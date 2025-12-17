@@ -19,7 +19,7 @@ function App() {
 
   const fetchWords = async (pattern) => {
     try {
-      const res = await axios.get(`http://localhost:8000/words?pattern=${pattern}`);
+      const res = await axios.get(`/words?pattern=${pattern}`);
       setWords(res.data.words);
     } catch (err) {
       console.error(err);
