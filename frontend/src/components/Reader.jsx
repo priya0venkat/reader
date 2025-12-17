@@ -18,25 +18,35 @@ export function Reader({ word, onBack }) {
         }
     }, [word]);
 
-    // Simple, robust speak function
+    // Pre-load voices on mount (Chrome requirement)
+    useEffect(() => {
+        const loadVoices = () => {
+            const voices = window.speechSynthesis.getVoices();
+        };
+        loadVoices();
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        return () => {
+            window.speechSynthesis.onvoiceschanged = null;
+        }
+    }, []);
+
+    // Absolute simplest speak function
     const speak = (text) => {
         if (!text) return;
 
-        console.log("Speaking:", text);
-
-        // 1. Resume to unblock paused engine (Chrome fix)
-        window.speechSynthesis.resume();
-
-        // 2. Cancel ongoing speech 
-        window.speechSynthesis.cancel();
-
+        // 1. Create utterance
         const utterance = new SpeechSynthesisUtterance(text);
 
-        // 3. Prevent Garbage Collection (Critical Fix)
-        window.utterance = utterance;
+        // 2. Prevent Garbage Collection (Critical Fix)
+        window.currentUtterance = utterance;
 
-        // 4. Speak
+        // 3. Queue speech
         window.speechSynthesis.speak(utterance);
+
+        // 4. Force resume to unstick engine (Chrome fix)
+        setTimeout(() => {
+            window.speechSynthesis.resume();
+        }, 10);
     };
 
     const loadStory = async () => {
