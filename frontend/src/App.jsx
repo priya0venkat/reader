@@ -19,7 +19,7 @@ function App() {
 
   const fetchWords = async (pattern) => {
     try {
-      const res = await axios.get(`/words?pattern=${pattern}`);
+      const res = await axios.get(`http://localhost:8000/words?pattern=${pattern}`);
       setWords(res.data.words);
     } catch (err) {
       console.error(err);
@@ -65,7 +65,7 @@ function App() {
                 </h2>
 
                 <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  {words.map((word) => (
+                  {(words || []).map((word) => (
                     <motion.button
                       key={word}
                       whileHover={{ scale: 1.1, rotate: -3 }}
@@ -77,7 +77,7 @@ function App() {
                       {word}
                     </motion.button>
                   ))}
-                  {words.length === 0 && <p style={{ fontSize: '1.5rem' }}>Loading words...</p>}
+                  {(!words || words.length === 0) && <p style={{ fontSize: '1.5rem' }}>Loading words...</p>}
                 </div>
               </motion.div>
             )}

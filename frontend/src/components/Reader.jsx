@@ -53,7 +53,7 @@ export function Reader({ word, onBack }) {
         setLoading(true);
         // speak(`Let's read about ${word}!`); // Minimized sound
         try {
-            const res = await axios.post('/story', { word });
+            const res = await axios.post('http://localhost:8000/story', { word });
             setStory(res.data.story);
         } catch (err) {
             console.error(err);
@@ -82,7 +82,7 @@ export function Reader({ word, onBack }) {
 
     const getFeedback = async (text) => {
         try {
-            const res = await axios.post('/feedback', {
+            const res = await axios.post('http://localhost:8000/feedback', {
                 original_text: story,
                 transcript: text
             });
