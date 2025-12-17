@@ -2,6 +2,8 @@ import os
 import google.generativeai as genai
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from backend.utils.phonics import get_words_by_pattern
@@ -30,10 +32,6 @@ class StoryRequest(BaseModel):
 class FeedbackRequest(BaseModel):
     original_text: str
     transcript: str
-
-@app.get("/")
-def read_root():
-    return {"message": "Interactive Phonics Explorer API"}
 
 @app.get("/words")
 def get_words(pattern: str = "ch", limit: int = 5):
@@ -105,3 +103,29 @@ def generate_feedback(request: FeedbackRequest):
         return {"feedback": response.text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# =================================================================
+# SERVE FRONTEND (SPA Support)
+# =================================================================
+
+# 1. Mount /assets first so they are served correctly
+if os.path.exists("../frontend/dist/assets"):
+    app.mount("/assets", StaticFiles(directory="../frontend/dist/assets"), name="assets")
+
+# 2. Catch-all route for Index/SPA (MUST BE LAST)
+@app.get("/{full_path:path}")
+async def serve_frontend(full_path: str):
+    # Skip API routes if they accidentally fall through (which shouldn't happen due to route ordering)
+    if full_path.startswith("api"):
+        raise HTTPException(status_code=404)
+        
+    # Serve specific files if they exist (vite.svg, favicon, etc)
+    dist_path = f"../frontend/dist/{full_path}"
+    if os.path.exists(dist_path) and os.path.isfile(dist_path):
+        return FileResponse(dist_path)
+    
+    # Otherwise serve index.html for SPA routing
+    if os.path.exists("../frontend/dist/index.html"):
+        return FileResponse("../frontend/dist/index.html")
+    
+    return {"message": "Frontend not built. Run 'npm run build' in frontend/ directory."}
