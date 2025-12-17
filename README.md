@@ -1,6 +1,6 @@
 # Phonics Reader
 
-A brief description of what this project does and who it's for.
+This project is a collection of phonics scripts to help young readers make progress on reading
 
 ## Table of Contents
 
