@@ -1,30 +1,21 @@
 import React from 'react';
 import { Trophy, Star, Activity } from 'lucide-react';
 
-// Mock Data
 const stats = [
-    { label: 'Words Mastered', value: '12', icon: Trophy, color: '#fbbf24' },
-    { label: 'Current Streak', value: '3 Days', icon: Activity, color: '#f472b6' },
-    { label: 'Total Stars', value: '45', icon: Star, color: '#a855f7' },
+    { label: 'Stars!', value: '12', icon: Star, color: '#FFD700' },
+    { label: 'Streak!', value: '3', icon: Activity, color: '#FF69B4' },
 ];
 
 export function Dashboard() {
     return (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '2rem' }}>
             {stats.map((stat) => (
-                <div key={stat.label} className="card" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{
-                        padding: '1rem',
-                        borderRadius: '50%',
-                        background: `${stat.color}20`,
-                        color: stat.color
-                    }}>
-                        <stat.icon size={24} />
+                <div key={stat.label} className="card" style={{ padding: '1rem 2rem', border: `3px solid ${stat.color}` }}>
+                    <div style={{ color: stat.color, marginBottom: '0.5rem' }}>
+                        <stat.icon size={48} fill={stat.color} />
                     </div>
-                    <div>
-                        <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{stat.label}</div>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{stat.value}</div>
-                    </div>
+                    <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{stat.value}</div>
+                    <div style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>{stat.label}</div>
                 </div>
             ))}
         </div>

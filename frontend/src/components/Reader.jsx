@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mic, MicOff, Volume2, Sparkles } from 'lucide-react';
+import { Mic, MicOff, Volume2, Sparkles, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
@@ -7,10 +7,8 @@ export function Reader({ word, onBack }) {
     const [story, setStory] = useState('');
     const [loading, setLoading] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
-    const [transcript, setTranscript] = useState('');
     const [feedback, setFeedback] = useState(null);
 
-    // Speech Recognition Setup
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = SpeechRecognition ? new SpeechRecognition() : null;
 
@@ -20,42 +18,54 @@ export function Reader({ word, onBack }) {
         }
     }, [word]);
 
+    // Simple, robust speak function
+    const speak = (text) => {
+        if (!text) return;
+
+        console.log("Speaking:", text);
+
+        // 1. Resume to unblock paused engine (Chrome fix)
+        window.speechSynthesis.resume();
+
+        // 2. Cancel ongoing speech 
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        // 3. Prevent Garbage Collection (Critical Fix)
+        window.utterance = utterance;
+
+        // 4. Speak
+        window.speechSynthesis.speak(utterance);
+    };
+
     const loadStory = async () => {
         setLoading(true);
+        // speak(`Let's read about ${word}!`); // Minimized sound
         try {
             const res = await axios.post('http://localhost:8000/story', { word });
             setStory(res.data.story);
         } catch (err) {
             console.error(err);
-            setStory('Error loading story. Check backend.');
+            setStory('Error loading story. Ask a grown up!');
         } finally {
             setLoading(false);
         }
     };
 
     const toggleRecording = () => {
-        if (!recognition) {
-            alert("Browser doesn't support speech recognition.");
-            return;
-        }
-
         if (isRecording) {
             recognition.stop();
             setIsRecording(false);
         } else {
+            // speak("Your turn!"); // Minimized sound
             recognition.start();
             setIsRecording(true);
-            setTranscript('Listening...');
 
             recognition.onresult = (event) => {
                 const text = event.results[0][0].transcript;
-                setTranscript(text);
-                getFeedback(text);
-            };
-
-            recognition.onerror = (event) => {
-                console.error(event.error);
                 setIsRecording(false);
+                getFeedback(text);
             };
         }
     };
@@ -67,74 +77,64 @@ export function Reader({ word, onBack }) {
                 transcript: text
             });
             setFeedback(res.data.feedback);
+
+            // Plain TTS feedback, no confetti
+            speak(res.data.feedback);
         } catch (err) {
             console.error(err);
         }
     };
 
     return (
-        <div className="card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <button className="btn btn-secondary" onClick={onBack} style={{ marginBottom: '1rem' }}>
-                &larr; Back
+        <div className="card" style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+            <button
+                className="btn-secondary"
+                onClick={onBack}
+                style={{ position: 'absolute', left: '2rem', top: '2rem', borderRadius: '50%', width: '60px', height: '60px', padding: 0, justifyContent: 'center' }}
+            >
+                <ArrowLeft size={32} />
             </button>
 
             {loading ? (
-                <div style={{ textAlign: 'center', padding: '2rem' }}>
-                    <Sparkles className="spin" /> Generating Story for <b>{word}</b>...
+                <div style={{ padding: '4rem' }}>
+                    <Sparkles className="spin" size={64} color="var(--primary)" />
+                    <h2 style={{ fontSize: '2rem' }}>Making Magic... ✨</h2>
                 </div>
             ) : (
                 <>
-                    <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--secondary)' }}>
-                        Story Time: {word}
+                    <h2 style={{ fontSize: '3rem', marginBottom: '1rem', color: 'var(--primary)' }}>
+                        {word}
                     </h2>
+
                     <div style={{
-                        fontSize: '1.5rem',
-                        lineHeight: '2',
-                        marginBottom: '2rem',
-                        padding: '1rem',
-                        background: 'rgba(255,255,255,0.05)',
-                        borderRadius: '0.5rem'
-                    }}>
-                        {story}
+                        fontSize: '2.5rem',
+                        lineHeight: '1.4',
+                        marginBottom: '3rem',
+                        padding: '2rem',
+                        background: '#fff',
+                        borderRadius: '1rem',
+                        border: '2px dashed var(--secondary)',
+                        cursor: 'pointer'
+                    }} onClick={() => speak(story)}>
+                        {story} 🔊
                     </div>
 
-                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginBottom: '2rem' }}>
-                        <motion.button
-                            className="btn"
-                            onClick={toggleRecording}
-                            animate={{
-                                backgroundColor: isRecording ? 'var(--error)' : 'var(--primary)',
-                                scale: isRecording ? 1.1 : 1
-                            }}
-                        >
-                            {isRecording ? <MicOff /> : <Mic />}
-                            {isRecording ? 'Stop Recording' : 'Read Aloud'}
-                        </motion.button>
-                    </div>
-
-                    <AnimatePresence>
-                        {transcript && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                style={{ marginBottom: '1rem', color: 'var(--text-muted)' }}
-                            >
-                                You said: "{transcript}"
-                            </motion.div>
-                        )}
-
-                        {feedback && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                className="card"
-                                style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid var(--success)' }}
-                            >
-                                <h3 style={{ color: 'var(--success)', marginTop: 0 }}>Coach Says:</h3>
-                                <p>{feedback}</p>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                    <motion.button
+                        className="btn"
+                        onClick={toggleRecording}
+                        animate={{
+                            scale: isRecording ? 1.2 : 1,
+                            backgroundColor: isRecording ? 'var(--error)' : 'var(--primary)'
+                        }}
+                        style={{
+                            fontSize: '2rem',
+                            padding: '1.5rem 3rem',
+                            borderRadius: '2rem'
+                        }}
+                    >
+                        {isRecording ? <MicOff size={48} /> : <Mic size={48} />}
+                        {isRecording ? 'Listening...' : 'My Turn!'}
+                    </motion.button>
                 </>
             )}
         </div>

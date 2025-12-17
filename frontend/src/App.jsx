@@ -28,50 +28,56 @@ function App() {
 
   return (
     <div className="container">
-      <header style={{ marginBottom: '3rem', textAlign: 'center' }}>
+      <header style={{ marginBottom: '2rem' }}>
         <h1 style={{
-          fontSize: '3rem',
-          background: 'linear-gradient(to right, var(--primary), var(--secondary))',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          margin: 0
+          fontSize: '4rem',
+          color: 'var(--primary)',
+          margin: 0,
+          textShadow: '3px 3px 0px #ffd1ff'
         }}>
-          Interactive Phonics Explorer
+          Phonics Fun! 🎈
         </h1>
-        <p style={{ color: 'var(--text-muted)' }}>Learning to read, powered by AI</p>
       </header>
 
-      {!selectedWord && <Dashboard />}
+      {!selectedWord && !selectedPattern && <Dashboard />}
 
       <main>
         {!selectedWord ? (
           <div style={{ display: 'grid', gap: '2rem' }}>
-            <PhonicsSelector
-              selected={selectedPattern}
-              onSelect={setSelectedPattern}
-            />
-
-            {selectedPattern && (
+            {!selectedPattern ? (
+              <PhonicsSelector onSelect={setSelectedPattern} />
+            ) : (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
                 className="card"
               >
-                <h3>Words with '{selectedPattern}'</h3>
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <button
+                  className="btn-secondary"
+                  onClick={() => setSelectedPattern(null)}
+                  style={{ marginBottom: '1rem' }}
+                >
+                  &larr; Back
+                </button>
+
+                <h2 style={{ fontSize: '2.5rem', color: 'var(--text)' }}>
+                  Start with '{selectedPattern}'
+                </h2>
+
+                <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                   {words.map((word) => (
                     <motion.button
                       key={word}
-                      whileHover={{ scale: 1.1 }}
+                      whileHover={{ scale: 1.1, rotate: -3 }}
                       whileTap={{ scale: 0.9 }}
                       className="btn"
-                      style={{ background: 'var(--secondary)' }}
+                      style={{ background: 'var(--secondary)', fontSize: '2rem' }}
                       onClick={() => setSelectedWord(word)}
                     >
                       {word}
                     </motion.button>
                   ))}
-                  {words.length === 0 && <p>Loading words...</p>}
+                  {words.length === 0 && <p style={{ fontSize: '1.5rem' }}>Loading words...</p>}
                 </div>
               </motion.div>
             )}

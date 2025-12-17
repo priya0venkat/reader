@@ -72,9 +72,9 @@ def generate_story(request: StoryRequest):
     try:
         model = genai.GenerativeModel('gemini-2.0-flash')
         prompt = (
-            f"Write a very short, simple story (3 sentences max) for a child learning to read. "
-            f"Use the word '{request.word}' at least once. "
-            f"The language should be simple and encouraging."
+            f"Write exactly ONE very simple, short sentence (~5-7 words) for a toddler. "
+            f"Use the word '{request.word}'. "
+            f"Do NOT use any emojis. Keep it plain text."
         )
         response = model.generate_content(prompt)
         return {"story": response.text, "generated": True}
@@ -88,19 +88,18 @@ def generate_feedback(request: FeedbackRequest):
     """
     if not GOOGLE_API_KEY:
         return {
-            "feedback": "Great job trying! (Add API Key for AI feedback)",
+            "feedback": "Great job! (Add API Key for AI feedback)",
             "score": "N/A"
         }
 
     try:
         model = genai.GenerativeModel('gemini-2.0-flash')
         prompt = (
-            f"Act as a kind reading coach for a child. "
-            f"Original text: '{request.original_text}'. "
-            f"Child read: '{request.transcript}'. "
-            f"Compare these. If they are close, give positive praise. "
-            f"If there are mistakes, kindly point out which word to practice. "
-            f"Keep it to 1-2 sentences. Ensure the tone is encouraging."
+            f"Act as a cheerleader for a toddler. "
+            f"Original: '{request.original_text}'. "
+            f"Child said: '{request.transcript}'. "
+            f"If they got the main word '{request.original_text.split()[0]}', EXCLAIM 'Great Job!' or 'Wow!'. "
+            f"Ignore minor mistakes. Keep it under 10 words."
         )
         response = model.generate_content(prompt)
         return {"feedback": response.text}
