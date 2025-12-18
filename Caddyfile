@@ -1,4 +1,4 @@
-:80 {
+games.verma7.com {
     # Serve the landing page at root
     root * /home/abhishekverma/reader
     file_server
@@ -20,6 +20,13 @@
     # Serve US Map game
     handle_path /us-map-game/* {
         root * /home/abhishekverma/reader/us-map-game/dist
+        file_server
+        try_files {path} /index.html
+    }
+
+    # Serve World Map game
+    handle_path /world-map-game/* {
+        root * /home/abhishekverma/reader/world-map-game/dist
         file_server
         try_files {path} /index.html
     }
