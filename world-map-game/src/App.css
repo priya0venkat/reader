@@ -1,5 +1,6 @@
-.app {
+.app-container {
   min-height: 100vh;
+  width: 100%;
   padding: 1rem;
   display: flex;
   flex-direction: column;
