@@ -3,6 +3,13 @@
     root * /home/abhishekverma/reader
     file_server
 
+    # Serve Phonics Reader
+    handle_path /reader/* {
+        root * /home/abhishekverma/reader/reader/frontend/dist
+        file_server
+        try_files {path} /index.html
+    }
+
     # Serve Washing Machine game
     handle_path /washing-machine/* {
         root * /home/abhishekverma/reader/washing-machine/dist
