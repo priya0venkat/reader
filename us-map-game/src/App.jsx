@@ -19,8 +19,20 @@ function App() {
   // Use states in area order (largest to smallest)
   useEffect(() => {
     if (gameStarted && shuffledStates.length === 0) {
-      // Use the sorted list directly instead of shuffling
-      setShuffledStates([...statesList]);
+      // Create a shallow copy to sort and shuffle
+      let sorted = [...statesList];
+
+      // Add local randomness: swap elements within a small window (e.g., +/- 3 positions)
+      // This keeps the general "large to small" trend but isn't strictly deterministic
+      for (let i = 0; i < sorted.length; i++) {
+        const j = Math.min(
+          sorted.length - 1,
+          Math.max(0, i + Math.floor(Math.random() * 7) - 3)
+        );
+        [sorted[i], sorted[j]] = [sorted[j], sorted[i]];
+      }
+
+      setShuffledStates(sorted);
     }
   }, [gameStarted, shuffledStates.length]);
 
