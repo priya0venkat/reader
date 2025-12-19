@@ -30,4 +30,11 @@ games.verma7.com {
         file_server
         try_files {path} /index.html
     }
+
+    # Serve Food Classification game
+    handle_path /food-classification-game/* {
+        root * /home/abhishekverma/reader/food-classification-game/dist
+        file_server
+        try_files {path} /index.html
+    }
 }
