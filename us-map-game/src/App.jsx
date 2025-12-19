@@ -16,11 +16,11 @@ function App() {
   const [shuffledStates, setShuffledStates] = useState([]);
   const [gameComplete, setGameComplete] = useState(false);
 
-  // Shuffle states when game starts
+  // Use states in area order (largest to smallest)
   useEffect(() => {
     if (gameStarted && shuffledStates.length === 0) {
-      const shuffled = [...statesList].sort(() => Math.random() - 0.5);
-      setShuffledStates(shuffled);
+      // Use the sorted list directly instead of shuffling
+      setShuffledStates([...statesList]);
     }
   }, [gameStarted, shuffledStates.length]);
 
