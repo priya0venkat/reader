@@ -1,9 +1,27 @@
 .app {
   min-height: 100vh;
+  width: 100%;
   padding: 1rem;
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* Mobile Landscape Optimization */
+@media (max-height: 600px) and (orientation: landscape) {
+  .app {
+    flex-direction: row;
+    padding: 0;
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    align-items: stretch;
+    height: 100vh;
+    overflow: hidden;
+  }
 }
 
 /* Welcome Screen */
@@ -320,5 +338,43 @@
 
   .final-stat {
     width: 100%;
+  }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  .complete-screen {
+    min-height: 100vh;
+    padding: 1rem;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .complete-title {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .final-stats {
+    margin-bottom: 1rem;
+    gap: 1.5rem;
+  }
+
+  .final-stat {
+    padding: 1rem 2rem;
+    min-width: 120px;
+  }
+
+  .final-stat-value {
+    font-size: 2.5rem;
+  }
+
+  .complete-message {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .play-again-button {
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
   }
 }
