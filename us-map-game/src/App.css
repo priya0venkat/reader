@@ -21,6 +21,21 @@
     align-items: stretch;
     height: 100vh;
     overflow: hidden;
+    position: relative;
+  }
+
+  .progress-container {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 85px;
+    /* Sidebar width */
+    right: 0;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0 1rem;
+    z-index: 10;
+    pointer-events: none;
   }
 }
 
