@@ -22,3 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+puzzle-game-credentials.json
+backend-bundle.tar.gz
