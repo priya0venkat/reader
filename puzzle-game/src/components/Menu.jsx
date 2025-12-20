@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { initAudio } from '../utils/sound'
 
 const DEFAULT_IMAGES = [
     'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800&q=80', // Lion
@@ -101,7 +102,10 @@ export default function Menu({ onStart }) {
                 </div>
 
                 <button
-                    onClick={() => onStart(selectedImage, difficulty)}
+                    onClick={() => {
+                        initAudio()
+                        onStart(selectedImage, difficulty)
+                    }}
                     className="mt-4 w-full py-5 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 rounded-2xl font-black text-2xl text-white shadow-[0_10px_40px_-10px_rgba(139,92,246,0.6)] transform hover:-translate-y-1 transition-all duration-300 active:scale-95 flex items-center justify-center gap-3 uppercase tracking-widest"
                 >
                     Start Game

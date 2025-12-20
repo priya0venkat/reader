@@ -78,3 +78,21 @@ function getAudioContext() {
     }
     return audioContext;
 }
+
+// iOS Audio Unlocker
+// Must be called on a direct user interaction (click/touch)
+export const initAudio = () => {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    if (ctx.state === 'suspended') {
+        ctx.resume();
+    }
+
+    // Play a silent note to fully unlock the audio engine on iOS
+    const buffer = ctx.createBuffer(1, 1, 22050);
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(ctx.destination);
+    source.start(0);
+}
