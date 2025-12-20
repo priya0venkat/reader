@@ -1,8 +1,6 @@
 import { useState } from 'react'
 
-const DEFAULT_IMAGES = [
-    'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800&q=80', // Lion
-    'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800&q=80', // Lion
+'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800&q=80', // Lion
     'https://storage.googleapis.com/purejax-data-1234/puzzle-game/Kitkat.png', // KitKat
     'https://storage.googleapis.com/purejax-data-1234/puzzle-game/bourbon.png', // Bourbon
 ]
