@@ -39,9 +39,14 @@ games.verma7.com {
     }
 
     # Serve Puzzle game
-    handle_path /puzzle-game/* {
+    handle /puzzle-game* {
+        # Strip the /puzzle-game prefix
+        uri strip_prefix /puzzle-game
+        
         # Proxy API requests to backend server
-        reverse_proxy /api/* localhost:3001
+        handle /api/* {
+            reverse_proxy localhost:3001
+        }
         
         # Serve static frontend files
         root * /home/abhishekverma/reader/puzzle-game/dist
