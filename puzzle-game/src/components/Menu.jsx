@@ -21,7 +21,7 @@ export default function Menu({ onStart }) {
 
     const fetchImages = async () => {
         try {
-            const response = await fetch('/api/images')
+            const response = await fetch('api/images')
             if (!response.ok) throw new Error('Failed to fetch images')
             const data = await response.json()
             setAvailableImages(data.images)
@@ -43,7 +43,7 @@ export default function Menu({ onStart }) {
             const formData = new FormData()
             formData.append('image', file)
 
-            const response = await fetch('/api/upload', {
+            const response = await fetch('api/upload', {
                 method: 'POST',
                 body: formData,
             })
