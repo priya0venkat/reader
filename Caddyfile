@@ -37,4 +37,11 @@ games.verma7.com {
         file_server
         try_files {path} /index.html
     }
+
+    # Serve Puzzle game
+    handle_path /puzzle-game/* {
+        root * /home/abhishekverma/reader/puzzle-game/dist
+        file_server
+        try_files {path} /index.html
+    }
 }
