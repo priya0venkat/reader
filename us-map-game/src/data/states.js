@@ -14,11 +14,22 @@ export const statesList = [
     'New Hampshire', 'New Jersey', 'Connecticut', 'Delaware', 'Rhode Island'
 ];
 
-// Generate a unique color for each state
+// Generate a unique color for each state, avoiding green (approx 60-180 hue)
+// Uses pseudo-random scattering to avoid a sequential gradient look
 const generateStateColor = (index, total) => {
-    const hue = (index * 360 / total) % 360;
-    const saturation = 65 + (index % 3) * 10;
-    const lightness = 55 + (index % 2) * 5;
+    // Golden angle approximation (137.508 deg) ensures good distribution
+    const goldenAngle = 137.508;
+    // Calculate offset in the [0, 240] valid range
+    const hueOffset = (index * goldenAngle) % 240;
+
+    // Map [0, 240] to valid hue ranges: [180, 360] U [0, 60]
+    // 0 -> 180 (Cyan), 60 -> 240 (Blue), 180 -> 0 (Red), 239 -> 59 (Yellow)
+    const hue = (180 + hueOffset) % 360;
+
+    // Randomize saturation (60-95%) and lightness (45-65%)
+    const saturation = 60 + ((index * 23) % 36);
+    const lightness = 45 + ((index * 17) % 21);
+
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 };
 
