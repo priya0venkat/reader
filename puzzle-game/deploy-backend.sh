@@ -15,61 +15,41 @@ echo "🚀 Starting puzzle game backend deployment via gcloud..."
 ZONE=$(gcloud compute instances list --filter="name=${INSTANCE_NAME}" --format="value(zone)" --project=${PROJECT_ID})
 echo "📍 Target Instance: ${INSTANCE_NAME} in zone ${ZONE}"
 
-# Step 1: Create remote directory
-echo "📂 Creating remote directory..."
-gcloud compute ssh ${INSTANCE_NAME} --project=${PROJECT_ID} --zone=${ZONE} --command="mkdir -p ${SERVER_PATH}"
-
-# Step 2: Sync backend files using tarball (more reliable)
-echo "📦 Compressing and syncing backend files..."
-# Create a temporary tarball locally
-tar -czf backend-bundle.tar.gz server.js package.json package-lock.json
-
-# Upload tarball
-gcloud compute scp --project=${PROJECT_ID} --zone=${ZONE} \
-    backend-bundle.tar.gz \
-    ${INSTANCE_NAME}:${SERVER_PATH}/
-
-# Extract on server
-gcloud compute ssh ${INSTANCE_NAME} --project=${PROJECT_ID} --zone=${ZONE} --command="cd ${SERVER_PATH} && tar -xzf backend-bundle.tar.gz && rm backend-bundle.tar.gz"
-
-# clean up local tarball
-rm backend-bundle.tar.gz
-
-# Step 3: Deployment of systemd service
-echo "📄 Deploying systemd service file..."
-gcloud compute scp --project=${PROJECT_ID} --zone=${ZONE} \
-    puzzle-backend.service \
-    ${INSTANCE_NAME}:/tmp/puzzle-backend.service
-
-# Step 4: Transfer Credentials
+# Step 1: Transfer Credentials
 echo "🔑 Transferring GCP credentials..."
 gcloud compute ssh ${INSTANCE_NAME} --project=${PROJECT_ID} --zone=${ZONE} --command="mkdir -p /home/abhishekverma/.gcp"
 gcloud compute scp --project=${PROJECT_ID} --zone=${ZONE} \
     puzzle-game-credentials.json \
     ${INSTANCE_NAME}:/home/abhishekverma/.gcp/puzzle-game-credentials.json
 
-# Step 5: Configure and Restart
-echo "🔧 Configuring backend on server..."
+# Step 2: Deployment via Git
+echo "📦 Syncing code via Git..."
 gcloud compute ssh ${INSTANCE_NAME} --project=${PROJECT_ID} --zone=${ZONE} --command="bash -s" << 'ENDSSH'
 set -e
 
-# Install Node.js if not present
-if ! command -v node &> /dev/null; then
-    echo "📦 Installing Node.js..."
-    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-    sudo apt-get install -y nodejs
-fi
+# Navigate to repo
+cd /home/abhishekverma/reader
 
-echo "📦 Installing backend dependencies..."
-cd /home/abhishekverma/reader/puzzle-game
-npm install --production
+# Discard local changes to avoid conflicts (if any) and pull
+git reset --hard
+git pull origin main
 
-# Install systemd service
+# Install dependencies & Build Frontend
+echo "📦 Installing dependencies & building..."
+cd puzzle-game
+npm install
+npm run build
+
+# Install systemd service (it's now in the repo!)
 echo "⚙️  Installing systemd service..."
-sudo mv /tmp/puzzle-backend.service /etc/systemd/system/puzzle-backend.service
+sudo cp puzzle-backend.service /etc/systemd/system/puzzle-backend.service
 sudo systemctl daemon-reload
 sudo systemctl enable puzzle-backend.service
 sudo systemctl restart puzzle-backend.service
+
+# Reload Caddy to pick up Caddyfile changes
+echo "🔄 Reloading Caddy..."
+sudo systemctl reload caddy
 
 # Check service status
 echo ""

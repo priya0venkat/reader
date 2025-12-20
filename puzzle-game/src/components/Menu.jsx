@@ -21,12 +21,13 @@ export default function Menu({ onStart }) {
 
     const fetchImages = async () => {
         try {
-            const response = await fetch('api/images')
+            const response = await fetch(`${import.meta.env.BASE_URL}api/images`)
             if (!response.ok) throw new Error('Failed to fetch images')
             const data = await response.json()
             setAvailableImages(data.images)
         } catch (error) {
             console.error('Error fetching images:', error)
+            console.error('Fetch URL:', `${import.meta.env.BASE_URL}api/images`)
             // Fallback to default images if API fails
             setAvailableImages(DEFAULT_IMAGES)
         }
@@ -43,7 +44,7 @@ export default function Menu({ onStart }) {
             const formData = new FormData()
             formData.append('image', file)
 
-            const response = await fetch('api/upload', {
+            const response = await fetch(`${import.meta.env.BASE_URL}api/upload`, {
                 method: 'POST',
                 body: formData,
             })
@@ -62,6 +63,7 @@ export default function Menu({ onStart }) {
             setSelectedImage(data.url)
         } catch (error) {
             console.error('Error uploading image:', error)
+            console.error('Upload URL:', `${import.meta.env.BASE_URL}api/upload`)
             setUploadError(error.message)
         } finally {
             setUploading(false)
