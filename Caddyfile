@@ -40,6 +40,10 @@ games.verma7.com {
 
     # Serve Puzzle game
     handle_path /puzzle-game/* {
+        # Proxy API requests to backend server
+        reverse_proxy /api/* localhost:3001
+        
+        # Serve static frontend files
         root * /home/abhishekverma/reader/puzzle-game/dist
         file_server
         try_files {path} /index.html
