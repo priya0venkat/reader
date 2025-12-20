@@ -31,7 +31,6 @@ function App() {
           image={image}
           difficulty={difficulty}
           onWin={handleWin}
-          onBack={resetGame}
         />
       )}
       {gameState === 'won' && <SuccessScreen onReset={resetGame} image={image} />}

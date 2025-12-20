@@ -3,7 +3,7 @@ import PuzzlePiece from './PuzzlePiece'
 import { playSnap, playWin } from '../utils/sound'
 import clsx from 'clsx'
 
-export default function PuzzleBoard({ image, difficulty, onWin, onBack }) {
+export default function PuzzleBoard({ image, difficulty, onWin }) {
     const [pieces, setPieces] = useState([])
     const [boardDimensions, setBoardDimensions] = useState({ width: 0, height: 0, top: 0, left: 0 })
     const [loaded, setLoaded] = useState(false)
@@ -136,16 +136,6 @@ export default function PuzzleBoard({ image, difficulty, onWin, onBack }) {
 
     return (
         <div ref={containerRef} className="w-full h-full relative overflow-hidden backdrop-blur-sm bg-black/10">
-            {/* Back Button */}
-            <button
-                onClick={onBack}
-                className="absolute top-6 left-6 z-50 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 backdrop-blur-md border border-white/10 transition-all hover:scale-105 shadow-lg group"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 group-hover:-translate-x-1 transition-transform">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                </svg>
-            </button>
-
             {/* Guide / Shadow Board */}
             <div
                 className="absolute border-2 border-white/20 bg-white/5 rounded-lg"

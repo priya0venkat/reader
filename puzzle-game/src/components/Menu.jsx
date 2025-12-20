@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { initAudio } from '../utils/sound'
 
 const DEFAULT_IMAGES = [
@@ -10,13 +10,63 @@ const DEFAULT_IMAGES = [
 export default function Menu({ onStart }) {
     const [selectedImage, setSelectedImage] = useState(DEFAULT_IMAGES[0])
     const [difficulty, setDifficulty] = useState(3)
+    const [availableImages, setAvailableImages] = useState(DEFAULT_IMAGES)
+    const [uploading, setUploading] = useState(false)
+    const [uploadError, setUploadError] = useState(null)
 
-    const handleFileUpload = (e) => {
+    // Fetch available images on mount
+    useEffect(() => {
+        fetchImages()
+    }, [])
+
+    const fetchImages = async () => {
+        try {
+            const response = await fetch('/api/images')
+            if (!response.ok) throw new Error('Failed to fetch images')
+            const data = await response.json()
+            setAvailableImages(data.images)
+        } catch (error) {
+            console.error('Error fetching images:', error)
+            // Fallback to default images if API fails
+            setAvailableImages(DEFAULT_IMAGES)
+        }
+    }
+
+    const handleFileUpload = async (e) => {
         const file = e.target.files[0]
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (e) => setSelectedImage(e.target.result)
-            reader.readAsDataURL(file)
+        if (!file) return
+
+        setUploading(true)
+        setUploadError(null)
+
+        try {
+            const formData = new FormData()
+            formData.append('image', file)
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.error || 'Upload failed')
+            }
+
+            const data = await response.json()
+
+            // Refresh the image list
+            await fetchImages()
+
+            // Select the newly uploaded image
+            setSelectedImage(data.url)
+        } catch (error) {
+            console.error('Error uploading image:', error)
+            setUploadError(error.message)
+        } finally {
+            setUploading(false)
+            // Reset the file input
+            e.target.value = ''
         }
     }
 
@@ -37,7 +87,7 @@ export default function Menu({ onStart }) {
                     </label>
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        {DEFAULT_IMAGES.map((img, idx) => (
+                        {availableImages.map((img, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => setSelectedImage(img)}
@@ -54,28 +104,35 @@ export default function Menu({ onStart }) {
 
                     <div className="relative group">
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-200"></div>
-                        <label className="relative flex items-center justify-center w-full px-6 py-4 bg-slate-900 rounded-lg cursor-pointer hover:bg-slate-800 transition-colors border border-white/10">
-                            <span className="text-gray-300 font-medium group-hover:text-white transition-colors">Upload Custom Image</span>
+                        <label className={`relative flex items-center justify-center w-full px-6 py-4 bg-slate-900 rounded-lg cursor-pointer hover:bg-slate-800 transition-colors border border-white/10 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                            {uploading ? (
+                                <>
+                                    <svg className="animate-spin h-5 w-5 mr-3 text-pink-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span className="text-gray-300 font-medium">Uploading...</span>
+                                </>
+                            ) : (
+                                <span className="text-gray-300 font-medium group-hover:text-white transition-colors">Upload Custom Image</span>
+                            )}
                             <input
                                 type="file"
                                 accept="image/*"
                                 onChange={handleFileUpload}
                                 className="hidden"
+                                disabled={uploading}
                             />
                         </label>
                     </div>
 
-                    {/* Custom Image Preview */}
-                    {!DEFAULT_IMAGES.includes(selectedImage) && (
-                        <div className="mt-4 flex flex-col items-center animate-pulse">
-                            <div className="relative rounded-2xl overflow-hidden aspect-video w-full border-2 border-pink-500 shadow-lg">
-                                <img src={selectedImage} alt="Custom Selection" className="w-full h-full object-cover" />
-                                <div className="absolute top-2 right-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md font-bold shadow-md">
-                                    READY
-                                </div>
-                            </div>
+                    {/* Upload Error */}
+                    {uploadError && (
+                        <div className="mt-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                            <p className="text-red-400 text-sm font-medium">⚠️ {uploadError}</p>
                         </div>
                     )}
+
                 </div>
 
                 <div className="space-y-4">
