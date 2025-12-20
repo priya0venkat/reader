@@ -15,8 +15,11 @@ export default function PuzzleBoard({ image, difficulty, onWin, onBack }) {
         const img = new Image()
         img.src = image
         img.onload = () => {
-            const maxWidth = window.innerWidth * 0.9 // Mobile padding
-            const maxHeight = window.innerHeight * 0.7 // Leave space for controls/scattering
+            const isLandscape = window.innerWidth > window.innerHeight
+
+            // Adjust max dimensions based on orientation
+            const maxWidth = window.innerWidth * (isLandscape ? 0.6 : 0.9) // Use less width in landscape to leave side space for pieces
+            const maxHeight = window.innerHeight * (isLandscape ? 0.9 : 0.65) // Use more height in landscape, less in portrait
 
             const aspect = img.width / img.height
             let width = maxWidth
@@ -71,8 +74,14 @@ export default function PuzzleBoard({ image, difficulty, onWin, onBack }) {
                         shape: shapes[row][col],
                         targetX: left + col * pieceW,
                         targetY: top + row * pieceH,
-                        currentX: Math.random() * (window.innerWidth - pieceW),
-                        currentY: Math.random() * (window.innerHeight - pieceH),
+                        currentX: isLandscape
+                            ? (Math.random() < 0.5
+                                ? Math.random() * (left - pieceW) // Left side
+                                : left + width + Math.random() * (window.innerWidth - (left + width) - pieceW)) // Right side
+                            : Math.random() * (window.innerWidth - pieceW),
+                        currentY: isLandscape
+                            ? Math.random() * (window.innerHeight - pieceH)
+                            : top + height + Math.random() * (window.innerHeight - (top + height) - pieceH),
                         isLocked: false,
                     })
                 }
