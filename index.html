@@ -76,6 +76,12 @@
 
 <body>
 
+    <div id="login-container" style="position: absolute; top: 20px; right: 20px;">
+        <a href="/auth/google"
+            style="color: white; text-decoration: none; border: 1px solid white; padding: 0.5rem 1rem; border-radius: 20px;">Login
+            with Google</a>
+    </div>
+
     <h1>Phonics Reader Games</h1>
 
     <div class="container">
@@ -116,6 +122,30 @@
         </a>
     </div>
 
+    <script>
+        async function checkUser() {
+            try {
+                const response = await fetch('/auth/me');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.authenticated) {
+                        const loginContainer = document.getElementById('login-container');
+                        loginContainer.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span>Welcome, ${data.user.displayName}</span>
+                                <a href="/auth/logout" style="color: #ff6b6b; text-decoration: none; border: 1px solid #ff6b6b; padding: 0.5rem 1rem; border-radius: 20px;">Logout</a>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch user status', error);
+            }
+        }
+
+        // Call on load
+        checkUser();
+    </script>
 </body>
 
 </html>

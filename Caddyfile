@@ -3,6 +3,11 @@ games.verma7.com {
     root * /home/abhishekverma/reader
     file_server
 
+    # Global Auth
+    handle /auth/* {
+        reverse_proxy 127.0.0.1:3001
+    }
+
     # Serve Phonics Reader
     handle_path /reader/* {
         root * /home/abhishekverma/reader/reader/frontend/dist

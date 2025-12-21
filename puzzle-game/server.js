@@ -4,6 +4,9 @@ import cors from 'cors'
 import { Storage } from '@google-cloud/storage'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import session from 'express-session'
+import passport from 'passport'
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -24,9 +27,61 @@ const DEFAULT_IMAGES = [
     'https://storage.googleapis.com/purejax-data-1234/puzzle-game/bourbon.png',
 ]
 
+// OAuth Configuration
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
+const SESSION_SECRET = process.env.SESSION_SECRET || 'dev_secret_key_123'
+const CALLBACK_URL = process.env.CALLBACK_URL || 'https://games.verma7.com/auth/google/callback'
+
+if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+    console.warn('⚠️  GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET not set. OAuth will not work.')
+}
+
+// Passport Setup
+passport.use(new GoogleStrategy({
+    clientID: GOOGLE_CLIENT_ID || 'placeholder',
+    clientSecret: GOOGLE_CLIENT_SECRET || 'placeholder',
+    callbackURL: CALLBACK_URL
+},
+    (accessToken, refreshToken, profile, done) => {
+        // Here you would typically save the user to a database
+        // For now, we'll just return the profile
+        return done(null, profile)
+    }
+))
+
+passport.serializeUser((user, done) => {
+    done(null, user)
+})
+
+passport.deserializeUser((user, done) => {
+    done(null, user)
+})
+
 // Middleware
-app.use(cors())
+app.use(cors({
+    origin: true, // Allow all origins for now, or specify 'https://games.verma7.com'
+    credentials: true // Important for sessions
+}))
 app.use(express.json())
+
+// Session Middleware
+app.use(session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false, // Set to true if using HTTPS (which we are behind Caddy, but Caddy handles SSL)
+        // If behind a proxy like Caddy, we might need app.set('trust proxy', 1)
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}))
+
+// Trust proxy for secure cookies to work if we set secure: true
+app.set('trust proxy', 1)
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 // Configure multer for memory storage (we'll upload directly to GCS)
 const upload = multer({
@@ -46,6 +101,50 @@ const upload = multer({
         }
     }
 })
+
+// --- Auth Routes ---
+
+// Start Login
+app.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+)
+
+// Callback
+app.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/' }),
+    (req, res) => {
+        // Successful authentication, redirect home.
+        res.redirect('/')
+    }
+)
+
+// Get Current User
+app.get('/auth/me', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({
+            authenticated: true,
+            user: {
+                id: req.user.id,
+                displayName: req.user.displayName,
+                photos: req.user.photos,
+                emails: req.user.emails
+            }
+        })
+    } else {
+        res.status(401).json({ authenticated: false })
+    }
+})
+
+// Logout
+app.get('/auth/logout', (req, res, next) => {
+    req.logout((err) => {
+        if (err) { return next(err) }
+        res.redirect('/')
+    })
+})
+
+
+// --- Existing Routes ---
 
 // GET /api/images - List all available images
 app.get('/api/images', async (req, res) => {
@@ -133,4 +232,5 @@ app.listen(PORT, () => {
     console.log(`🚀 Puzzle game backend server running on http://localhost:${PORT}`)
     console.log(`📦 Using GCS bucket: ${bucketName}`)
     console.log(`📁 Upload path: ${uploadPath}`)
+    console.log(`🔑 OAuth Status: ${GOOGLE_CLIENT_ID ? 'Enabled' : 'Disabled (Missing Credentials)'}`)
 })
