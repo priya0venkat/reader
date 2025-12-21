@@ -65,7 +65,7 @@ games.verma7.com {
 
         # Proxy API requests to backend server
         handle /api/* {
-            reverse_proxy 127.0.0.1:3001
+            reverse_proxy 127.0.0.1:3002
         }
         
         # Serve static frontend files for everything else
