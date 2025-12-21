@@ -140,7 +140,8 @@ app.get('/auth/check', (req, res) => {
     if (req.isAuthenticated()) {
         res.sendStatus(200)
     } else {
-        res.sendStatus(401)
+        // Redirect to custom unauthorized page
+        res.redirect('/unauthorized.html')
     }
 })
 
