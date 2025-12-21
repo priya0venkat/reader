@@ -84,6 +84,6 @@ games.verma7.com {
         @401 {
             expression {http.error.status_code} == 401
         }
-        redir @401 /
+        redir @401 /unauthorized.html
     }
 }
