@@ -58,25 +58,19 @@ games.verma7.com {
         try_files {path} /index.html
     }
 
-    # Serve Puzzle game
-    # Serve Puzzle game
-    handle /puzzle-game* {
-        uri strip_prefix /puzzle-game
-
-        # Proxy API requests to backend server
-        handle /api/* {
-            reverse_proxy 127.0.0.1:3002
+    # Serve Puzzle game - API endpoints (no auth required)
+    handle_path /puzzle-game/api/* {
+        reverse_proxy 127.0.0.1:3002
+    }
+    
+    # Serve Puzzle game - Frontend (auth required)
+    handle_path /puzzle-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
         }
-        
-        # Serve static frontend files for everything else
-        handle {
-            forward_auth localhost:3001 {
-                uri /auth/check
-            }
-            root * /home/abhishekverma/reader/puzzle-game/dist
-            try_files {path} /index.html
-            file_server
-        }
+        root * /home/abhishekverma/reader/puzzle-game/dist
+        try_files {path} /index.html
+        file_server
     }
     
     # Handle auth errors (redirect to login page)
