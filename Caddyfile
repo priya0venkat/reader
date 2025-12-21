@@ -59,7 +59,8 @@ games.verma7.com {
     }
 
     # Serve Puzzle game - API endpoints (no auth required)
-    handle_path /puzzle-game/api/* {
+    handle /puzzle-game/api/* {
+        uri strip_prefix /puzzle-game
         reverse_proxy 127.0.0.1:3002
     }
     
