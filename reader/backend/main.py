@@ -148,6 +148,9 @@ async def auth_callback(request: Request):
         token = await oauth.google.authorize_access_token(request)
         user = token.get('userinfo')
         if user:
+            # Ensure displayName is set for frontend compatibility
+            if 'name' in user and 'displayName' not in user:
+                user['displayName'] = user['name']
             request.session['user'] = user
         return RedirectResponse(url='/')
     except Exception as e:
