@@ -172,7 +172,7 @@ async def check_auth(request: Request):
     user = request.session.get('user')
     if user:
         return JSONResponse({"status": "ok"}, status_code=200)
-    return JSONResponse({"status": "unauthorized"}, status_code=401)
+    return RedirectResponse(url='/unauthorized.html')
 
 # =================================================================
 # SERVE FRONTEND (SPA Support)
