@@ -93,6 +93,30 @@
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
             background-color: #f8f9fa;
         }
+
+        /* Mobile Layout Adjustments */
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                justify-content: flex-start;
+                padding-top: 2rem;
+            }
+
+            #login-container {
+                position: static !important;
+                margin-bottom: 2rem;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 
