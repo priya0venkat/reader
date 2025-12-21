@@ -10,6 +10,9 @@ games.verma7.com {
 
     # Serve Phonics Reader
     handle_path /reader/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
         root * /home/abhishekverma/reader/reader/frontend/dist
         file_server
         try_files {path} /index.html
@@ -17,6 +20,9 @@ games.verma7.com {
 
     # Serve Washing Machine game
     handle_path /washing-machine/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
         root * /home/abhishekverma/reader/washing-machine/dist
         file_server
         try_files {path} /index.html
@@ -24,6 +30,9 @@ games.verma7.com {
 
     # Serve US Map game
     handle_path /us-map-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
         root * /home/abhishekverma/reader/us-map-game/dist
         file_server
         try_files {path} /index.html
@@ -31,6 +40,9 @@ games.verma7.com {
 
     # Serve World Map game
     handle_path /world-map-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
         root * /home/abhishekverma/reader/world-map-game/dist
         file_server
         try_files {path} /index.html
@@ -38,6 +50,9 @@ games.verma7.com {
 
     # Serve Food Classification game
     handle_path /food-classification-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
         root * /home/abhishekverma/reader/food-classification-game/dist
         file_server
         try_files {path} /index.html
@@ -55,9 +70,20 @@ games.verma7.com {
         
         # Serve static frontend files for everything else
         handle {
+            forward_auth localhost:3001 {
+                uri /auth/check
+            }
             root * /home/abhishekverma/reader/puzzle-game/dist
             try_files {path} /index.html
             file_server
         }
+    }
+    
+    # Handle auth errors (redirect to login page)
+    handle_errors {
+        @401 {
+            expression {http.error.status_code} == 401
+        }
+        redir @401 /
     }
 }

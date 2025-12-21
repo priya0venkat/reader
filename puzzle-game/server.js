@@ -135,6 +135,15 @@ app.get('/auth/me', (req, res) => {
     }
 })
 
+// Check Auth Status (for internal/proxy use)
+app.get('/auth/check', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.sendStatus(200)
+    } else {
+        res.sendStatus(401)
+    }
+})
+
 // Logout
 app.get('/auth/logout', (req, res, next) => {
     req.logout((err) => {
