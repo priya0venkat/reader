@@ -4,11 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Denied</title>
+    <title>Access Denied - Verma Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -16,59 +21,126 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            text-align: center;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1s ease-out;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         h1 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
             margin-top: 0;
+            font-weight: 600;
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         p {
-            opacity: 0.8;
-            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2.5rem;
             line-height: 1.6;
+            font-size: 1.1rem;
+            font-weight: 300;
         }
 
-        .icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            display: block;
+        .icon-container {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
         }
 
         .login-btn {
             background-color: white;
-            color: #333;
-            font-family: 'Segoe UI', sans-serif;
+            color: #1a1a1a;
+            font-family: 'Outfit', sans-serif;
             font-weight: 600;
             text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 30px;
+            padding: 14px 28px;
+            border-radius: 50px;
             font-size: 1.1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
             gap: 12px;
             border: none;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-            background-color: #f8f9fa;
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+            background-color: #ffffff;
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn svg {
+            transition: transform 0.3s ease;
+        }
+
+        .login-btn:hover svg {
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -76,9 +148,10 @@
 <body>
 
     <div class="card">
-        <span class="icon">🔒</span>
+        <div class="icon-container">🔒</div>
         <h1>Access Denied</h1>
-        <p>You need to be logged in to play this game. Please sign in with your Google account to continue.</p>
+        <p>This area is restricted. Please sign in with your Google account to verify your identity and continue
+            playing.</p>
 
         <a href="/auth/google" class="login-btn">
             <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
