@@ -25,14 +25,27 @@ function App() {
     startNewLevel();
   }, []);
 
+  const speak = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.1;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  };
+
   const startNewLevel = () => {
-    const newTarget = Math.floor(Math.random() * 10) + 1; // Start with 1-10 for simplicity, can scale to 20
+    const newTarget = Math.floor(Math.random() * 10) + 1;
     const randomTreat = TREATS[Math.floor(Math.random() * TREATS.length)];
     setTargetNumber(newTarget);
     setCurrentTreat(randomTreat);
     setItemsOnPlate([]);
     setCurrentCount(0);
     setShowSuccess(false);
+
+    // Announce level
+    setTimeout(() => {
+      speak(`Let's count to ${newTarget}!`);
+    }, 500);
   };
 
   const addItemToPlate = () => {
@@ -43,12 +56,15 @@ function App() {
         y: Math.random() * 200 - 100,
       };
       setItemsOnPlate([...itemsOnPlate, newItem]);
-      setCurrentCount(prev => {
-        const newCount = prev + 1;
-        checkWin(newCount);
-        return newCount;
-      });
+      setItemsOnPlate([...itemsOnPlate, newItem]);
+
+      const newCount = currentCount + 1;
+      setCurrentCount(newCount);
+
       playPopSound();
+      speak(newCount.toString());
+
+      checkWin(newCount);
     }
   };
 
@@ -61,7 +77,8 @@ function App() {
         origin: { y: 0.6 }
       });
       playSuccessSound();
-      setTimeout(startNewLevel, 3000);
+      speak("Great job!");
+      setTimeout(startNewLevel, 4000);
     }
   };
 
