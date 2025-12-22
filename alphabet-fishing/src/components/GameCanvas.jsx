@@ -4,13 +4,7 @@ import ScoreBoard from './ScoreBoard';
 import confetti from 'canvas-confetti';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-const PHONETICS = {
-    A: 'aah', B: 'Buh', C: 'Kuh', D: 'Duh', E: 'Eh',
-    F: 'Fuh', G: 'Guh', H: 'Huh', I: 'ihh', J: 'Juh',
-    K: 'Kuh', L: 'Luh', M: 'Muh', N: 'Nuh', O: 'Aw',
-    P: 'Puh', Q: 'Kwuh', R: 'Ruh', S: 'Suh', T: 'Tuh',
-    U: 'Uh', V: 'Vuh', W: 'Wuh', X: 'Ks', Y: 'Yuh', Z: 'Zuh'
-};
+
 
 const GameCanvas = ({ onGoBack }) => {
     const [score, setScore] = useState(0);
@@ -96,7 +90,7 @@ const GameCanvas = ({ onGoBack }) => {
 
         const randomFish = currentFish[Math.floor(Math.random() * currentFish.length)];
         setTargetLetter(randomFish.char);
-        speak(`Fish me ${PHONETICS[randomFish.char]}`);
+        speak(`Fish me ${randomFish.char}`);
     }, [speak, addTimeout]);
 
     const startLevel = useCallback(() => {
@@ -194,7 +188,7 @@ const GameCanvas = ({ onGoBack }) => {
     };
 
     const handleReplay = () => {
-        speak(`Fish me ${PHONETICS[targetLetter]}`);
+        speak(`Fish me ${targetLetter}`);
     };
 
     return (
