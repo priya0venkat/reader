@@ -70,8 +70,9 @@ function App() {
     const newItems = Array.from({ length: newTarget }, (_, i) => ({
       id: Date.now() + i,
       // Spiral layout pre-calculation
-      x: 35 * Math.sqrt(i + 1) * Math.cos(i * 2.39996),
-      y: 35 * Math.sqrt(i + 1) * Math.sin(i * 2.39996),
+      // Increased spread 35->50 for larger plate and items
+      x: 50 * Math.sqrt(i + 1) * Math.cos(i * 2.39996),
+      y: 50 * Math.sqrt(i + 1) * Math.sin(i * 2.39996),
     }));
     setItemsOnPlate(newItems);
 
@@ -177,7 +178,7 @@ function App() {
                   className="plate-item"
                   onClick={() => handleItemClick(item.id)}
                   style={{
-                    fontSize: '3rem',
+                    fontSize: '5rem',
                     position: 'absolute',
                     // Use pre-calculated positions or calculate on fly? 
                     // Using stored x/y is better for stability if we were re-ordering, 

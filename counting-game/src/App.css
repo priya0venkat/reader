@@ -86,9 +86,10 @@ main {
 }
 
 .plate {
-  width: 400px;
-  height: 400px;
-  background: var(--plate);
+  width: 600px;
+  height: 600px;
+  background: #f0f8ff;
+  /* AliceBlue for a nice clean look, distinct from ECF0F1 */
   border-radius: 50%;
   position: relative;
   box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.1), 0 20px 40px rgba(0, 0, 0, 0.3);
