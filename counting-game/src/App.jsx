@@ -21,16 +21,31 @@ function App() {
   const [itemsOnPlate, setItemsOnPlate] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  const [hasStarted, setHasStarted] = useState(false);
+
   useEffect(() => {
-    startNewLevel();
+    // Wait for user interaction to start
   }, []);
 
   const speak = (text) => {
+    // Simple robust speech function
     const utterance = new SpeechSynthesisUtterance(text);
+    // Try to select an English voice
+    const voices = window.speechSynthesis.getVoices();
+    const enVoice = voices.find(v => v.lang.startsWith('en'));
+    if (enVoice) utterance.voice = enVoice;
+
     utterance.rate = 1.0;
     utterance.pitch = 1.1;
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
+  };
+
+  const startGame = () => {
+    setHasStarted(true);
+    // Ensure audio context is unlocked by playing a silent sound or just starting speech
+    speak("Let's play!");
+    startNewLevel();
   };
 
   const startNewLevel = () => {
@@ -108,6 +123,26 @@ function App() {
           />
         </div>
       </header>
+
+      {!hasStarted && (
+        <div className="start-overlay" style={{
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.85)', zIndex: 1000,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <h1 style={{ fontSize: '4rem', marginBottom: '2rem' }}>Counting Game</h1>
+          <button
+            onClick={startGame}
+            style={{
+              fontSize: '3rem', padding: '1rem 3rem', borderRadius: '50px',
+              border: 'none', background: 'var(--secondary)', color: 'white',
+              cursor: 'pointer', boxShadow: '0 10px 20px rgba(0,0,0,0.3)'
+            }}
+          >
+            Start Playing ▶️
+          </button>
+        </div>
+      )}
 
       <main>
         <div className="pantry">
