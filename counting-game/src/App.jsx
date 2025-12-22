@@ -203,7 +203,7 @@ function App() {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
-          <h2 style={{ fontSize: '4rem' }}>Great Job! 🎉</h2>
+          <h2 style={{ fontSize: '2.5rem', margin: 0 }}>Great Job! 🎉</h2>
         </motion.div>
       )}
     </div>
