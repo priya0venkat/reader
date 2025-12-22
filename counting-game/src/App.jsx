@@ -34,7 +34,7 @@ function App() {
   };
 
   const startNewLevel = () => {
-    const newTarget = Math.floor(Math.random() * 10) + 1;
+    const newTarget = Math.floor(Math.random() * 20) + 1;
     const randomTreat = TREATS[Math.floor(Math.random() * TREATS.length)];
     setTargetNumber(newTarget);
     setCurrentTreat(randomTreat);
@@ -55,7 +55,6 @@ function App() {
         x: Math.random() * 200 - 100, // Random position offset
         y: Math.random() * 200 - 100,
       };
-      setItemsOnPlate([...itemsOnPlate, newItem]);
       setItemsOnPlate([...itemsOnPlate, newItem]);
 
       const newCount = currentCount + 1;
@@ -133,10 +132,9 @@ function App() {
                   style={{
                     fontSize: '3rem',
                     position: 'absolute',
-                    // Distribute in a spiral or grid if possible, or random
-                    // For now, let's just use flex wrapping or absolute randoms
-                    left: `calc(50% + ${Math.cos(index) * (index * 15)}px)`,
-                    top: `calc(50% + ${Math.sin(index) * (index * 15)}px)`,
+                    // Phyllotaxis spiral for better packing
+                    left: `calc(50% + ${35 * Math.sqrt(index + 1) * Math.cos(index * 2.39996)}px)`,
+                    top: `calc(50% + ${35 * Math.sqrt(index + 1) * Math.sin(index * 2.39996)}px)`,
                     transform: 'translate(-50%, -50%)'
                   }}
                 >
