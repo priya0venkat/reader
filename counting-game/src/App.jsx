@@ -23,19 +23,11 @@ function App() {
 
   const [hasStarted, setHasStarted] = useState(false);
   const [voice, setVoice] = useState(null);
-  const [debugInfo, setDebugInfo] = useState({ supported: false, voices: 0, loaded: false });
 
   useEffect(() => {
     const loadVoices = () => {
-      if (!window.speechSynthesis) {
-        setDebugInfo(prev => ({ ...prev, supported: false }));
-        return;
-      }
-
-      const voices = window.speechSynthesis.getVoices();
       const enVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
       setVoice(enVoice);
-      setDebugInfo({ supported: true, voices: voices.length, loaded: true, selected: enVoice ? enVoice.name : 'None' });
     };
 
     loadVoices();
@@ -160,19 +152,6 @@ function App() {
           >
             Start Playing ▶️
           </button>
-
-          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '10px', textAlign: 'left' }}>
-            <h3>Audio Debug (v1.2)</h3>
-            <p>Supported: {debugInfo.supported ? 'Yes ✅' : 'No ❌'}</p>
-            <p>Voices Found: {debugInfo.voices}</p>
-            <p>Selected Voice: {debugInfo.selected || 'Loading...'}</p>
-            <button
-              onClick={() => speak("Testing 1, 2, 3")}
-              style={{ padding: '0.5rem 1rem', marginTop: '1rem', cursor: 'pointer' }}
-            >
-              Test Sound 🔊
-            </button>
-          </div>
         </div>
       )}
 
