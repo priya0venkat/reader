@@ -204,6 +204,7 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
             resumable: false,
             metadata: {
                 contentType: req.file.mimetype,
+                cacheControl: 'public, max-age=31536000', // Cache for 1 year
             },
         })
 
