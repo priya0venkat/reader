@@ -63,52 +63,56 @@ function App() {
     const randomTreat = TREATS[Math.floor(Math.random() * TREATS.length)];
     setTargetNumber(newTarget);
     setCurrentTreat(randomTreat);
-    setItemsOnPlate([]);
     setCurrentCount(0);
     setShowSuccess(false);
 
+    // Pre-fill the plate with N items
+    const newItems = Array.from({ length: newTarget }, (_, i) => ({
+      id: Date.now() + i,
+      // Spiral layout pre-calculation
+      x: 35 * Math.sqrt(i + 1) * Math.cos(i * 2.39996),
+      y: 35 * Math.sqrt(i + 1) * Math.sin(i * 2.39996),
+    }));
+    setItemsOnPlate(newItems);
+
     // Announce level
     setTimeout(() => {
-      speak(`Let's count to ${newTarget}!`);
+      speak(`Count the ${randomTreat.name}s!`);
     }, 500);
   };
 
-  const addItemToPlate = () => {
-    if (currentCount < targetNumber) {
-      const newItem = {
-        id: Date.now(),
-        x: Math.random() * 200 - 100, // Random position offset
-        y: Math.random() * 200 - 100,
-      };
-      setItemsOnPlate([...itemsOnPlate, newItem]);
+  const handleItemClick = (id) => {
+    if (showSuccess) return;
 
-      const newCount = currentCount + 1;
-      setCurrentCount(newCount);
+    const newCount = currentCount + 1;
+    setCurrentCount(newCount);
 
-      playPopSound();
-      speak(newCount.toString());
+    // Remove the clicked item
+    setItemsOnPlate(prevItems => prevItems.filter(item => item.id !== id));
 
-      checkWin(newCount);
+    playPopSound();
+    speak(newCount.toString());
+
+    // Check win condition (all items removed)
+    if (newCount === targetNumber) {
+      handleWin();
     }
   };
 
-  const checkWin = (count) => {
-    if (count === targetNumber) {
-      setShowSuccess(true);
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
-      playSuccessSound();
+  const handleWin = () => {
+    setShowSuccess(true);
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+    playSuccessSound();
 
-      // Delay success speech so the last number isn't cut off
-      setTimeout(() => {
-        speak("Great job!");
-      }, 1000);
+    setTimeout(() => {
+      speak("Great job!");
+    }, 1000);
 
-      setTimeout(startNewLevel, 4000);
-    }
+    setTimeout(startNewLevel, 4000);
   };
 
   const playPopSound = () => {
@@ -125,7 +129,7 @@ function App() {
     <div className="game-container">
       <header>
         <a href="/" className="home-btn" style={{ position: 'absolute', top: '20px', left: '20px', textDecoration: 'none', fontSize: '2rem' }}>🏠</a>
-        <h1>Let's Count to {targetNumber}!</h1>
+        <h1>Count the {currentTreat.name}s!</h1>
         <div className="progress-bar">
           <div
             className="progress-fill"
@@ -157,19 +161,7 @@ function App() {
       )}
 
       <main>
-        <div className="pantry">
-          <h2>Pantry</h2>
-          <p>Click to add {currentTreat.name}s!</p>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="treat-button"
-            onClick={addItemToPlate}
-            disabled={showSuccess}
-          >
-            {currentTreat.emoji}
-          </motion.button>
-        </div>
+        {/* Pantry removed */}
 
         <div className="plate-area">
           <div className={`plate ${showSuccess ? 'success' : ''}`}>
@@ -180,13 +172,18 @@ function App() {
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0, opacity: 0 }}
+                  whileHover={{ scale: 1.2, cursor: 'pointer' }}
+                  whileTap={{ scale: 0.9 }}
                   className="plate-item"
+                  onClick={() => handleItemClick(item.id)}
                   style={{
                     fontSize: '3rem',
                     position: 'absolute',
-                    // Phyllotaxis spiral for better packing
-                    left: `calc(50% + ${35 * Math.sqrt(index + 1) * Math.cos(index * 2.39996)}px)`,
-                    top: `calc(50% + ${35 * Math.sqrt(index + 1) * Math.sin(index * 2.39996)}px)`,
+                    // Use pre-calculated positions or calculate on fly? 
+                    // Using stored x/y is better for stability if we were re-ordering, 
+                    // but here we just remove. Let's use item properties.
+                    left: `calc(50% + ${item.x}px)`,
+                    top: `calc(50% + ${item.y}px)`,
                     transform: 'translate(-50%, -50%)'
                   }}
                 >
@@ -194,7 +191,7 @@ function App() {
                 </motion.div>
               ))}
             </AnimatePresence>
-            <div className="count-display">{currentCount}</div>
+            <div className="count-display">{currentCount > 0 ? currentCount : ''}</div>
           </div>
         </div>
       </main>
