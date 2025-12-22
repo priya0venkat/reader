@@ -23,12 +23,19 @@ function App() {
 
   const [hasStarted, setHasStarted] = useState(false);
   const [voice, setVoice] = useState(null);
+  const [debugInfo, setDebugInfo] = useState({ supported: false, voices: 0, loaded: false });
 
   useEffect(() => {
     const loadVoices = () => {
+      if (!window.speechSynthesis) {
+        setDebugInfo(prev => ({ ...prev, supported: false }));
+        return;
+      }
+
       const voices = window.speechSynthesis.getVoices();
       const enVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
       setVoice(enVoice);
+      setDebugInfo({ supported: true, voices: voices.length, loaded: true, selected: enVoice ? enVoice.name : 'None' });
     };
 
     loadVoices();
@@ -36,19 +43,24 @@ function App() {
   }, []);
 
   const speak = (text) => {
-    // Simple robust speech function
+    if (!window.speechSynthesis) return;
+
+    // Cancel any previous speech to avoid queue buildup
+    window.speechSynthesis.cancel();
+
     const utterance = new SpeechSynthesisUtterance(text);
     if (voice) utterance.voice = voice;
 
     utterance.rate = 1.0;
     utterance.pitch = 1.1;
-    window.speechSynthesis.cancel();
+
+    utterance.onerror = (e) => console.error("Speech Error:", e);
+
     window.speechSynthesis.speak(utterance);
   };
 
   const startGame = () => {
     setHasStarted(true);
-    // Ensure audio context is unlocked by playing a silent sound or just starting speech
     speak("Let's go!");
     startNewLevel();
   };
@@ -133,7 +145,8 @@ function App() {
         <div className="start-overlay" style={{
           position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
           background: 'rgba(0,0,0,0.85)', zIndex: 1000,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          color: 'white'
         }}>
           <h1 style={{ fontSize: '4rem', marginBottom: '2rem' }}>Counting Game</h1>
           <button
@@ -141,11 +154,25 @@ function App() {
             style={{
               fontSize: '3rem', padding: '1rem 3rem', borderRadius: '50px',
               border: 'none', background: 'var(--secondary)', color: 'white',
-              cursor: 'pointer', boxShadow: '0 10px 20px rgba(0,0,0,0.3)'
+              cursor: 'pointer', boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+              marginBottom: '2rem'
             }}
           >
             Start Playing ▶️
           </button>
+
+          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '10px', textAlign: 'left' }}>
+            <h3>Audio Debug (v1.2)</h3>
+            <p>Supported: {debugInfo.supported ? 'Yes ✅' : 'No ❌'}</p>
+            <p>Voices Found: {debugInfo.voices}</p>
+            <p>Selected Voice: {debugInfo.selected || 'Loading...'}</p>
+            <button
+              onClick={() => speak("Testing 1, 2, 3")}
+              style={{ padding: '0.5rem 1rem', marginTop: '1rem', cursor: 'pointer' }}
+            >
+              Test Sound 🔊
+            </button>
+          </div>
         </div>
       )}
 
