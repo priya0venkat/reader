@@ -119,7 +119,7 @@ const GameCanvas = ({ onGoBack }) => {
 
             while (!valid && attempts < 50) {
                 x = Math.random() * 80 + 10;
-                y = Math.random() * 60 + 20;
+                y = Math.random() * 55 + 25; // Start lower (25%) to clear header
                 if (isSafePosition(x, y, newFish)) {
                     valid = true;
                 }
@@ -195,11 +195,11 @@ const GameCanvas = ({ onGoBack }) => {
         <div style={{ width: '100%', height: '100%', position: 'relative' }}>
             <ScoreBoard score={score} totalAttempts={attempts} />
 
-            {/* Target Letter Display */}
+            {/* Target Letter Display - Moved down to avoid overlap with score/controls */}
             {targetLetter && (
                 <div style={{
                     position: 'absolute',
-                    top: '20px',
+                    top: '90px',
                     left: '50%',
                     transform: 'translateX(-50%)',
                     background: 'rgba(255, 255, 255, 0.9)',
