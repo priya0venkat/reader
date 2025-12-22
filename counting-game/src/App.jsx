@@ -26,6 +26,7 @@ function App() {
 
   useEffect(() => {
     const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
       const enVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
       setVoice(enVoice);
     };
