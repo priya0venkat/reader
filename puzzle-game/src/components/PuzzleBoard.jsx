@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { motion } from 'framer-motion'
 import PuzzlePiece from './PuzzlePiece'
 import { playSnap, playWin } from '../utils/sound'
 import clsx from 'clsx'
@@ -136,46 +137,53 @@ export default function PuzzleBoard({ image, difficulty, showBackground, onWin }
 
     return (
         <div ref={containerRef} className="w-full h-full relative overflow-hidden backdrop-blur-sm bg-black/10">
-            {/* Guide / Shadow Board */}
-            <div
-                className="absolute border-2 border-white/20 bg-white/5 rounded-lg"
-                style={{
-                    width: boardDimensions.width,
-                    height: boardDimensions.height,
-                    top: boardDimensions.top,
-                    left: boardDimensions.left,
-                }}
+            <motion.div
+                drag
+                dragMomentum={true}
+                className="w-full h-full cursor-grab active:cursor-grabbing transform-gpu"
+                style={{ transformStyle: 'preserve-3d' }}
             >
-                {/* Faint hint image */}
-                {showBackground && (
-                    <div
-                        className="w-full h-full opacity-20 bg-contain bg-no-repeat"
-                        style={{ backgroundImage: `url(${image})`, backgroundSize: `${boardDimensions.width}px ${boardDimensions.height}px` }}
+                {/* Guide / Shadow Board */}
+                <div
+                    className="absolute border-2 border-white/20 bg-white/5 rounded-lg"
+                    style={{
+                        width: boardDimensions.width,
+                        height: boardDimensions.height,
+                        top: boardDimensions.top,
+                        left: boardDimensions.left,
+                    }}
+                >
+                    {/* Faint hint image */}
+                    {showBackground && (
+                        <div
+                            className="w-full h-full opacity-20 bg-contain bg-no-repeat"
+                            style={{ backgroundImage: `url(${image})`, backgroundSize: `${boardDimensions.width}px ${boardDimensions.height}px` }}
+                        />
+                    )}
+                </div>
+
+                {/* Pieces */}
+                {pieces.map((piece) => (
+                    <PuzzlePiece
+                        key={piece.id}
+                        id={piece.id}
+                        image={image}
+                        width={piece.width}
+                        height={piece.height}
+                        x={piece.targetX - boardDimensions.left}
+                        y={piece.targetY - boardDimensions.top}
+                        boardWidth={boardDimensions.width}
+                        boardHeight={boardDimensions.height}
+
+                        currentX={piece.currentX}
+                        currentY={piece.currentY}
+
+                        onDragEnd={handleDragEnd}
+                        isLocked={piece.isLocked}
+                        shape={piece.shape}
                     />
-                )}
-            </div>
-
-            {/* Pieces */}
-            {pieces.map((piece) => (
-                <PuzzlePiece
-                    key={piece.id}
-                    id={piece.id}
-                    image={image}
-                    width={piece.width}
-                    height={piece.height}
-                    x={piece.targetX - boardDimensions.left}
-                    y={piece.targetY - boardDimensions.top}
-                    boardWidth={boardDimensions.width}
-                    boardHeight={boardDimensions.height}
-
-                    currentX={piece.currentX}
-                    currentY={piece.currentY}
-
-                    onDragEnd={handleDragEnd}
-                    isLocked={piece.isLocked}
-                    shape={piece.shape}
-                />
-            ))}
+                ))}
+            </motion.div>
         </div>
     )
 }
