@@ -76,7 +76,12 @@ function App() {
         origin: { y: 0.6 }
       });
       playSuccessSound();
-      speak("Great job!");
+
+      // Delay success speech so the last number isn't cut off
+      setTimeout(() => {
+        speak("Great job!");
+      }, 1000);
+
       setTimeout(startNewLevel, 4000);
     }
   };
