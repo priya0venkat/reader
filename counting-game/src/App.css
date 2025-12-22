@@ -86,8 +86,10 @@ main {
 }
 
 .plate {
-  width: 600px;
-  height: 600px;
+  width: 90vw;
+  height: 90vw;
+  max-width: 450px;
+  max-height: 450px;
   background: #f0f8ff;
   /* AliceBlue for a nice clean look, distinct from ECF0F1 */
   border-radius: 50%;
