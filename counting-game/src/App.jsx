@@ -78,7 +78,7 @@ function App() {
 
     // Announce level
     setTimeout(() => {
-      speak(`Count the ${randomTreat.name}s!`);
+      speak(`Let's eat ${randomTreat.name}s!`);
     }, 500);
   };
 
@@ -96,11 +96,11 @@ function App() {
 
     // Check win condition (all items removed)
     if (newCount === targetNumber) {
-      handleWin();
+      handleWin(newCount);
     }
   };
 
-  const handleWin = () => {
+  const handleWin = (finalCount) => {
     setShowSuccess(true);
     confetti({
       particleCount: 100,
@@ -110,10 +110,10 @@ function App() {
     playSuccessSound();
 
     setTimeout(() => {
-      speak("Great job!");
+      speak(`You ate ${finalCount} ${currentTreat.name}s!`);
     }, 1000);
 
-    setTimeout(startNewLevel, 4000);
+    setTimeout(startNewLevel, 5000);
   };
 
   const playPopSound = () => {
@@ -130,7 +130,7 @@ function App() {
     <div className="game-container">
       <header>
         <a href="/" className="home-btn" style={{ position: 'absolute', top: '20px', left: '20px', textDecoration: 'none', fontSize: '2rem' }}>🏠</a>
-        <h1>Count the {currentTreat.name}s!</h1>
+        <h1>Let's eat {currentTreat.name}s!</h1>
         <div className="progress-bar">
           <div
             className="progress-fill"
