@@ -87,6 +87,16 @@ games.verma7.com {
         file_server
     }
     
+    # Serve Counting game
+    handle_path /counting-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/counting-game/dist
+        try_files {path} /index.html
+        file_server
+    }
+    
     # Handle auth errors (redirect to login page)
     handle_errors {
         @401 {
