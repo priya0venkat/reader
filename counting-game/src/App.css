@@ -114,19 +114,24 @@ main {
 }
 
 .success-message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  background: rgba(0, 0, 0, 0.8);
-  padding: 2rem;
-  border-radius: 30px;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  /* Slightly more transparent as it covers screen */
+  z-index: 2000;
+  /* High z-index to stay on top */
   pointer-events: none;
-  backdrop-filter: blur(10px);
-  width: 90vw;
-  max-width: 500px;
-  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.success-message>h2 {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 2rem 4rem;
+  border-radius: 30px;
+  color: white;
+  max-width: 90vw;
   box-sizing: border-box;
-  /* "Great Job" or "You ate N items" can be long */
 }
