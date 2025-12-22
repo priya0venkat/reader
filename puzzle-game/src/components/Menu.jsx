@@ -10,6 +10,7 @@ const DEFAULT_IMAGES = [
 export default function Menu({ onStart }) {
     const [selectedImage, setSelectedImage] = useState(DEFAULT_IMAGES[0])
     const [difficulty, setDifficulty] = useState(3)
+    const [showBackground, setShowBackground] = useState(true)
     const [availableImages, setAvailableImages] = useState(DEFAULT_IMAGES)
     const [uploading, setUploading] = useState(false)
     const [uploadError, setUploadError] = useState(null)
@@ -158,12 +159,22 @@ export default function Menu({ onStart }) {
                             <span>Impossible</span>
                         </div>
                     </div>
+
+                    <div className="flex items-center justify-between bg-slate-800/50 p-4 rounded-xl border border-white/5">
+                        <label className="text-white font-medium">Show Background Hint</label>
+                        <button
+                            onClick={() => setShowBackground(!showBackground)}
+                            className={`relative w-14 h-8 rounded-full transition-colors duration-300 ${showBackground ? 'bg-pink-500' : 'bg-slate-600'}`}
+                        >
+                            <div className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform duration-300 ${showBackground ? 'translate-x-6' : 'translate-x-0'}`} />
+                        </button>
+                    </div>
                 </div>
 
                 <button
                     onClick={() => {
                         initAudio()
-                        onStart(selectedImage, difficulty)
+                        onStart(selectedImage, difficulty, showBackground)
                     }}
                     className="mt-4 w-full py-5 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 rounded-2xl font-black text-2xl text-white shadow-[0_10px_40px_-10px_rgba(139,92,246,0.6)] transform hover:-translate-y-1 transition-all duration-300 active:scale-95 flex items-center justify-center gap-3 uppercase tracking-widest"
                 >

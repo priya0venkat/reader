@@ -7,10 +7,12 @@ function App() {
   const [gameState, setGameState] = useState('menu') // menu, playing, won
   const [image, setImage] = useState(null)
   const [difficulty, setDifficulty] = useState(3) // 3x3 default
+  const [showBackground, setShowBackground] = useState(true)
 
-  const startGame = (selectedImage, selectedDifficulty) => {
+  const startGame = (selectedImage, selectedDifficulty, selectedShowBackground) => {
     setImage(selectedImage)
     setDifficulty(selectedDifficulty)
+    setShowBackground(selectedShowBackground)
     setGameState('playing')
   }
 
@@ -30,6 +32,7 @@ function App() {
         <PuzzleBoard
           image={image}
           difficulty={difficulty}
+          showBackground={showBackground}
           onWin={handleWin}
         />
       )}

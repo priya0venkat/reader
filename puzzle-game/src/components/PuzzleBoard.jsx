@@ -3,7 +3,7 @@ import PuzzlePiece from './PuzzlePiece'
 import { playSnap, playWin } from '../utils/sound'
 import clsx from 'clsx'
 
-export default function PuzzleBoard({ image, difficulty, onWin }) {
+export default function PuzzleBoard({ image, difficulty, showBackground, onWin }) {
     const [pieces, setPieces] = useState([])
     const [boardDimensions, setBoardDimensions] = useState({ width: 0, height: 0, top: 0, left: 0 })
     const [loaded, setLoaded] = useState(false)
@@ -147,10 +147,12 @@ export default function PuzzleBoard({ image, difficulty, onWin }) {
                 }}
             >
                 {/* Faint hint image */}
-                <div
-                    className="w-full h-full opacity-20 bg-contain bg-no-repeat"
-                    style={{ backgroundImage: `url(${image})`, backgroundSize: `${boardDimensions.width}px ${boardDimensions.height}px` }}
-                />
+                {showBackground && (
+                    <div
+                        className="w-full h-full opacity-20 bg-contain bg-no-repeat"
+                        style={{ backgroundImage: `url(${image})`, backgroundSize: `${boardDimensions.width}px ${boardDimensions.height}px` }}
+                    />
+                )}
             </div>
 
             {/* Pieces */}
