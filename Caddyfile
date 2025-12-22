@@ -96,6 +96,16 @@ games.verma7.com {
         try_files {path} /index.html
         file_server
     }
+
+    # Serve Alphabet Fishing game
+    handle_path /alphabet-fishing/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/alphabet-fishing/dist
+        try_files {path} /index.html
+        file_server
+    }
     
     # Handle auth errors (redirect to login page)
     handle_errors {
