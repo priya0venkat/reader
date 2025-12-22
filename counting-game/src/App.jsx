@@ -22,18 +22,23 @@ function App() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const [hasStarted, setHasStarted] = useState(false);
+  const [voice, setVoice] = useState(null);
 
   useEffect(() => {
-    // Wait for user interaction to start
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      const enVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+      setVoice(enVoice);
+    };
+
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
   }, []);
 
   const speak = (text) => {
     // Simple robust speech function
     const utterance = new SpeechSynthesisUtterance(text);
-    // Try to select an English voice
-    const voices = window.speechSynthesis.getVoices();
-    const enVoice = voices.find(v => v.lang.startsWith('en'));
-    if (enVoice) utterance.voice = enVoice;
+    if (voice) utterance.voice = voice;
 
     utterance.rate = 1.0;
     utterance.pitch = 1.1;
@@ -44,7 +49,7 @@ function App() {
   const startGame = () => {
     setHasStarted(true);
     // Ensure audio context is unlocked by playing a silent sound or just starting speech
-    speak("Let's play!");
+    speak("Let's go!");
     startNewLevel();
   };
 
