@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import USMap from './components/USMap';
 import GameHeader from './components/GameHeader';
@@ -15,6 +15,7 @@ function App() {
   const [attempts, setAttempts] = useState(0);
   const [shuffledStates, setShuffledStates] = useState([]);
   const [gameComplete, setGameComplete] = useState(false);
+  const processingRef = useRef(false);
 
   // Use states in area order (largest to smallest)
   useEffect(() => {
@@ -54,10 +55,14 @@ function App() {
     setAttempts(0);
     setGameComplete(false);
     setShuffledStates([]);
+    processingRef.current = false;
   };
 
   const handleStateClick = (clickedState) => {
     if (!gameStarted || gameComplete) return;
+
+    // Prevent double clicks while transitioning
+    if (processingRef.current) return;
 
     const targetState = shuffledStates[currentStateIndex];
     setAttempts(prev => prev + 1);
@@ -68,6 +73,9 @@ function App() {
       setCorrectStates(prev => [...prev, clickedState]);
       setScore(prev => prev + 1);
       setIncorrectState(null);
+
+      // Lock interactions
+      processingRef.current = true;
 
       // Move to next state after a delay
       setTimeout(() => {
@@ -83,6 +91,8 @@ function App() {
             origin: { y: 0.6 }
           });
         }
+        // Unlock interactions
+        processingRef.current = false;
       }, 1500);
     } else {
       // Wrong answer
