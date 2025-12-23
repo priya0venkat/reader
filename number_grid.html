@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Grid 1-16</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f4f8;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+            aspect-ratio: 1;
+        }
+
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            user-select: none;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .grid-item:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* 16 Different Colorful Backgrounds */
+        .item-1 {
+            background-color: #FF6B6B;
+        }
+
+        .item-2 {
+            background-color: #4ECDC4;
+        }
+
+        .item-3 {
+            background-color: #45B7D1;
+        }
+
+        .item-4 {
+            background-color: #FFA07A;
+        }
+
+        .item-5 {
+            background-color: #98D8C8;
+        }
+
+        .item-6 {
+            background-color: #F7B731;
+        }
+
+        .item-7 {
+            background-color: #FF9FF3;
+        }
+
+        .item-8 {
+            background-color: #54A0FF;
+        }
+
+        .item-9 {
+            background-color: #5F27CD;
+        }
+
+        .item-10 {
+            background-color: #FF5252;
+        }
+
+        .item-11 {
+            background-color: #341F97;
+        }
+
+        /* Made text white, background dark */
+        .item-12 {
+            background-color: #0ABDE3;
+        }
+
+        .item-13 {
+            background-color: #10AC84;
+        }
+
+        .item-14 {
+            background-color: #EE5253;
+        }
+
+        .item-15 {
+            background-color: #2E86DE;
+        }
+
+        .item-16 {
+            background-color: #FF9F43;
+        }
+
+        @media (max-width: 400px) {
+            .grid-item {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="grid-container">
+        <div class="grid-item item-1">1</div>
+        <div class="grid-item item-2">2</div>
+        <div class="grid-item item-3">3</div>
+        <div class="grid-item item-4">4</div>
+        <div class="grid-item item-5">5</div>
+        <div class="grid-item item-6">6</div>
+        <div class="grid-item item-7">7</div>
+        <div class="grid-item item-8">8</div>
+        <div class="grid-item item-9">9</div>
+        <div class="grid-item item-10">10</div>
+        <div class="grid-item item-11">11</div>
+        <div class="grid-item item-12">12</div>
+        <div class="grid-item item-13">13</div>
+        <div class="grid-item item-14">14</div>
+        <div class="grid-item item-15">15</div>
+        <div class="grid-item item-16">16</div>
+    </div>
+
+</body>
+
+</html>
