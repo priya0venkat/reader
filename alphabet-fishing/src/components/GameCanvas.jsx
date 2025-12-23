@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import LetterFish from './LetterFish';
 import ScoreBoard from './ScoreBoard';
 import confetti from 'canvas-confetti';
+import { initPiper, speakText, phonetizeSentence } from '../utils/audio';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -11,54 +12,24 @@ const GameCanvas = ({ onGoBack }) => {
     const [attempts, setAttempts] = useState(0);
     const [targetLetter, setTargetLetter] = useState('');
     const [fish, setFish] = useState([]);
+    const [audioStatus, setAudioStatus] = useState('Initializing Audio...');
+
+    // Initialize Piper WASM
+    useEffect(() => {
+        initPiper((status) => {
+            setAudioStatus(status);
+        }).catch(err => {
+            console.error("Audio init failed", err);
+            setAudioStatus("Audio Failed (Using Fallback)");
+        });
+    }, []);
 
     // Audio setup
     const speak = useCallback((text) => {
-        if (!window.speechSynthesis) return;
-
-        // Cancel previous speech
-        window.speechSynthesis.cancel();
-
-        const utterance = new SpeechSynthesisUtterance(text);
-
-        // Attempt to pick a clear English voice, but fallback gracefully
-        const voices = window.speechSynthesis.getVoices();
-        // Prefer Google US English, then any US English, then any English
-        const preferredVoice = voices.find(v => v.name.includes('Google US English')) ||
-            voices.find(v => v.lang === 'en-US') ||
-            voices.find(v => v.lang.startsWith('en'));
-
-        if (preferredVoice) {
-            utterance.voice = preferredVoice;
-        }
-
-        utterance.rate = 0.9;
-        utterance.pitch = 1.1;
-
-        // Chrome bug fix
-        window.currentUtterance = utterance;
-        utterance.onend = () => {
-            window.currentUtterance = null;
-        };
-        utterance.onerror = (e) => {
-            if (e.error === 'canceled' || e.error === 'interrupted') {
-                return;
-            }
-            console.error(`Speech Error: ${e.error}`);
-        };
-
-        // Force resume
-        if (window.speechSynthesis.paused) {
-            window.speechSynthesis.resume();
-        }
-
-        window.speechSynthesis.speak(utterance);
-    }, []);
-
-    // Ensure voices are loaded
-    useEffect(() => {
-        // Some browsers need a little nudge
-        window.speechSynthesis.getVoices();
+        // Convert any single letters to phonetic sounds before speaking
+        // e.g. "Fish me B" -> "Fish me Buh"
+        const phoneticText = phonetizeSentence(text);
+        speakText(phoneticText);
     }, []);
 
     // Use a ref to access the current fish state inside timeouts/callbacks if needed,
@@ -202,6 +173,19 @@ const GameCanvas = ({ onGoBack }) => {
     return (
         <div style={{ width: '100%', height: '100%', position: 'relative' }}>
             <ScoreBoard score={score} totalAttempts={attempts} />
+
+            {/* Audio Status Indicator */}
+            <div style={{
+                position: 'absolute',
+                top: '5px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                fontSize: '0.8rem',
+                color: '#666',
+                zIndex: 90
+            }}>
+                {audioStatus !== 'Ready' && audioStatus}
+            </div>
 
             {/* Target Letter Display - Moved down to avoid overlap with score/controls */}
             {targetLetter && (
