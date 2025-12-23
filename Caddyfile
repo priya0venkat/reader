@@ -106,6 +106,16 @@ games.verma7.com {
         try_files {path} /index.html
         file_server
     }
+
+    # Serve Flash Card game
+    handle_path /flash-card-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/flash-card-game/dist
+        try_files {path} /index.html
+        file_server
+    }
     
     # Handle auth errors (redirect to login page)
     handle_errors {
