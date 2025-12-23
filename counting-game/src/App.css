@@ -15,6 +15,67 @@ body {
   user-select: none;
 }
 
+
+.options-container {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  z-index: 10;
+}
+
+.option-button {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  color: var(--bg);
+  font-size: 3rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.option-button:hover {
+  background: var(--secondary);
+  color: white;
+}
+
+.option-button.shake {
+  background: #FF6B6B;
+  /* Primary color for error */
+  color: white;
+  animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
 .game-container {
   height: 100vh;
   display: flex;
@@ -34,51 +95,15 @@ h1 {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.progress-bar {
-  width: 300px;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  overflow: hidden;
-  margin: 0 auto;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--secondary);
-  transition: width 0.3s ease;
-}
-
 main {
   display: flex;
+  flex-direction: column;
+  /* Changed to column to stack plate and options */
   justify-content: center;
   align-items: center;
-  gap: 4rem;
+  gap: 2rem;
   flex: 1;
   width: 100%;
-  max-width: 1200px;
-}
-
-.pantry {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 2rem;
-  border-radius: 20px;
-  text-align: center;
-  min-width: 250px;
-}
-
-.treat-button {
-  font-size: 8rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-  outline: none;
-  transition: filter 0.2s;
-}
-
-.treat-button:hover {
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
 }
 
 .plate-area {
@@ -86,12 +111,12 @@ main {
 }
 
 .plate {
-  width: 90vw;
-  height: 90vw;
-  max-width: 450px;
-  max-height: 450px;
+  width: 80vw;
+  /* Slightly smaller to fit options */
+  height: 80vw;
+  max-width: 400px;
+  max-height: 400px;
   background: #f0f8ff;
-  /* AliceBlue for a nice clean look, distinct from ECF0F1 */
   border-radius: 50%;
   position: relative;
   box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.1), 0 20px 40px rgba(0, 0, 0, 0.3);
@@ -106,13 +131,6 @@ main {
   box-shadow: 0 0 50px var(--secondary);
 }
 
-.count-display {
-  position: absolute;
-  bottom: -60px;
-  font-size: 4rem;
-  font-weight: bold;
-}
-
 .success-message {
   position: fixed;
   inset: 0;
@@ -120,9 +138,7 @@ main {
   justify-content: center;
   align-items: center;
   background: rgba(0, 0, 0, 0.6);
-  /* Slightly more transparent as it covers screen */
   z-index: 2000;
-  /* High z-index to stay on top */
   pointer-events: none;
   backdrop-filter: blur(5px);
 }

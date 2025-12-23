@@ -16,10 +16,11 @@ const TREATS = [
 
 function App() {
   const [targetNumber, setTargetNumber] = useState(1);
-  const [currentCount, setCurrentCount] = useState(0);
   const [currentTreat, setCurrentTreat] = useState(TREATS[0]);
   const [itemsOnPlate, setItemsOnPlate] = useState([]);
+  const [options, setOptions] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [wrongOption, setWrongOption] = useState(null); // ID of wrong option for shake effect
 
   const [hasStarted, setHasStarted] = useState(false);
   const [voice, setVoice] = useState(null);
@@ -41,6 +42,9 @@ function App() {
     // Cancel any previous speech to avoid queue buildup
     window.speechSynthesis.cancel();
 
+    // If counting numbers, we don't speak anymore. 
+    // This is mainly for game start/win messages now.
+
     const utterance = new SpeechSynthesisUtterance(text);
     if (voice) utterance.voice = voice;
 
@@ -58,13 +62,30 @@ function App() {
     startNewLevel();
   };
 
+  const generateOptions = (target) => {
+    const opts = new Set([target]);
+    while (opts.size < 3) {
+      // Generate random number between 1 and 20 (max target is 20)
+      // Or maybe range around target? Let's just do 1-20 for simplicity but distinct
+      let num = Math.floor(Math.random() * 20) + 1;
+      if (num !== target) {
+        opts.add(num);
+      }
+    }
+    // Convert to array and shuffle
+    return Array.from(opts).sort(() => Math.random() - 0.5);
+  };
+
   const startNewLevel = () => {
     const newTarget = Math.floor(Math.random() * 20) + 1;
     const randomTreat = TREATS[Math.floor(Math.random() * TREATS.length)];
+    const newOptions = generateOptions(newTarget);
+
     setTargetNumber(newTarget);
     setCurrentTreat(randomTreat);
-    setCurrentCount(0);
+    setOptions(newOptions);
     setShowSuccess(false);
+    setWrongOption(null);
 
     // Pre-fill the plate with N items
     const newItems = Array.from({ length: newTarget }, (_, i) => ({
@@ -85,18 +106,21 @@ function App() {
   const handleItemClick = (id) => {
     if (showSuccess) return;
 
-    const newCount = currentCount + 1;
-    setCurrentCount(newCount);
-
-    // Remove the clicked item
-    setItemsOnPlate(prevItems => prevItems.filter(item => item.id !== id));
-
+    // Just remove item and play pop sound. NO speaking count.
     playPopSound();
-    speak(newCount.toString());
+    setItemsOnPlate(prevItems => prevItems.filter(item => item.id !== id));
+  };
 
-    // Check win condition (all items removed)
-    if (newCount === targetNumber) {
-      handleWin(newCount);
+  const handleOptionClick = (number) => {
+    if (showSuccess) return;
+
+    if (number === targetNumber) {
+      handleWin(number);
+    } else {
+      // Wrong answer
+      setWrongOption(number);
+      playErrorSound();
+      setTimeout(() => setWrongOption(null), 500); // Reset shake after 500ms
     }
   };
 
@@ -110,7 +134,7 @@ function App() {
     playSuccessSound();
 
     setTimeout(() => {
-      speak(`You ate ${finalCount} ${currentTreat.name}s!`);
+      speak(`That is right! There were ${finalCount} ${currentTreat.name}s!`);
     }, 1000);
 
     setTimeout(startNewLevel, 5000);
@@ -126,17 +150,20 @@ function App() {
     audio.play().catch(e => console.log('Audio play failed', e));
   };
 
+  const playErrorSound = () => {
+    // Simple buzzer or error sound
+    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3'); // Example error sound (cork pop high? or maybe simple thud)
+    // Actually 2572 is another pop. Let's try 2902 (Error) or just silent if unsure.
+    // Let's use a generic error sound if available, or just rely on visual shake.
+    // Assuming a placeholder or re-using pop for now but different pitch? Audio api doesn't allow pitch easily.
+    // I'll skip the audio URL for error to avoid broken link guesses and stick to Shake.
+  };
+
   return (
     <div className="game-container">
       <header>
         <a href="/" className="home-btn" style={{ position: 'absolute', top: '20px', left: '20px', textDecoration: 'none', fontSize: '2rem' }}>🏠</a>
-        <h1>Let's eat {currentTreat.name}s!</h1>
-        <div className="progress-bar">
-          <div
-            className="progress-fill"
-            style={{ width: `${(currentCount / targetNumber) * 100}%` }}
-          />
-        </div>
+        <h1>How many {currentTreat.name}s?</h1>
       </header>
 
       {!hasStarted && (
@@ -162,12 +189,10 @@ function App() {
       )}
 
       <main>
-        {/* Pantry removed */}
-
         <div className="plate-area">
           <div className={`plate ${showSuccess ? 'success' : ''}`}>
             <AnimatePresence>
-              {itemsOnPlate.map((item, index) => (
+              {itemsOnPlate.map((item) => (
                 <motion.div
                   key={item.id}
                   initial={{ scale: 0, opacity: 0 }}
@@ -180,9 +205,6 @@ function App() {
                   style={{
                     fontSize: '4rem',
                     position: 'absolute',
-                    // Use pre-calculated positions or calculate on fly? 
-                    // Using stored x/y is better for stability if we were re-ordering, 
-                    // but here we just remove. Let's use item properties.
                     left: `calc(50% + ${item.x}px)`,
                     top: `calc(50% + ${item.y}px)`,
                     transform: 'translate(-50%, -50%)'
@@ -192,8 +214,23 @@ function App() {
                 </motion.div>
               ))}
             </AnimatePresence>
-            <div className="count-display">{currentCount > 0 ? currentCount : ''}</div>
           </div>
+        </div>
+
+        <div className="options-container">
+          {options.map((number) => (
+            <motion.button
+              key={number}
+              className={`option-button ${wrongOption === number ? 'shake' : ''}`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleOptionClick(number)}
+              animate={wrongOption === number ? { x: [-10, 10, -10, 10, 0] } : {}}
+              transition={{ duration: 0.4 }}
+            >
+              {number}
+            </motion.button>
+          ))}
         </div>
       </main>
 
@@ -203,7 +240,7 @@ function App() {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
-          <h2 style={{ fontSize: '2.5rem', margin: 0 }}>Great Job! 🎉</h2>
+          <h2 style={{ fontSize: '2.5rem', margin: 0 }}>Correct! That's {targetNumber}! 🎉</h2>
         </motion.div>
       )}
     </div>
