@@ -20,7 +20,9 @@ const GameCanvas = ({ onGoBack }) => {
             setAudioStatus(status);
         }).catch(err => {
             console.error("Audio init failed", err);
-            setAudioStatus("Audio Failed (Using Fallback)");
+            // Don't overwrite if we already have a detailed failure message?
+            // Actually, initPiper throws AFTER calling callback with "Failed: ..."
+            // So we should just let the callback handle the status update.
         });
     }, []);
 

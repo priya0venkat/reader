@@ -1,77 +1,101 @@
-import * as tts from '@mintplex-labs/piper-tts-web';
+import { TtsSession } from '@mintplex-labs/piper-tts-web';
 
 const PHONETIC_MAP = {
-    A: "Ah",
+    A: "Aa",    // "a" as in apple
     B: "Buh",
     C: "Kuh",
     D: "Duh",
-    E: "Eh",
+    E: "Eh",    // "e" as in egg
     F: "Fuh",
     G: "Guh",
     H: "Huh",
-    I: "Ih",
+    I: "Ih",    // "i" as in iguana
     J: "Juh",
     K: "Kuh",
     L: "Luh",
     M: "Muh",
     N: "Nuh",
-    O: "Aw",
+    O: "Aw",    // "o" as in octopus
     P: "Puh",
-    Q: "Qwuh",
-    R: "Rrruh",
-    S: "Sss",
+    Q: "Kwuh",
+    R: "Ruh",
+    S: "Suh",
     T: "Tuh",
-    U: "Uh",
-    V: "Vvv",
+    U: "Uh",    // "u" as in umbrella
+    V: "Vuh",
     W: "Wuh",
     X: "Ks",
     Y: "Yuh",
-    Z: "Zzz"
+    Z: "Zuh"
 };
 
-let piperInstance = null;
+let session = null;
 let isInitializing = false;
+let audioContext = null;
+
+const getAudioContext = () => {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioContext;
+};
 
 export const initPiper = async (callback) => {
-    if (piperInstance) return piperInstance;
-    if (isInitializing) return;
+    if (session) return "Ready";
+    if (isInitializing) return "Initializing...";
 
     isInitializing = true;
     try {
-        // Using a high quality US English female voice
-        // Model: en_US-amy-medium
-        // Hosted on Hugging Face or similar stable CDN for this library validation
-        const voiceUrl = 'https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/amy/medium/en_US-amy-medium.onnx?download=true';
-        const configUrl = 'https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/amy/medium/en_US-amy-medium.onnx.json?download=true';
+        if (callback) callback("Initializing Audio...");
 
-        piperInstance = new tts.Piper();
-
-        // callback for progress updates
-        if (callback) {
-            callback("Downloading voice model...");
-        }
-
-        await piperInstance.init({
-            url: voiceUrl,
-            config: configUrl,
-            onProgress: (percent) => {
-                if (callback) callback(`Loading: ${Math.round(percent)}%`);
+        // TtsSession handles model downloading and WASM initialization using defaults (CDN)
+        // Using 'low' quality for faster load and better stability testing
+        session = new TtsSession({
+            voiceId: 'en_US-amy-low',
+            progress: (percent) => {
+                const p = Math.round(percent);
+                // Handle NaN or Infinity if content-length is missing
+                const progressText = isNaN(p) || !isFinite(p) ? '...' : `${p}%`;
+                if (callback) callback(`Loading: ${progressText}`);
+            },
+            logger: (msg) => console.log("[Piper]", msg),
+            wasmPaths: {
+                // Ensure we point to the local public/onnx folder for the WASM files
+                onnxWasm: `${window.location.origin}${import.meta.env.BASE_URL}onnx/`,
+                piperData: `${window.location.origin}${import.meta.env.BASE_URL}piper/piper_phonemize.data`,
+                piperWasm: `${window.location.origin}${import.meta.env.BASE_URL}piper/piper_phonemize.wasm`,
             }
         });
 
+        // Initialize the session (downloads model and config)
+        await session.init();
+
         isInitializing = false;
         if (callback) callback("Ready");
-        return piperInstance;
+        return "Ready";
     } catch (err) {
         console.error("Failed to init Piper:", err);
         isInitializing = false;
-        if (callback) callback("Error loading voice");
+        session = null;
+        // Return only the error message to fit in the UI
+        const errMsg = err.message || "Unknown Error";
+        if (callback) callback(`Failed: ${errMsg.slice(0, 20)}...`);
         throw err;
     }
 };
 
 export const speakText = async (text) => {
-    if (!piperInstance) {
+    // Ensure AudioContext is initialized and resumed (must be triggered by interaction ideally first time)
+    const ctx = getAudioContext();
+    if (ctx.state === 'suspended') {
+        try {
+            await ctx.resume();
+        } catch (e) {
+            console.warn("Could not resume audio context", e);
+        }
+    }
+
+    if (!session) {
         console.warn("Piper not initialized, trying fallback");
         // Fallback to browser TTS if Piper isn't ready
         const utterance = new SpeechSynthesisUtterance(text);
@@ -80,9 +104,31 @@ export const speakText = async (text) => {
     }
 
     try {
-        await piperInstance.speak({ text });
+        if (typeof text !== 'string' || !text.trim()) {
+            console.warn("Invalid text to speak:", text);
+            return;
+        }
+
+        // Piper generates an audio blob
+        const blob = await session.predict(text);
+
+        // Convert Blob to ArrayBuffer
+        const arrayBuffer = await blob.arrayBuffer();
+
+        // Decode Audio Data
+        const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+
+        // Play AudioBuffer
+        const source = ctx.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(ctx.destination);
+        source.start(0);
+
     } catch (err) {
         console.error("Piper speak error:", err);
+        // Fallback on error
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
     }
 };
 

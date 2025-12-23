@@ -1,11 +1,9 @@
-import React from 'react';
+import { speakText } from '../utils/audio';
 
 const StartScreen = ({ onStart }) => {
     const handleStart = () => {
         // Warm up TTS
-        const utterance = new SpeechSynthesisUtterance("Welcome");
-        utterance.volume = 0.1;
-        window.speechSynthesis.speak(utterance);
+        speakText("Welcome");
         onStart();
     };
 
