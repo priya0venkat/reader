@@ -40,6 +40,20 @@ const getAudioContext = () => {
     return audioContext;
 };
 
+// Must be called from a user gesture (click/touch)
+export const unlockAudioContext = () => {
+    const ctx = getAudioContext();
+    if (ctx.state === 'suspended') {
+        ctx.resume();
+    }
+    // Play a silent short buffer to force the audio engine to unlock
+    const buffer = ctx.createBuffer(1, 1, 22050);
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(ctx.destination);
+    source.start(0);
+};
+
 export const initPiper = async (callback) => {
     if (session) return "Ready";
     if (isInitializing) return "Initializing...";

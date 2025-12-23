@@ -1,7 +1,10 @@
-import { speakText } from '../utils/audio';
+import { speakText, unlockAudioContext } from '../utils/audio';
 
 const StartScreen = ({ onStart }) => {
     const handleStart = () => {
+        // Unlock audio immediately on user gesture
+        unlockAudioContext();
+
         // Warm up TTS
         speakText("Welcome");
         onStart();
