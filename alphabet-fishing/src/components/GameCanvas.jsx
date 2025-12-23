@@ -109,8 +109,16 @@ const GameCanvas = ({ onGoBack }) => {
             return true;
         };
 
+        // Create a pool of available letters (copy of ALPHABET)
+        const availableChars = [...ALPHABET];
+
         for (let i = 0; i < count; i++) {
-            const char = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+            // Pick a random index from availableChars
+            const randomIndex = Math.floor(Math.random() * availableChars.length);
+            const char = availableChars[randomIndex];
+
+            // Remove the selected char from the pool to avoid duplicates
+            availableChars.splice(randomIndex, 1);
 
             // Try to find a safe position
             let x, y;
