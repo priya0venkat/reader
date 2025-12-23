@@ -5,16 +5,16 @@ export const bundles = [
         description: 'Guess the object! Click to reveal the word.',
         mechanic: 'image-reveal', // 'image-reveal' or 'flip'
         cards: [
-            { id: 'apple', front: '/assets/images/apple.png', back: 'Apple', phonetic: 'Ah Puh Puh Luh Eh, Apple' },
-            { id: 'ball', front: '/assets/images/ball.png', back: 'Ball', phonetic: 'Buh Ah Luh Luh, Ball' },
-            { id: 'cat', front: '/assets/images/cat.png', back: 'Cat', phonetic: 'Kuh Ah Tuh, Cat' },
-            { id: 'dog', front: '/assets/images/dog.png', back: 'Dog', phonetic: 'Duh Aw Guh, Dog' },
-            { id: 'car', front: '/assets/images/car.png', back: 'Car', phonetic: 'Kuh Ah Ruh, Car' },
-            { id: 'bus', front: '/assets/images/bus.png', back: 'Bus', phonetic: 'Buh Uh Suh, Bus' },
-            { id: 'flower', front: '/assets/images/flower.png', back: 'Flower', phonetic: 'Fuh Luh Ow Wuh Eh Ruh, Flower' },
-            { id: 'house', front: '/assets/images/house.png', back: 'House', phonetic: 'Huh Ow Uh Suh Eh, House' },
-            { id: 'hat', front: '/assets/images/hat.png', back: 'Hat', phonetic: 'Huh Ah Tuh, Hat' },
-            { id: 'shoe', front: '/assets/images/shoe.png', back: 'Shoe', phonetic: 'Suh Huh Oh Eh, Shoe' },
+            { id: 'apple', front: '🍎', back: 'Apple', phonetic: 'Ah Puh Puh Luh Eh, Apple' },
+            { id: 'ball', front: '⚽', back: 'Ball', phonetic: 'Buh Ah Luh Luh, Ball' },
+            { id: 'cat', front: '🐱', back: 'Cat', phonetic: 'Kuh Ah Tuh, Cat' },
+            { id: 'dog', front: '🐶', back: 'Dog', phonetic: 'Duh Aw Guh, Dog' },
+            { id: 'car', front: '🚗', back: 'Car', phonetic: 'Kuh Ah Ruh, Car' },
+            { id: 'bus', front: '🚌', back: 'Bus', phonetic: 'Buh Uh Suh, Bus' },
+            { id: 'flower', front: '🌸', back: 'Flower', phonetic: 'Fuh Luh Ow Wuh Eh Ruh, Flower' },
+            { id: 'house', front: '🏠', back: 'House', phonetic: 'Huh Ow Uh Suh Eh, House' },
+            { id: 'hat', front: '🧢', back: 'Hat', phonetic: 'Huh Ah Tuh, Hat' },
+            { id: 'shoe', front: '👟', back: 'Shoe', phonetic: 'Suh Huh Oh Eh, Shoe' },
         ]
     },
     {

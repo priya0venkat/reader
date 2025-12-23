@@ -21,7 +21,7 @@ function FlashCard({ card, mechanic }) {
             card.front.startsWith('/') ? (
               <img src={card.front} alt="Guess the object" />
             ) : (
-              <div className="text-content">{card.front}</div>
+              <div className="emoji-content">{card.front}</div>
             )
           ) : (
             <div className="text-content">{card.front}</div>
@@ -85,6 +85,10 @@ function FlashCard({ card, mechanic }) {
         .text-content {
           font-size: 3rem;
           font-weight: bold;
+        }
+        .emoji-content {
+          font-size: 8rem;
+          line-height: 1;
         }
         .hint {
           margin-top: 1rem;
