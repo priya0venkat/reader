@@ -151,8 +151,13 @@
 /* Responsive design */
 @media (max-width: 768px) {
     .map-container {
-        padding: 0.5rem;
-        margin: 1rem auto;
+        padding: 0.25rem;
+        margin: 0.5rem auto;
+        /* Reduce margin to pull map up */
+        background: transparent;
+        /* Remove background on smallest screens to save space */
+        box-shadow: none;
+        border: none;
     }
 
     .state {
@@ -164,4 +169,32 @@
     .state.incorrect {
         stroke-width: 1.5;
     }
+
+    /* Scaling for mobile */
+    .country-flag {
+        width: 60px;
+        height: 40px;
+        transform: translate(15px, -10px);
+        /* Adjust position slightly for smaller size */
+    }
+
+    .country-label {
+        font-size: 10px;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
+    }
+}
+
+.country-flag {
+    width: 90px;
+    height: 60px;
+    transition: all 0.3s ease;
+}
+
+.country-label {
+    fill: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    transition: all 0.3s ease;
 }

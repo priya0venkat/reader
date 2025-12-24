@@ -44,8 +44,7 @@ const NorthAmericaMap = ({ targetState, onStateClick, correctStates, incorrectSt
                                     href={`https://flagcdn.com/${countryInfo.code}.svg`}
                                     x={countryInfo.labelX - 45}
                                     y={countryInfo.labelY + 5}
-                                    width="90"
-                                    height="60"
+                                    className="country-flag"
                                 />
                             )}
                             <text
@@ -54,12 +53,6 @@ const NorthAmericaMap = ({ targetState, onStateClick, correctStates, incorrectSt
                                 className="country-label"
                                 textAnchor="middle"
                                 dominantBaseline="middle"
-                                style={{
-                                    fill: 'white',
-                                    fontSize: '14px',
-                                    fontWeight: 'bold',
-                                    textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
-                                }}
                             >
                                 {countryInfo.id}
                             </text>
