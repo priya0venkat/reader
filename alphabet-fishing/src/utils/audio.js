@@ -153,7 +153,7 @@ export const getPhonetic = (letter) => {
 // Helper to convert typical sentences to phonetic representations for single letters
 // e.g. "Fish me B" -> "Fish me Buh"
 export const phonetizeSentence = (sentence) => {
-    // This regex looks for single capital letters surrounded by spaces or at ends of string
+    // This regex looks for single letters (case-insensitive) surrounded by spaces or at ends of string
     // and replaces them with their phonetic equivalent
-    return sentence.replace(/\b([A-Z])\b/g, (match) => getPhonetic(match));
+    return sentence.replace(/\b([a-zA-Z])\b/g, (match) => getPhonetic(match));
 };

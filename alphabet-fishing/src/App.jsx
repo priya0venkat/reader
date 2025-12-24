@@ -4,6 +4,12 @@ import StartScreen from './components/StartScreen';
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [gameMode, setGameMode] = useState('capital');
+
+  const handleStart = (mode) => {
+    setGameMode(mode);
+    setIsPlaying(true);
+  };
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
@@ -23,9 +29,12 @@ function App() {
       ))}
 
       {isPlaying ? (
-        <GameCanvas onGoBack={() => setIsPlaying(false)} />
+        <GameCanvas
+          onGoBack={() => setIsPlaying(false)}
+          gameMode={gameMode}
+        />
       ) : (
-        <StartScreen onStart={() => setIsPlaying(true)} />
+        <StartScreen onStart={handleStart} />
       )}
     </div>
   );

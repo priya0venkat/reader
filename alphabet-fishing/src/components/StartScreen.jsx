@@ -1,13 +1,13 @@
 import { speakText, unlockAudioContext } from '../utils/audio';
 
 const StartScreen = ({ onStart }) => {
-    const handleStart = () => {
+    const handleStart = (mode) => {
         // Unlock audio immediately on user gesture
         unlockAudioContext();
 
         // Warm up TTS
         speakText("Welcome");
-        onStart();
+        onStart(mode);
     };
 
     return (
@@ -25,20 +25,52 @@ const StartScreen = ({ onStart }) => {
             <p style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>
                 Catch the letters!
             </p>
-            <button
-                onClick={handleStart}
-                style={{
-                    fontSize: '2rem',
-                    padding: '1rem 3rem',
-                    borderRadius: '50px',
-                    background: '#FFD700',
-                    border: 'none',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
-                    cursor: 'pointer'
-                }}
-            >
-                Play
-            </button>
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <button
+                    onClick={() => handleStart('capital')}
+                    style={{
+                        fontSize: '1.5rem',
+                        padding: '1rem 2rem',
+                        borderRadius: '50px',
+                        background: '#FFD700',
+                        border: 'none',
+                        boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                        cursor: 'pointer'
+                    }}
+                >
+                    Capital Letters
+                </button>
+                <button
+                    onClick={() => handleStart('small')}
+                    style={{
+                        fontSize: '1.5rem',
+                        padding: '1rem 2rem',
+                        borderRadius: '50px',
+                        background: '#4CC9F0',
+                        color: 'white',
+                        border: 'none',
+                        boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                        cursor: 'pointer'
+                    }}
+                >
+                    Small Letters
+                </button>
+                <button
+                    onClick={() => handleStart('number')}
+                    style={{
+                        fontSize: '1.5rem',
+                        padding: '1rem 2rem',
+                        borderRadius: '50px',
+                        background: '#F72585',
+                        color: 'white',
+                        border: 'none',
+                        boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                        cursor: 'pointer'
+                    }}
+                >
+                    Numbers 1-10
+                </button>
+            </div>
         </div>
     );
 };

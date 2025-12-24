@@ -4,11 +4,13 @@ import ScoreBoard from './ScoreBoard';
 import confetti from 'canvas-confetti';
 import { initPiper, speakText, phonetizeSentence } from '../utils/audio';
 
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const ALPHABET_CAPS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const ALPHABET_SMALL = 'abcdefghijklmnopqrstuvwxyz'.split('');
+const NUMBERS = '123456789'.split('').concat(['10']); // 1-10
 
-
-const GameCanvas = ({ onGoBack }) => {
+const GameCanvas = ({ onGoBack, gameMode = 'capital' }) => {
     const [score, setScore] = useState(0);
+
     const [attempts, setAttempts] = useState(0);
     const [targetLetter, setTargetLetter] = useState('');
     const [fish, setFish] = useState([]);
@@ -82,8 +84,18 @@ const GameCanvas = ({ onGoBack }) => {
             return true;
         };
 
-        // Create a pool of available letters (copy of ALPHABET)
-        const availableChars = [...ALPHABET];
+        // Select pool based on game mode
+        let pool = [];
+        if (gameMode === 'small') {
+            pool = [...ALPHABET_SMALL];
+        } else if (gameMode === 'number') {
+            pool = [...NUMBERS];
+        } else {
+            pool = [...ALPHABET_CAPS];
+        }
+
+        // Create a pool of available chars
+        const availableChars = [...pool];
 
         const screenWidth = window.innerWidth;
         const screenHeight = window.innerHeight;
