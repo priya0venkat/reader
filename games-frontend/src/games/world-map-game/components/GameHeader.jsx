@@ -11,8 +11,7 @@ const GameHeader = ({ targetContinent, score, total, isComplete, onReset }) => {
                 <h2 className="complete-title">World Explorer!</h2>
                 <div className="final-stats">
                     <div className="final-stat">
-                        <span className="final-stat-value">{total}</span>
-                        <span className="final-stat-label">Continents Found</span>
+                        <span className="final-stat-value">7 Continents and 4 Oceans Found</span>
                     </div>
                 </div>
                 <p className="complete-message">

@@ -112,3 +112,64 @@
         transform: translate3d(4px, 0, 0);
     }
 }
+
+/* Ocean styles */
+.continent.ocean-phase {
+    opacity: 0.6;
+    filter: brightness(0.8) saturate(0.7);
+}
+
+.ocean-group {
+    pointer-events: none;
+}
+
+.ocean-click-area {
+    fill: rgba(100, 181, 246, 0.15);
+    stroke: rgba(100, 181, 246, 0.5);
+    stroke-width: 1;
+    stroke-dasharray: 5, 3;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.ocean-click-area:hover {
+    fill: rgba(100, 181, 246, 0.35);
+    stroke: rgba(33, 150, 243, 0.8);
+    stroke-width: 2;
+}
+
+.ocean-click-area.correct {
+    fill: rgba(76, 175, 80, 0.3);
+    stroke: rgba(76, 175, 80, 0.8);
+    stroke-dasharray: none;
+}
+
+.ocean-click-area.incorrect {
+    fill: rgba(244, 67, 54, 0.3);
+    stroke: rgba(244, 67, 54, 0.8);
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+.ocean-label {
+    font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+    font-size: 14px;
+    font-weight: bold;
+    fill: transparent;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.ocean-label.active {
+    fill: #1565C0;
+    text-shadow: 0 0 3px white, 0 0 3px white, 0 0 3px white;
+    pointer-events: auto;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.ocean-label.correct {
+    fill: #2E7D32;
+    font-size: 12px;
+    text-shadow: 0 0 2px white, 0 0 2px white;
+}
