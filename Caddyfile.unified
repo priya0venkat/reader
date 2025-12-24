@@ -130,11 +130,7 @@ games.verma7.com {
         }
         root * /home/abhishekverma/reader/games-frontend/dist
         
-        # Headers for SharedArrayBuffer / WASM multi-threading
-        header {
-            Cross-Origin-Opener-Policy same-origin
-            Cross-Origin-Embedder-Policy require-corp
-        }
+
         
         try_files {path} /index.html
         file_server
