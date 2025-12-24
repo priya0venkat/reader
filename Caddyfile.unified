@@ -1,0 +1,49 @@
+games.verma7.com {
+    # Unified games frontend
+    root * /home/abhishekverma/reader/games-frontend/dist
+    file_server
+
+    # Global Auth - FastAPI backend on port 3001
+    handle /auth/* {
+        reverse_proxy 127.0.0.1:3001
+    }
+
+    # Puzzle Game API endpoints - Express backend on port 3002
+    handle /api/* {
+        # CORS headers for browser uploads
+        header {
+            Access-Control-Allow-Origin "*"
+            Access-Control-Allow-Methods "GET, POST, OPTIONS"
+            Access-Control-Allow-Headers "Content-Type, Authorization"
+            Access-Control-Max-Age "3600"
+        }
+        
+        # Handle preflight requests
+        @options method OPTIONS
+        respond @options 204
+        
+        reverse_proxy 127.0.0.1:3002
+    }
+
+    # Reader phonics API (if still needed)
+    handle /words* {
+        reverse_proxy 127.0.0.1:3001
+    }
+    handle /story {
+        reverse_proxy 127.0.0.1:3001
+    }
+    handle /feedback {
+        reverse_proxy 127.0.0.1:3001
+    }
+
+    # SPA fallback - serve index.html for all routes (React Router handles client-side routing)
+    try_files {path} /index.html
+
+    # Auth errors
+    handle_errors {
+        @401 {
+            expression {http.error.status_code} == 401
+        }
+        redir @401 /unauthorized.html
+    }
+}
