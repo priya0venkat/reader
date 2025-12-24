@@ -85,6 +85,26 @@ const GameCanvas = ({ onGoBack }) => {
         // Create a pool of available letters (copy of ALPHABET)
         const availableChars = [...ALPHABET];
 
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        // Approximate safe dimensions including some wiggle/padding
+        const fishWidthPx = 120;
+        const fishHeightPx = 100;
+
+        // Calculate maximum safe percentage positions
+        // x% + (fishWidth/screenWidth * 100) should be < 95% (right margin)
+        // So max_x% = 95 - (fishWidth/screenWidth * 100)
+        const safeRightMargin = 5;
+        const fishWidthPercent = (fishWidthPx / screenWidth) * 100;
+        const maxX = 100 - safeRightMargin - fishWidthPercent;
+        const minX = 5; // Left safe margin
+
+        const safeBottomMargin = 5;
+        const fishHeightPercent = (fishHeightPx / screenHeight) * 100;
+        const maxY = 100 - safeBottomMargin - fishHeightPercent;
+        const minY = 25; // Keep existing top margin for header
+
         for (let i = 0; i < count; i++) {
             // Pick a random index from availableChars
             const randomIndex = Math.floor(Math.random() * availableChars.length);
@@ -98,9 +118,13 @@ const GameCanvas = ({ onGoBack }) => {
             let valid = false;
             let attempts = 0;
 
+            // Ensure ranges are valid (if screen is extremely small, fallback to small range)
+            const xRange = Math.max(0, maxX - minX);
+            const yRange = Math.max(0, maxY - minY);
+
             while (!valid && attempts < 50) {
-                x = Math.random() * 80 + 10;
-                y = Math.random() * 55 + 25; // Start lower (25%) to clear header
+                x = Math.random() * xRange + minX;
+                y = Math.random() * yRange + minY;
                 if (isSafePosition(x, y, newFish)) {
                     valid = true;
                 }
