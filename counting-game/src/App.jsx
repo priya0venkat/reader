@@ -15,6 +15,7 @@ const TREATS = [
 ];
 
 function App() {
+  const [maxNumber, setMaxNumber] = useState(10);
   const [targetNumber, setTargetNumber] = useState(1);
   const [currentTreat, setCurrentTreat] = useState(TREATS[0]);
   const [itemsOnPlate, setItemsOnPlate] = useState([]);
@@ -65,9 +66,8 @@ function App() {
   const generateOptions = (target) => {
     const opts = new Set([target]);
     while (opts.size < 3) {
-      // Generate random number between 1 and 20 (max target is 20)
-      // Or maybe range around target? Let's just do 1-20 for simplicity but distinct
-      let num = Math.floor(Math.random() * 20) + 1;
+      // Generate random number between 1 and maxNumber
+      let num = Math.floor(Math.random() * maxNumber) + 1;
       if (num !== target) {
         opts.add(num);
       }
@@ -77,7 +77,7 @@ function App() {
   };
 
   const startNewLevel = () => {
-    const newTarget = Math.floor(Math.random() * 20) + 1;
+    const newTarget = Math.floor(Math.random() * maxNumber) + 1;
     const randomTreat = TREATS[Math.floor(Math.random() * TREATS.length)];
     const newOptions = generateOptions(newTarget);
 
@@ -174,6 +174,21 @@ function App() {
           color: 'white'
         }}>
           <h1 style={{ fontSize: '4rem', marginBottom: '2rem' }}>Counting Game</h1>
+
+          <div style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <label style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#ffcc00' }}>
+              Maximum Number: {maxNumber}
+            </label>
+            <input
+              type="range"
+              min="5"
+              max="30"
+              value={maxNumber}
+              onChange={(e) => setMaxNumber(parseInt(e.target.value))}
+              style={{ width: '300px', cursor: 'pointer' }}
+            />
+          </div>
+
           <button
             onClick={startGame}
             style={{
