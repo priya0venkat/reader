@@ -71,9 +71,9 @@ export const initPiper = async (callback) => {
             },
             logger: (msg) => console.log("[Piper]", msg),
             wasmPaths: {
-                onnxWasm: `${window.location.origin}/onnx/`,
-                piperData: `${window.location.origin}/piper/piper_phonemize.data`,
-                piperWasm: `${window.location.origin}/piper/piper_phonemize.wasm`,
+                onnxWasm: `${window.location.origin}${import.meta.env.BASE_URL}onnx/`,
+                piperData: `${window.location.origin}${import.meta.env.BASE_URL}piper/piper_phonemize.data`,
+                piperWasm: `${window.location.origin}${import.meta.env.BASE_URL}piper/piper_phonemize.wasm`,
             }
         });
 
