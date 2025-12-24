@@ -1,5 +1,14 @@
 import { countriesData } from '../data/countries';
 import './USMap.css';
+import usFlag from '../assets/flags/us.svg';
+import caFlag from '../assets/flags/ca.svg';
+import mxFlag from '../assets/flags/mx.svg';
+
+const flags = {
+    us: usFlag,
+    ca: caFlag,
+    mx: mxFlag
+};
 
 const NorthAmericaMap = ({ targetState, onStateClick, correctStates, incorrectState }) => {
     const handleCountryClick = (countryName) => {
@@ -41,7 +50,7 @@ const NorthAmericaMap = ({ targetState, onStateClick, correctStates, incorrectSt
                         <g key={`label-group-${countryName}`} style={{ pointerEvents: 'none' }}>
                             {countryInfo.code && (
                                 <image
-                                    href={`https://flagcdn.com/${countryInfo.code}.svg`}
+                                    href={flags[countryInfo.code]}
                                     x={countryInfo.labelX - 45}
                                     y={countryInfo.labelY + 5}
                                     className="country-flag"
