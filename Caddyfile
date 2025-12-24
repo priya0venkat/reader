@@ -18,12 +18,20 @@ games.verma7.com {
         try_files {path} /index.html
     }
 
+    # Serve Unified Games Frontend - All games under one SPA
     # Serve Washing Machine game
     handle_path /washing-machine/* {
         forward_auth localhost:3001 {
             uri /auth/check
         }
-        root * /home/abhishekverma/reader/washing-machine/dist
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
         file_server
         try_files {path} /index.html
     }
@@ -33,7 +41,14 @@ games.verma7.com {
         forward_auth localhost:3001 {
             uri /auth/check
         }
-        root * /home/abhishekverma/reader/us-map-game/dist
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
         file_server
         try_files {path} /index.html
     }
@@ -43,7 +58,14 @@ games.verma7.com {
         forward_auth localhost:3001 {
             uri /auth/check
         }
-        root * /home/abhishekverma/reader/north-america-map-game/dist
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
         file_server
         try_files {path} /index.html
     }
@@ -53,7 +75,14 @@ games.verma7.com {
         forward_auth localhost:3001 {
             uri /auth/check
         }
-        root * /home/abhishekverma/reader/world-map-game/dist
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
         file_server
         try_files {path} /index.html
     }
@@ -63,7 +92,14 @@ games.verma7.com {
         forward_auth localhost:3001 {
             uri /auth/check
         }
-        root * /home/abhishekverma/reader/food-classification-game/dist
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
         file_server
         try_files {path} /index.html
     }
@@ -92,7 +128,10 @@ games.verma7.com {
         forward_auth localhost:3001 {
             uri /auth/check
         }
-        root * /home/abhishekverma/reader/puzzle-game/dist
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+
+        
         try_files {path} /index.html
         file_server
     }
@@ -102,7 +141,14 @@ games.verma7.com {
         forward_auth localhost:3001 {
             uri /auth/check
         }
-        root * /home/abhishekverma/reader/counting-game/dist
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
         try_files {path} /index.html
         file_server
     }
@@ -112,7 +158,14 @@ games.verma7.com {
         forward_auth localhost:3001 {
             uri /auth/check
         }
-        root * /home/abhishekverma/reader/alphabet-fishing/dist
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
         try_files {path} /index.html
         file_server
     }
@@ -122,7 +175,7 @@ games.verma7.com {
         forward_auth localhost:3001 {
             uri /auth/check
         }
-        root * /home/abhishekverma/reader/flash-card-game/dist
+        root * /home/abhishekverma/reader/games-frontend/dist
         
         # Headers for SharedArrayBuffer / WASM multi-threading
         header {
