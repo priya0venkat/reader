@@ -1,0 +1,214 @@
+games.verma7.com {
+    # Serve the landing page at root
+    root * /home/abhishekverma/reader
+    file_server
+
+    # Global Auth
+    handle /auth/* {
+        reverse_proxy 127.0.0.1:3001
+    }
+
+    # Serve Phonics Reader
+    handle_path /reader/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/reader/frontend/dist
+        file_server
+        try_files {path} /index.html
+    }
+
+    # Serve Unified Games Frontend - All games under one SPA
+    # Serve Washing Machine game
+    handle_path /washing-machine/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
+        file_server
+        try_files {path} /index.html
+    }
+
+    # Serve US Map game
+    handle_path /us-map-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
+        file_server
+        try_files {path} /index.html
+    }
+
+    # Serve North America Map game
+    handle_path /north-america-map-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
+        file_server
+        try_files {path} /index.html
+    }
+
+    # Serve World Map game
+    handle_path /world-map-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
+        file_server
+        try_files {path} /index.html
+    }
+
+    # Serve Food Classification game
+    handle_path /food-classification-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
+        file_server
+        try_files {path} /index.html
+    }
+
+    # Serve Puzzle game - API endpoints (no auth required)
+    handle /puzzle-game/api/* {
+        uri strip_prefix /puzzle-game
+        
+        # CORS headers for browser uploads
+        header {
+            Access-Control-Allow-Origin "*"
+            Access-Control-Allow-Methods "GET, POST, OPTIONS"
+            Access-Control-Allow-Headers "Content-Type, Authorization"
+            Access-Control-Max-Age "3600"
+        }
+        
+        # Handle preflight requests
+        @options method OPTIONS
+        respond @options 204
+        
+        reverse_proxy 127.0.0.1:3002
+    }
+    
+    # Serve Puzzle game - Frontend (auth required)
+    handle_path /puzzle-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+
+        
+        try_files {path} /index.html
+        file_server
+    }
+    
+    # Serve Counting game
+    handle_path /counting-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
+        try_files {path} /index.html
+        file_server
+    }
+
+    # Serve Alphabet Fishing game
+    handle_path /alphabet-fishing/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+        
+        try_files {path} /index.html
+        file_server
+    }
+
+    # Serve Flash Card game
+    handle_path /flash-card-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+
+        try_files {path} /index.html
+        file_server
+    }
+
+    # Serve Solar System Game
+    handle_path /solar-system-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+
+        try_files {path} /index.html
+        file_server
+    }
+    
+    # Handle auth errors (redirect to login page)
+    handle_errors {
+        @401 {
+            expression {http.error.status_code} == 401
+        }
+        redir @401 /unauthorized.html
+    }
+}

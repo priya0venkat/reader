@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verma Games</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2QRFT696PL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-2QRFT696PL');
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .login-btn {
+            background-color: white;
+            color: #333;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            background-color: #f8f9fa;
+        }
+
+        /* Mobile Layout Adjustments */
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                justify-content: flex-start;
+                padding-top: 2rem;
+            }
+
+            #login-container {
+                position: static !important;
+                margin-bottom: 2rem;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="login-container" style="position: absolute; top: 30px; right: 30px;">
+        <a href="/auth/google" class="login-btn">
+            <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.26z" />
+                <path fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+            </svg>
+            Sign in with Google
+        </a>
+    </div>
+
+    <h1>Verma Games</h1>
+
+    <div class="container">
+        <a href="/reader/" class="card">
+            <span class="icon">📖</span>
+            <h2>Phonics Reader</h2>
+            <p>Practice your reading skills!</p>
+        </a>
+
+        <a href="/washing-machine/" class="card">
+            <span class="icon">🧺</span>
+            <h2>Washing Machine</h2>
+            <p>Assemble the parts correctly!</p>
+        </a>
+
+        <a href="/us-map-game/" class="card">
+            <span class="icon">🗺️</span>
+            <h2>US Map Game</h2>
+            <p>Learn the states geography!</p>
+        </a>
+
+        <a href="/north-america-map-game/" class="card">
+            <span class="icon">🌎</span>
+            <h2>N. America Map</h2>
+            <p>Explore North America!</p>
+        </a>
+
+        <a href="/world-map-game/" class="card">
+            <span class="icon">🌎</span>
+            <h2>World Map Game</h2>
+            <p>Explore the continents!</p>
+        </a>
+
+        <a href="/solar-system-game/" class="card">
+            <span class="icon">🪐</span>
+            <h2>Solar System</h2>
+            <p>Touch the right planet!</p>
+        </a>
+
+        <a href="/food-classification-game/" class="card">
+            <span class="icon">🍎</span>
+            <h2>Food Classifier</h2>
+            <p>Sort the food items!</p>
+        </a>
+
+
+        <a href="/puzzle-game/" class="card">
+            <span class="icon">🧩</span>
+            <h2>Puzzle Game</h2>
+            <p>Solve the picture puzzles!</p>
+        </a>
+
+        <a href="/counting-game/" class="card">
+            <span class="icon">🍎</span>
+            <h2>Counting Game</h2>
+            <p>Learn to count yummy treats!</p>
+        </a>
+
+        <a href="/flash-card-game/" class="card">
+            <span class="icon">✨</span>
+            <h2>Flash Cards</h2>
+            <p>Learn words with pictures!</p>
+        </a>
+
+        <a href="/alphabet-fishing/" class="card">
+            <span class="icon">🎣</span>
+            <h2>Alphabet Fishing</h2>
+            <p>Catch the letters!</p>
+        </a>
+    </div>
+
+    <script>
+        async function checkUser() {
+            try {
+                const response = await fetch('/auth/me');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.authenticated) {
+                        const loginContainer = document.getElementById('login-container');
+                        loginContainer.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span>Welcome, ${data.user.displayName}</span>
+                                <a href="/auth/logout" style="color: #ff6b6b; text-decoration: none; border: 1px solid #ff6b6b; padding: 0.5rem 1rem; border-radius: 20px;">Logout</a>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch user status', error);
+            }
+        }
+
+        // Call on load
+        checkUser();
+    </script>
+</body>
+
+</html>

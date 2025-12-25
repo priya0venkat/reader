@@ -1,78 +1,69 @@
-# Interactive Phonics Explorer
+# Phonics Reader & Games Hub
 
-**Interactive Phonics Explorer** is a local web application designed to help children practice reading through phonics-based exercises. It leverages AI to generate custom stories and provide real-time reading feedback.
+This repository hosts a collection of educational web games and a specialized Phonics Reader application, designed primarily for early childhood education.
 
-## Features
+## 🎮 Games Collection
 
-- **Phonics-Based Word Selection**: Filters words from the NLTK corpus based on specific patterns (e.g., 'ch', 'sh', 'th').
-- **AI Story Generation**: Uses Google Gemini to create unique, age-appropriate mini-stories for selected words.
-- **Gamified Reader**: A "Space/Dark" themed interface where children can read stories aloud.
-- **Real-Time Feedback**: Integrates Web Speech API and AI to listen to the child's reading and provide encouraging feedback.
-- **Progress Dashboard**: Tracks learning milestones (words mastered, streaks).
+The following games are available as standalone web applications served under `games.verma7.com`:
 
-## Installation
+### 1. **Counting Game** (`/counting-game`)
+*   **Goal**: Teach counting from 1 to 20 using one-to-one correspondence.
+*   **Mechanics**: Users add treats (apples, cookies, etc.) to a plate to match a target number.
+*   **Features**: Audio feedback (speaks numbers), celebratory confetti, smart spiral layout for items.
+*   **Tech**: React, Vite, Framer Motion, Canvas Confetti, Web Speech API.
 
-### Prerequisites
+### 2. **Puzzle Game** (`/puzzle-game`)
+*   **Goal**: Solve sliding image puzzles.
+*   **Features**: Upload custom images, difficulty levels, background hints.
+*   **Tech**: React, Node.js backend (for uploads), Google Cloud Storage.
 
-- Python 3.8+
-- Node.js 18+
-- A Google Gemini API Key
+### 3. **US Map Game** (`/us-map-game`)
+*   **Goal**: Learn US state locations and names.
+*   **Mechanics**: Drag and drop or click to identify states.
 
-### 1. Backend Setup
+### 4. **World Map Game** (`/world-map-game`)
+*   **Goal**: Learn world geography (continents, countries).
 
-1. Navigate to the `backend` directory:
+### 5. **Food Classification Game** (`/food-classification-game`)
+*   **Goal**: Categorize foods into groups (Fruits, Vegetables, etc.).
 
-   ```bash
-   cd backend
-   ```
+### 6. **Washing Machine Game** (`/washing-machine`)
+*   **Goal**: Interactive fun simulation of a washing machine.
 
-2. Install Python dependencies:
+---
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+## 📚 Phonics Reader (`/reader`)
+A comprehensive reading assistant application.
+*   **Frontend**: React-based reader interface.
+*   **Backend**: Python/FastAPI service for text processing and user management.
 
-3. Create a `.env` file and add your Google API Key:
+---
 
-   ```bash
-   GOOGLE_API_KEY=your_api_key_here
-   ```
+## 🛠 Deployment & Operations
 
-4. Start the server:
+*   **Infrastructure**: Hosted on a Google Cloud Compute Engine VM (`phonics-reader-vm`).
+*   **Web Server**: Caddy is used as the reverse proxy and SSL terminator.
+*   **Routing**:
+    *   `games.verma7.com` -> Serves `index.html` (Games Hub)
+    *   `games.verma7.com/counting-game/*` -> `counting-game/dist`
+    *   `games.verma7.com/puzzle-game/*` -> `puzzle-game/dist`
+    *   (etc.)
 
-   ```bash
-   uvicorn backend.main:app --reload
-   ```
+For detailed operations (restarting services, logs), see [OPS.md](./OPS.md).
 
-### 2. Frontend Setup
+## 🚀 Local Development
 
-1. Navigate to the `frontend` directory:
+Each game is a standalone project. To run one locally:
 
-   ```bash
-   cd frontend
-   ```
-
-2. Install Node dependencies:
-
-   ```bash
-   npm install
-   ```
-
-3. Start the development server:
-
-   ```bash
-   npm run dev
-   ```
-
-## Usage
-
-1. Open your browser and go to `http://localhost:5173`.
-2. Select a phonics pattern (e.g., "ch").
-3. Choose a word from the list.
-4. Read the generated story aloud using the "Read Aloud" button.
-5. Receive instant feedback from your AI Coach!
-
-## Tech Stack
-
-- **Backend**: Python, FastAPI, NLTK, Google Gemini API
-- **Frontend**: React, Vite, Framer Motion, Lucide React
+1.  Navigate to the directory:
+    ```bash
+    cd counting-game
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the dev server:
+    ```bash
+    npm run dev
+    ```
