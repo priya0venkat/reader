@@ -76,8 +76,8 @@ export const initPiper = async (callback) => {
             wasmPaths: {
                 // Ensure we point to the local public/onnx folder for the WASM files
                 // onnxWasm: `${window.location.origin}${import.meta.env.BASE_URL}onnx/`,
-                piperData: `${window.location.origin}${import.meta.env.BASE_URL}piper/piper_phonemize.data`,
-                piperWasm: `${window.location.origin}${import.meta.env.BASE_URL}piper/piper_phonemize.wasm`,
+                piperData: '/piper/piper_phonemize.data',
+                piperWasm: '/piper/piper_phonemize.wasm',
             }
         });
 
