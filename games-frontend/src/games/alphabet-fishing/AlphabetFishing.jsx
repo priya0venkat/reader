@@ -7,10 +7,12 @@ import './styles.css';
 function AlphabetFishing() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [gameMode, setGameMode] = useState('capital');
+    const [maxNumber, setMaxNumber] = useState(10);
     const navigate = useNavigate();
 
-    const handleStart = (mode) => {
+    const handleStart = (mode, maxNum) => {
         setGameMode(mode);
+        setMaxNumber(maxNum);
         setIsPlaying(true);
     };
 
@@ -43,6 +45,7 @@ function AlphabetFishing() {
                 <GameCanvas
                     onGoBack={handleGoBack}
                     gameMode={gameMode}
+                    maxNumber={maxNumber}
                 />
             ) : (
                 <StartScreen onStart={handleStart} onGoHome={() => navigate('/')} />

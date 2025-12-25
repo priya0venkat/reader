@@ -6,9 +6,9 @@ import { initPiper, speakText, phonetizeSentence } from '../utils/audio';
 
 const ALPHABET_CAPS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const ALPHABET_SMALL = 'abcdefghijklmnopqrstuvwxyz'.split('');
-const NUMBERS = '123456789'.split('').concat(['10']); // 1-10
 
-const GameCanvas = ({ onGoBack, gameMode = 'capital' }) => {
+
+const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
     const [score, setScore] = useState(0);
 
     const [attempts, setAttempts] = useState(0);
@@ -89,7 +89,7 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital' }) => {
         if (gameMode === 'small') {
             pool = [...ALPHABET_SMALL];
         } else if (gameMode === 'number') {
-            pool = [...NUMBERS];
+            pool = Array.from({ length: maxNumber }, (_, i) => String(i + 1));
         } else {
             pool = [...ALPHABET_CAPS];
         }

@@ -1,13 +1,16 @@
+import React, { useState } from 'react';
 import { speakText, unlockAudioContext } from '../utils/audio';
 
 const StartScreen = ({ onStart }) => {
+    const [maxNumber, setMaxNumber] = useState(10);
+
     const handleStart = (mode) => {
         // Unlock audio immediately on user gesture
         unlockAudioContext();
 
         // Warm up TTS
         speakText("Welcome");
-        onStart(mode);
+        onStart(mode, maxNumber);
     };
 
     return (
@@ -25,6 +28,20 @@ const StartScreen = ({ onStart }) => {
             <p style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>
                 Catch the letters!
             </p>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', marginBottom: '20px' }}>
+                <label style={{ fontSize: '1.2rem', marginBottom: '10px', color: '#333' }}>
+                    Max Number: {maxNumber}
+                </label>
+                <input
+                    type="range"
+                    min="5"
+                    max="30"
+                    value={maxNumber}
+                    onChange={(e) => setMaxNumber(parseInt(e.target.value))}
+                    style={{ width: '200px', cursor: 'pointer' }}
+                />
+            </div>
+
             <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <button
                     onClick={() => handleStart('capital')}
@@ -68,7 +85,7 @@ const StartScreen = ({ onStart }) => {
                         cursor: 'pointer'
                     }}
                 >
-                    Numbers 1-10
+                    Numbers 1-{maxNumber}
                 </button>
             </div>
         </div>
