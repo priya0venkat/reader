@@ -98,7 +98,28 @@ export const initPiper = async (callback) => {
     }
 };
 
+
+let currentAudioSource = null;
+
+export const stopCurrentAudio = () => {
+    if (currentAudioSource) {
+        try {
+            currentAudioSource.stop();
+        } catch (e) {
+            // Ignore errors if already stopped
+        }
+        currentAudioSource = null;
+    }
+    // Also cancel browser synthesis if active
+    if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+    }
+};
+
 export const speakText = async (text) => {
+    // Stop any currently playing audio first
+    stopCurrentAudio();
+
     // Ensure AudioContext is initialized and resumed (must be triggered by interaction ideally first time)
     const ctx = getAudioContext();
     if (ctx.state === 'suspended') {
@@ -136,6 +157,16 @@ export const speakText = async (text) => {
         const source = ctx.createBufferSource();
         source.buffer = audioBuffer;
         source.connect(ctx.destination);
+
+        // Track the source
+        currentAudioSource = source;
+
+        source.onended = () => {
+            if (currentAudioSource === source) {
+                currentAudioSource = null;
+            }
+        };
+
         source.start(0);
 
     } catch (err) {
