@@ -15,6 +15,7 @@
         "@dnd-kit/sortable": "^10.0.0",
         "@dnd-kit/utilities": "^3.2.2",
         "@mintplex-labs/piper-tts-web": "^1.0.4",
+        "@mlc-ai/web-llm": "^0.2.80",
         "canvas-confetti": "^1.9.4",
         "clsx": "^2.1.1",
         "framer-motion": "^12.23.26",

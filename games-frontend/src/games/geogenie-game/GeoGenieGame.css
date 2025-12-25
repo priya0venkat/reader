@@ -1,0 +1,447 @@
+/* GeoGenie Game Styles */
+
+* {
+    box-sizing: border-box;
+}
+
+.geogenie-game {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    font-family: 'Comic Sans MS', -apple-system, BlinkMacSystemFont, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Home button */
+.home-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 100;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.2s;
+}
+
+.home-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Welcome Screen */
+.welcome-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+}
+
+.welcome-content {
+    max-width: 500px;
+    padding: 40px 20px;
+}
+
+.game-title {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #4fc3f7, #81d4fa, #4dd0e1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    animation: title-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes title-glow {
+    0% {
+        filter: drop-shadow(0 0 10px rgba(79, 195, 247, 0.5));
+    }
+
+    100% {
+        filter: drop-shadow(0 0 20px rgba(79, 195, 247, 0.8));
+    }
+}
+
+.genie-icon {
+    display: inline-block;
+    animation: icon-bounce 2s ease-in-out infinite;
+}
+
+.genie-icon:last-child {
+    animation-delay: 0.5s;
+}
+
+@keyframes icon-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.game-subtitle {
+    font-size: 1.3rem;
+    color: #81d4fa;
+    margin-bottom: 30px;
+}
+
+.level-preview {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.level-badge {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px 20px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.3s, background 0.3s;
+}
+
+.level-badge:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.level-emoji {
+    font-size: 1.5rem;
+}
+
+.level-name {
+    font-size: 0.95rem;
+    font-weight: bold;
+}
+
+.start-button {
+    font-size: 1.5rem;
+    padding: 18px 50px;
+    background: linear-gradient(135deg, #4caf50, #81c784);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.start-button:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
+}
+
+.start-button:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+/* Mode Selector */
+.mode-selector {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mode-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 25px 40px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 140px;
+}
+
+.mode-button.train-mode {
+    background: linear-gradient(135deg, #9c27b0, #ce93d8);
+    box-shadow: 0 6px 20px rgba(156, 39, 176, 0.4);
+}
+
+.mode-button.quiz-mode {
+    background: linear-gradient(135deg, #ff9800, #ffb74d);
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+}
+
+.mode-button:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.02);
+}
+
+.mode-button.train-mode:hover:not(:disabled) {
+    box-shadow: 0 8px 25px rgba(156, 39, 176, 0.5);
+}
+
+.mode-button.quiz-mode:hover:not(:disabled) {
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.5);
+}
+
+.mode-button:disabled {
+    background: #666;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.mode-icon {
+    font-size: 2.5rem;
+}
+
+.mode-label {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: white;
+}
+
+.mode-desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.loading-status {
+    margin-top: 20px;
+    color: #aaa;
+    font-size: 0.95rem;
+}
+
+/* Playing Screen */
+.playing-screen {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+}
+
+.level-indicator {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 20px;
+    border-radius: 25px;
+    z-index: 50;
+}
+
+.score-hud {
+    position: absolute;
+    top: 15px;
+    right: 200px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    z-index: 50;
+}
+
+.level-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 70px 20px 80px;
+    overflow: hidden;
+}
+
+.level-progress {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 50;
+}
+
+.progress-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s;
+}
+
+.progress-dot.active {
+    background: #4fc3f7;
+    box-shadow: 0 0 10px rgba(79, 195, 247, 0.6);
+    transform: scale(1.2);
+}
+
+.progress-dot.completed {
+    background: #4caf50;
+}
+
+/* Level Complete Screen */
+.level-complete-screen,
+.game-complete-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+}
+
+.complete-content {
+    max-width: 450px;
+    padding: 30px;
+}
+
+.complete-title {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    animation: celebrate-bounce 0.6s ease-in-out infinite;
+}
+
+@keyframes celebrate-bounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.complete-message {
+    font-size: 1.3rem;
+    color: #81d4fa;
+    margin-bottom: 20px;
+}
+
+.score-display {
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px 30px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.final-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px 30px;
+    border-radius: 15px;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #4fc3f7;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.next-level-hint {
+    color: #aaa;
+    margin-bottom: 15px;
+}
+
+.next-button,
+.play-again-button {
+    font-size: 1.3rem;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #4caf50, #81c784);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+    transition: transform 0.2s;
+}
+
+.next-button:hover,
+.play-again-button:hover {
+    transform: translateY(-2px);
+}
+
+.home-button {
+    font-size: 1rem;
+    padding: 12px 30px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.home-button:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2.2rem;
+    }
+
+    .level-preview {
+        gap: 10px;
+    }
+
+    .level-badge {
+        padding: 10px 15px;
+    }
+
+    .start-button {
+        font-size: 1.2rem;
+        padding: 15px 40px;
+    }
+
+    .complete-title {
+        font-size: 2rem;
+    }
+
+    .final-stats {
+        gap: 15px;
+    }
+
+    .stat {
+        padding: 15px 20px;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+    }
+}
