@@ -186,6 +186,23 @@ games.verma7.com {
         try_files {path} /index.html
         file_server
     }
+
+    # Serve Solar System Game
+    handle_path /solar-system-game/* {
+        forward_auth localhost:3001 {
+            uri /auth/check
+        }
+        root * /home/abhishekverma/reader/games-frontend/dist
+        
+        # Headers for SharedArrayBuffer / WASM multi-threading
+        header {
+            Cross-Origin-Opener-Policy same-origin
+            Cross-Origin-Embedder-Policy require-corp
+        }
+
+        try_files {path} /index.html
+        file_server
+    }
     
     # Handle auth errors (redirect to login page)
     handle_errors {
