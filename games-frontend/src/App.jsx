@@ -1,8 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import GameSelector from './components/GameSelector'
 import Layout from './components/Layout'
-
-// Lazy load games for code splitting
 import { lazy, Suspense } from 'react'
 
 const AlphabetFishing = lazy(() => import('./games/alphabet-fishing/AlphabetFishing'))
@@ -16,7 +14,6 @@ const WashingMachine = lazy(() => import('./games/washing-machine/WashingMachine
 const WorldMapGame = lazy(() => import('./games/world-map-game/WorldMapGame'))
 const SolarSystemGame = lazy(() => import('./games/solar-system-game/SolarSystemGame'))
 
-// Loading fallback component
 const GameLoading = () => (
     <div style={{
         display: 'flex',
