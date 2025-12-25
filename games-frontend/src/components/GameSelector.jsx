@@ -12,6 +12,7 @@ const GAMES = [
     { path: '/us-map-game', icon: '🗺️', title: 'US Map Game', description: 'Learn the states geography!' },
     { path: '/washing-machine', icon: '🧺', title: 'Washing Machine', description: 'Assemble the parts correctly!' },
     { path: '/world-map-game', icon: '🌎', title: 'World Map Game', description: 'Explore the continents!' },
+    { path: '/solar-system-game', icon: '🪐', title: 'Solar System', description: 'Touch the right planet!' },
 ]
 
 function GameSelector() {

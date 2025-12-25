@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { speakText, unlockAudioContext } from '../utils/audio';
+import { speakText, unlockAudioContext } from '../../../utils/audio';
 
 const StartScreen = ({ onStart }) => {
     const [maxNumber, setMaxNumber] = useState(10);

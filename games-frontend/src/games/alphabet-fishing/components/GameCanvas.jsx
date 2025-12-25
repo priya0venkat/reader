@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import LetterFish from './LetterFish';
 import ScoreBoard from './ScoreBoard';
 import confetti from 'canvas-confetti';
-import { initPiper, speakText, phonetizeSentence } from '../utils/audio';
+import { initPiper, speakText, phonetizeSentence } from '../../../utils/audio';
 
 const ALPHABET_CAPS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const ALPHABET_SMALL = 'abcdefghijklmnopqrstuvwxyz'.split('');

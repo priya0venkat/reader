@@ -14,6 +14,7 @@ const PuzzleGame = lazy(() => import('./games/puzzle-game/PuzzleGame'))
 const USMapGame = lazy(() => import('./games/us-map-game/USMapGame'))
 const WashingMachine = lazy(() => import('./games/washing-machine/WashingMachine'))
 const WorldMapGame = lazy(() => import('./games/world-map-game/WorldMapGame'))
+const SolarSystemGame = lazy(() => import('./games/solar-system-game/SolarSystemGame'))
 
 // Loading fallback component
 const GameLoading = () => (
@@ -45,6 +46,7 @@ function App() {
                     <Route path="/us-map-game" element={<USMapGame />} />
                     <Route path="/washing-machine" element={<WashingMachine />} />
                     <Route path="/world-map-game" element={<WorldMapGame />} />
+                    <Route path="/solar-system-game" element={<SolarSystemGame />} />
                 </Route>
             </Routes>
         </Suspense>
