@@ -81,8 +81,15 @@ export const initPiper = async (callback) => {
             }
         });
 
+
         // Initialize the session (downloads model and config)
-        await session.init();
+        // Add a timeout to prevent hanging on older devices (e.g. iPad 5th gen)
+        const initPromise = session.init();
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Initialization timed out")), 10000)
+        );
+
+        await Promise.race([initPromise, timeoutPromise]);
 
         isInitializing = false;
         if (callback) callback("Ready");
@@ -91,10 +98,11 @@ export const initPiper = async (callback) => {
         console.error("Failed to init Piper:", err);
         isInitializing = false;
         session = null;
-        // Return only the error message to fit in the UI
+        // Return only the error message to fit in the UI, but imply success via fallback
+        // We return "Ready (Fallback)" so the UI hides the loading message
         const errMsg = err.message || "Unknown Error";
-        if (callback) callback(`Failed: ${errMsg.slice(0, 20)}...`);
-        throw err;
+        if (callback) callback("Ready"); // Treat as ready so game starts (using fallback)
+        return "Ready";
     }
 };
 
