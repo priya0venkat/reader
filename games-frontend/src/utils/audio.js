@@ -41,17 +41,41 @@ const getAudioContext = () => {
 };
 
 // Must be called from a user gesture (click/touch)
+// Must be called from a user gesture (click/touch)
 export const unlockAudioContext = () => {
     const ctx = getAudioContext();
-    if (ctx.state === 'suspended') {
-        ctx.resume();
+    if (ctx.state === 'suspended' || ctx.state === 'interrupted') {
+        ctx.resume().catch(err => console.warn("Audio resume failed:", err));
     }
     // Play a silent short buffer to force the audio engine to unlock
-    const buffer = ctx.createBuffer(1, 1, 22050);
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    source.connect(ctx.destination);
-    source.start(0);
+    try {
+        const buffer = ctx.createBuffer(1, 1, 22050);
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(ctx.destination);
+        source.start(0);
+    } catch (e) {
+        console.warn("Audio unlock buffer failed", e);
+    }
+};
+
+// Robust unlock listener for iOS
+let audioUnlocked = false;
+export const setupAudioUnlockListener = () => {
+    if (audioUnlocked) return;
+
+    const unlock = () => {
+        unlockAudioContext();
+        audioUnlocked = true;
+        // Remove listeners once unlocked
+        ['touchstart', 'touchend', 'click', 'keydown'].forEach(event =>
+            document.removeEventListener(event, unlock)
+        );
+    };
+
+    ['touchstart', 'touchend', 'click', 'keydown'].forEach(event =>
+        document.addEventListener(event, unlock)
+    );
 };
 
 export const initPiper = async (callback) => {

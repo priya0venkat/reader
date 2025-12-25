@@ -29,7 +29,12 @@ const GameLoading = () => (
     </div>
 )
 
+import { setupAudioUnlockListener } from './utils/audio'
+
 function App() {
+    // Enable audio unlock on first interaction
+    setupAudioUnlockListener()
+
     return (
         <Suspense fallback={<GameLoading />}>
             <Routes>
