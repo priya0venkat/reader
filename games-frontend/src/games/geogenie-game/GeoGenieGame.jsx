@@ -7,6 +7,8 @@ import confetti from 'canvas-confetti';
 import GeoGenieAvatar from './components/GeoGenieAvatar';
 import SolarSystemLevel from './levels/SolarSystemLevel';
 import WorldMapLevel from './levels/WorldMapLevel';
+import NorthAmericaLevel from './levels/NorthAmericaLevel';
+import USStatesLevel from './levels/USStatesLevel';
 import {
     initGeoGenie,
     handleCorrectAnswer,
@@ -23,7 +25,9 @@ import './GeoGenieGame.css';
 // Levels limited to those with embedded data
 const LEVELS = [
     { id: 'solar-system', name: 'Space Explorer', emoji: '🚀', description: 'Find the planets!' },
-    { id: 'world-map', name: 'World Traveler', emoji: '🌍', description: 'Explore the continents!' }
+    { id: 'world-map', name: 'World Traveler', emoji: '🌍', description: 'Explore the continents!' },
+    { id: 'north-america', name: 'America Explorer', emoji: '🦅', description: 'Explore North America!' },
+    { id: 'us-states', name: 'State Master', emoji: '🇺🇸', description: 'Learn the US States!' }
 ];
 
 function GeoGenieGame() {
@@ -302,6 +306,26 @@ function GeoGenieGame() {
                 )}
                 {currentLevel.id === 'world-map' && (
                     <WorldMapLevel
+                        gameMode={gameMode}
+                        onCorrect={handleCorrect}
+                        onIncorrect={handleIncorrect}
+                        onNewTarget={handleNewTarget}
+                        onLevelComplete={handleLevelComplete}
+                        highlightedTarget={highlightedTarget}
+                    />
+                )}
+                {currentLevel.id === 'north-america' && (
+                    <NorthAmericaLevel
+                        gameMode={gameMode}
+                        onCorrect={handleCorrect}
+                        onIncorrect={handleIncorrect}
+                        onNewTarget={handleNewTarget}
+                        onLevelComplete={handleLevelComplete}
+                        highlightedTarget={highlightedTarget}
+                    />
+                )}
+                {currentLevel.id === 'us-states' && (
+                    <USStatesLevel
                         gameMode={gameMode}
                         onCorrect={handleCorrect}
                         onIncorrect={handleIncorrect}
