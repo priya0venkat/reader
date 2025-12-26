@@ -256,21 +256,25 @@ const STATS_COLLECTION = 'geogenie_stats'
 
 // --- Stats Route ---
 app.post('/api/stats', async (req, res) => {
-    if (!req.isAuthenticated()) {
-        return res.status(401).json({ error: 'Unauthorized' })
-    }
+    console.log('[API] POST /api/stats request received');
+
+    // Allow anonymous stats but mark them
+    const isAuthenticated = req.isAuthenticated();
+    const user = isAuthenticated ? req.user : { id: 'guest', displayName: 'Guest', emails: [] };
 
     try {
         const { gameId, levelId, score, totalAttempts, duration, entities, mode } = req.body
 
         if (!gameId || !levelId) {
+            console.warn('[Stats] Missing fields:', req.body);
             return res.status(400).json({ error: 'Missing required fields' })
         }
 
         const statsData = {
-            userId: req.user.id,
-            userEmail: req.user.emails?.[0]?.value || 'unknown',
-            userName: req.user.displayName,
+            userId: user.id,
+            userEmail: user.emails?.[0]?.value || 'anonymous',
+            userName: user.displayName,
+            isAnonymous: !isAuthenticated,
             gameId,
             levelId,
             mode: mode || 'quiz',
@@ -285,7 +289,7 @@ app.post('/api/stats', async (req, res) => {
         // Save to Firestore
         await firestore.collection(STATS_COLLECTION).add(statsData)
 
-        console.log(`[Stats] Saved for user ${req.user.displayName} - Level: ${levelId}`)
+        console.log(`[Stats] Saved for ${user.displayName} - Level: ${levelId}`)
 
         res.json({ success: true, message: 'Stats saved successfully' })
     } catch (error) {
