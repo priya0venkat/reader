@@ -165,9 +165,15 @@ export const speakText = async (text) => {
     if (!session) {
         console.warn("Piper not initialized, trying fallback");
         // Fallback to browser TTS if Piper isn't ready
-        const utterance = new SpeechSynthesisUtterance(text);
-        window.speechSynthesis.speak(utterance);
-        return;
+        return new Promise((resolve) => {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.onend = () => resolve();
+            utterance.onerror = (e) => {
+                console.error("SpeechSynthesis error:", e);
+                resolve(); // resolve anyway to not block game
+            };
+            window.speechSynthesis.speak(utterance);
+        });
     }
 
     try {
@@ -193,19 +199,26 @@ export const speakText = async (text) => {
         // Track the source
         currentAudioSource = source;
 
-        source.onended = () => {
-            if (currentAudioSource === source) {
-                currentAudioSource = null;
-            }
-        };
-
-        source.start(0);
+        // Return a promise that resolves when the audio ends
+        return new Promise((resolve) => {
+            source.onended = () => {
+                if (currentAudioSource === source) {
+                    currentAudioSource = null;
+                }
+                resolve();
+            };
+            source.start(0);
+        });
 
     } catch (err) {
         console.error("Piper speak error:", err);
         // Fallback on error
-        const utterance = new SpeechSynthesisUtterance(text);
-        window.speechSynthesis.speak(utterance);
+        return new Promise((resolve) => {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.onend = () => resolve();
+            utterance.onerror = () => resolve();
+            window.speechSynthesis.speak(utterance);
+        });
     }
 };
 
