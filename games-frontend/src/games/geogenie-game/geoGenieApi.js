@@ -44,6 +44,7 @@ const handleWorkerMessage = (event) => {
         if (!text) return text;
         return text
             .replace(/[*#_\[\]~`]/g, '') // Remove markdown chars
+            .replace(/\bIT\b/g, 'it')    // Fix 'IT' being read as 'I.T.'
             .replace(/\s+/g, ' ')        // Normalize whitespace
             .trim();
     };
