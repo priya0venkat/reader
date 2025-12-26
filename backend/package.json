@@ -12,6 +12,7 @@
     "dev:full": "concurrently \"npm run dev\" \"npm run server\""
   },
   "dependencies": {
+    "@google-cloud/firestore": "^8.0.0",
     "@google-cloud/storage": "^7.18.0",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",

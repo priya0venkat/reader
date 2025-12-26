@@ -247,9 +247,66 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: err.message })
 })
 
+// Initialize Firestore
+import { Firestore } from '@google-cloud/firestore'
+const firestore = new Firestore()
+const STATS_COLLECTION = 'geogenie_stats'
+
+// ... existing storage setup ...
+
+// --- Stats Route ---
+app.post('/api/stats', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: 'Unauthorized' })
+    }
+
+    try {
+        const { gameId, levelId, score, totalAttempts, duration, entities, mode } = req.body
+
+        if (!gameId || !levelId) {
+            return res.status(400).json({ error: 'Missing required fields' })
+        }
+
+        const statsData = {
+            userId: req.user.id,
+            userEmail: req.user.emails?.[0]?.value || 'unknown',
+            userName: req.user.displayName,
+            gameId,
+            levelId,
+            mode: mode || 'quiz',
+            score,
+            totalAttempts,
+            accuracy: totalAttempts > 0 ? Math.round((score / totalAttempts) * 100) : 0,
+            durationSeconds: duration,
+            entities: entities || {},
+            timestamp: new Date()
+        }
+
+        // Save to Firestore
+        await firestore.collection(STATS_COLLECTION).add(statsData)
+
+        console.log(`[Stats] Saved for user ${req.user.displayName} - Level: ${levelId}`)
+
+        res.json({ success: true, message: 'Stats saved successfully' })
+    } catch (error) {
+        console.error('Error saving stats:', error)
+        res.status(500).json({ error: 'Failed to save stats', message: error.message })
+    }
+})
+
+// --- Global Stats Route (Optional - for leaderboards or dashboard later) ---
+app.get('/api/stats/summary', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: 'Unauthorized' })
+    }
+    // Implementation for retrieving user's history can go here
+    res.json({ message: 'Not implemented yet' })
+})
+
 app.listen(PORT, () => {
     console.log(`🚀 Puzzle game backend server running on http://localhost:${PORT}`)
     console.log(`📦 Using GCS bucket: ${bucketName}`)
+    // ... remaining logs ...
     console.log(`📁 Upload path: ${uploadPath}`)
     console.log(`🔑 OAuth Status: ${GOOGLE_CLIENT_ID ? 'Enabled' : 'Disabled (Missing Credentials)'}`)
 })
