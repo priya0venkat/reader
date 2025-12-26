@@ -4,15 +4,11 @@ import './GameSelector.css'
 
 const GAMES = [
     { path: '/alphabet-fishing', icon: '🎣', title: 'Alphabet Fishing', description: 'Catch the letters!' },
-    { path: '/counting-game', icon: '🍎', title: 'Counting Game', description: 'Learn to count yummy treats!' },
+    { path: '/counting-game', icon: '🔢', title: 'Counting Game', description: 'Learn to count yummy treats!' },
     { path: '/flash-card-game', icon: '✨', title: 'Flash Cards', description: 'Learn words with pictures!' },
     { path: '/food-classification-game', icon: '🍎', title: 'Food Classifier', description: 'Sort the food items!' },
-    { path: '/north-america-map-game', icon: '🌎', title: 'N. America Map', description: 'Explore North America!' },
     { path: '/puzzle-game', icon: '🧩', title: 'Puzzle Game', description: 'Solve the picture puzzles!' },
-    { path: '/us-map-game', icon: '🗺️', title: 'US Map Game', description: 'Learn the states geography!' },
     { path: '/washing-machine', icon: '🧺', title: 'Washing Machine', description: 'Assemble the parts correctly!' },
-    { path: '/world-map-game', icon: '🌎', title: 'World Map Game', description: 'Explore the continents!' },
-    { path: '/solar-system-game', icon: '🪐', title: 'Solar System', description: 'Touch the right planet!' },
     { path: '/geogenie', icon: '🧞‍♂️', title: 'GeoGenie', description: 'Your AI Geography Tutor!' },
 ]
 
@@ -58,7 +54,7 @@ function GameSelector() {
                 )}
             </div>
 
-            <h1>Phonics Reader Games</h1>
+            <h1>Verma Games</h1>
 
             <div className="games-container">
                 {GAMES.map((game) => (
