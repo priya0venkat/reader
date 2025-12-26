@@ -9,10 +9,26 @@ import SolarSystemLevel from './levels/SolarSystemLevel';
 import WorldMapLevel from './levels/WorldMapLevel';
 import NorthAmericaLevel from './levels/NorthAmericaLevel';
 import USStatesLevel from './levels/USStatesLevel';
-// ... imports
+import {
+    initGeoGenie,
+    handleCorrectAnswer,
+    handleIncorrectAnswer,
+    announceTarget,
+    announceLevelComplete,
+    startTurn,
+    unlockAudio,
+    resetSession
+} from './geoGenieApi';
+import './GeoGenieGame.css';
 import { saveStats } from './statsService';
 
-// ... existing code ...
+// Level definitions
+const LEVELS = [
+    { id: 'solar-system', name: 'Space Explorer', emoji: '🚀', description: 'Find the planets!' },
+    { id: 'world-map', name: 'World Traveler', emoji: '🌍', description: 'Explore the continents!' },
+    { id: 'north-america', name: 'America Explorer', emoji: '🦅', description: 'Explore North America!' },
+    { id: 'us-states', name: 'State Master', emoji: '🇺🇸', description: 'Learn the US States!' }
+];
 
 function GeoGenieGame() {
     const navigate = useNavigate();
@@ -31,12 +47,19 @@ function GeoGenieGame() {
     // Avatar state
     const [avatarState, setAvatarState] = useState('idle');
 
-    // ... init status ...
+    // Initialize state
+    const [initStatus, setInitStatus] = useState('Loading...');
+    const [isReady, setIsReady] = useState(false);
 
     // Highlighted target for rescue mode
     const [highlightedTarget, setHighlightedTarget] = useState(null);
 
-    // ... useEffect init ...
+    // Initialize GeoGenie
+    useEffect(() => {
+        initGeoGenie(setInitStatus).then(result => {
+            setIsReady(result.ready);
+        });
+    }, []);
 
     // Get current level config
     const currentLevel = LEVELS[currentLevelIndex];
@@ -181,7 +204,56 @@ function GeoGenieGame() {
         handleStartGame(gameMode);
     };
 
-    // ... welcome screen ...
+    // Render welcome screen
+    if (gamePhase === 'welcome') {
+        return (
+            <div className="geogenie-game welcome-screen">
+                <button onClick={() => navigate('/')} className="home-btn">🏠</button>
+
+                <div className="welcome-content">
+                    <h1 className="game-title">
+                        <span className="genie-icon">🌍</span>
+                        GeoGenie
+                        <span className="genie-icon">✨</span>
+                    </h1>
+                    <p className="game-subtitle">Your AI Geography Friend!</p>
+
+                    <div className="level-preview">
+                        {LEVELS.map((level, idx) => (
+                            <div key={level.id} className="level-badge">
+                                <span className="level-emoji">{level.emoji}</span>
+                                <span className="level-name">{level.name}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="mode-selector">
+                        <button
+                            className="mode-button train-mode"
+                            onClick={() => handleStartGame('train')}
+                            disabled={!isReady}
+                        >
+                            <span className="mode-icon">📚</span>
+                            <span className="mode-label">Learn</span>
+                            <span className="mode-desc">I'll teach you!</span>
+                        </button>
+                        <button
+                            className="mode-button quiz-mode"
+                            onClick={() => handleStartGame('quiz')}
+                            disabled={!isReady}
+                        >
+                            <span className="mode-icon">🎯</span>
+                            <span className="mode-label">Quiz</span>
+                            <span className="mode-desc">Test yourself!</span>
+                        </button>
+                    </div>
+                    {!isReady && <p className="loading-status">{initStatus}</p>}
+                </div>
+
+                <GeoGenieAvatar state="idle" size="large" />
+            </div>
+        );
+    }
 
     // Render level complete screen
     if (gamePhase === 'levelComplete') {
