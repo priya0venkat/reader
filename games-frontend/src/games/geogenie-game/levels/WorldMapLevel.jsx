@@ -41,16 +41,26 @@ const WorldMapLevel = ({
         }
     }, [gameMode]);
 
+    const currentTarget = shuffledContinents[currentTargetIndex];
+    const currentKnowledge = currentTarget ? continentKnowledge[currentTarget.name] : null;
+
+    // Select a consistent random fact for the current target
+    const currentFunFact = React.useMemo(() => {
+        if (!currentKnowledge?.funFact) return null;
+        if (Array.isArray(currentKnowledge.funFact)) {
+            return currentKnowledge.funFact[Math.floor(Math.random() * currentKnowledge.funFact.length)];
+        }
+        return currentKnowledge.funFact;
+    }, [currentTarget, currentKnowledge]);
+
     // Announce target when ready
     useEffect(() => {
         if (shuffledContinents.length > 0 && currentTargetIndex < shuffledContinents.length) {
             const target = shuffledContinents[currentTargetIndex];
-            onNewTarget(target.name);
+            // Pass the selected fact so audio matches text
+            onNewTarget(target.name, currentFunFact);
         }
-    }, [currentTargetIndex, shuffledContinents, onNewTarget]);
-
-    const currentTarget = shuffledContinents[currentTargetIndex];
-    const currentKnowledge = currentTarget ? continentKnowledge[currentTarget.name] : null;
+    }, [currentTargetIndex, shuffledContinents, onNewTarget, currentFunFact]);
 
     const handleContinentClick = useCallback(async (continent) => {
         if (gameMode === 'train') return;
@@ -94,6 +104,8 @@ const WorldMapLevel = ({
         setIsProcessing(false);
     }, [currentTarget, currentTargetIndex, shuffledContinents, isProcessing, onCorrect, onLevelComplete]);
 
+    const displayFact = currentFunFact || '';
+
     return (
         <div className="world-map-level">
             <div className="target-instruction">
@@ -106,7 +118,7 @@ const WorldMapLevel = ({
             {/* Train mode info card */}
             {gameMode === 'train' && currentKnowledge && (
                 <div className="train-info-card">
-                    <p className="train-fact">{currentKnowledge.funFact}</p>
+                    <p className="train-fact">{displayFact}</p>
                     <button className="train-next-btn" onClick={handleNext} disabled={isProcessing}>
                         Next Continent →
                     </button>

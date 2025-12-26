@@ -11,7 +11,13 @@ export const continentKnowledge = {
         tier4Hints: ["It's where bears, eagles, and moose live!", "Home to the USA, Canada, and Mexico.", "The big orange continent."],
         tier3Hints: ["Look for the orange piece at the top left.", "High up on the left side."],
         tier2Hints: ["The big orange one!", "Top left corner."],
-        funFact: "North America has everything from frozen snow to hot deserts!"
+        funFact: [
+            "North America has everything from frozen snow to hot deserts!",
+            "It is home to the world's largest island, Greenland!",
+            "Bison are the largest land animals in North America!",
+            "Death Valley is one of the hottest places on Earth!",
+            "The Mississippi River is one of the longest rivers in the world!"
+        ]
     },
     "South America": {
         montessoriColor: "pink",
@@ -22,7 +28,13 @@ export const continentKnowledge = {
         tier4Hints: ["Where colorful parrots and jaguars live!", "It has the giant Amazon rainforest.", "The pink continent shaped like an ice cream cone."],
         tier3Hints: ["Look below North America.", "The pink one at the bottom left."],
         tier2Hints: ["The pink one!", "Bottom left corner."],
-        funFact: "The Amazon rainforest makes 20% of the world's oxygen!"
+        funFact: [
+            "The Amazon rainforest makes 20% of the world's oxygen!",
+            "It has the longest mountain range in the world, the Andes!",
+            "The Amazon River carries more water than any other river!",
+            "The world's highest waterfall, Angel Falls, is here!",
+            "The world's largest snake, the Anaconda, lives here!"
+        ]
     },
     "Europe": {
         montessoriColor: "red",
@@ -33,7 +45,13 @@ export const continentKnowledge = {
         tier4Hints: ["A red continent with many castles and kings!", "Attached to the big yellow Asia.", "Small but has lots of countries."],
         tier3Hints: ["The red piece in the middle, near the top.", "Above the green Africa."],
         tier2Hints: ["The red one!", "The small red piece."],
-        funFact: "Europe has a city built entirely on water called Venice!"
+        funFact: [
+            "Europe has a city built entirely on water called Venice!",
+            "It has the smallest country in the world, Vatican City!",
+            "There are many old castles from kings and queens!",
+            "The Eiffel Tower grows taller in the summer due to heat!",
+            "Pizza and pasta were invented in Italy, Europe!"
+        ]
     },
     "Asia": {
         montessoriColor: "yellow",
@@ -44,7 +62,13 @@ export const continentKnowledge = {
         tier4Hints: ["The biggest continent of all!", "Home to giant pandas and tigers.", "The huge yellow land."],
         tier3Hints: ["The giant yellow piece on the right.", "Connected to the red Europe."],
         tier2Hints: ["The big yellow one!", "The biggest piece."],
-        funFact: "Asia is so big, it has the highest mountain in the world!"
+        funFact: [
+            "Asia is so big, it has the highest mountain in the world!",
+            "It has the most people of any continent!",
+            "Tigers and giant pandas live in the wild here!",
+            "The Great Wall of China is the longest wall in the world!",
+            "Rice is grown in water paddies all over Asia!"
+        ]
     },
     "Africa": {
         montessoriColor: "green",
@@ -55,7 +79,13 @@ export const continentKnowledge = {
         tier4Hints: ["Where lions, giraffes, and elephants roam!", "It has the huge Sahara desert.", "The green continent in the middle."],
         tier3Hints: ["The big green piece in the center.", "Below the red Europe."],
         tier2Hints: ["The green one!", "Middle of the map."],
-        funFact: "Africa has the longest river in the world, the Nile!"
+        funFact: [
+            "Africa has the longest river in the world, the Nile!",
+            "It is home to the largest hot desert, the Sahara!",
+            "Elephants, giraffes, and lions live in the wild here!",
+            "The pyramids of Egypt are thousands of years old!",
+            "Cheetahs, the fastest land animals, live in Africa!"
+        ]
     },
     "Australia": {
         montessoriColor: "brown",
@@ -66,7 +96,13 @@ export const continentKnowledge = {
         tier4Hints: ["Where kangaroos hop and koalas sleep!", "The island continent down under.", "The brown land all by itself."],
         tier3Hints: ["The brown island at the bottom right.", "All alone in the corner."],
         tier2Hints: ["The brown one!", "Bottom right corner."],
-        funFact: "Australia has more kangaroos than people!"
+        funFact: [
+            "Australia has more kangaroos than people!",
+            "It is the only continent that is also a country!",
+            "The Great Barrier Reef is the biggest coral reef system!",
+            "Koalas and platypuses can only be found here!",
+            "Wombats have cube-shaped poop!"
+        ]
     },
     "Antarctica": {
         montessoriColor: "white",
@@ -77,7 +113,13 @@ export const continentKnowledge = {
         tier4Hints: ["The frozen land of penguins!", "It's super cold and covered in ice.", "At the very bottom of the world."],
         tier3Hints: ["The white snowy land at the bottom.", "Way down at the bottom."],
         tier2Hints: ["The white one!", "The snowy bottom."],
-        funFact: "Antarctica is the coldest place on Earth, colder than your freezer!"
+        funFact: [
+            "Antarctica is the coldest place on Earth, colder than your freezer!",
+            "No people live there permanently, only scientists!",
+            "Penguins slide on their bellies to move fast on ice!",
+            "It holds most of the world's fresh water in ice!",
+            "It is the windiest continent on Earth!"
+        ]
     }
 };
 

@@ -32,16 +32,26 @@ const SolarSystemLevel = ({
         }
     }, [gameMode]);
 
+    const currentTarget = shuffledPlanets[currentTargetIndex];
+    const currentKnowledge = currentTarget ? solarSystemKnowledge[currentTarget.name] : null;
+
+    // Select a consistent random fact for the current target
+    const currentFunFact = React.useMemo(() => {
+        if (!currentKnowledge?.funFact) return null;
+        if (Array.isArray(currentKnowledge.funFact)) {
+            return currentKnowledge.funFact[Math.floor(Math.random() * currentKnowledge.funFact.length)];
+        }
+        return currentKnowledge.funFact;
+    }, [currentTarget, currentKnowledge]);
+
     // Announce target when ready
     useEffect(() => {
         if (shuffledPlanets.length > 0 && currentTargetIndex < shuffledPlanets.length) {
             const target = shuffledPlanets[currentTargetIndex];
-            onNewTarget(target.name);
+            // Pass the selected fact so audio matches text
+            onNewTarget(target.name, currentFunFact);
         }
-    }, [currentTargetIndex, shuffledPlanets, onNewTarget]);
-
-    const currentTarget = shuffledPlanets[currentTargetIndex];
-    const currentKnowledge = currentTarget ? solarSystemKnowledge[currentTarget.name] : null;
+    }, [currentTargetIndex, shuffledPlanets, onNewTarget, currentFunFact]);
 
     // Handle planet click (quiz mode)
     const handlePlanetClick = useCallback(async (planet) => {
@@ -90,6 +100,8 @@ const SolarSystemLevel = ({
         setIsProcessing(false);
     }, [currentTarget, currentTargetIndex, shuffledPlanets, isProcessing, onCorrect, onLevelComplete]);
 
+    const displayFact = currentFunFact || '';
+
     return (
         <div className="solar-system-level">
             {/* Target instruction */}
@@ -103,7 +115,7 @@ const SolarSystemLevel = ({
             {/* Train mode info card */}
             {gameMode === 'train' && currentKnowledge && (
                 <div className="train-info-card">
-                    <p className="train-fact">{currentKnowledge.funFact}</p>
+                    <p className="train-fact">{displayFact}</p>
                     <button className="train-next-btn" onClick={handleNext} disabled={isProcessing}>
                         Next Planet →
                     </button>

@@ -226,23 +226,37 @@ export const handleCorrectAnswer = async (entityName, level, gameMode = 'quiz') 
     }
 
     // Quiz mode: use praise
-    // Try AI praise first
-    if (useAI) {
-        const aiResult = await requestAIPraise(entityName);
-        if (!aiResult.useFallback && aiResult.praise) {
-            message = result.wasQuick
-                ? `${aiResult.praise} You're so fast!`
-                : aiResult.praise;
-        }
+    // Quiz mode: use fun fact instead of praise
+    let knowledge = null;
+    switch (level) {
+        case 'solar-system':
+            knowledge = solarSystemKnowledge[entityName];
+            break;
+        case 'world-map':
+            knowledge = continentKnowledge[entityName];
+            break;
+        case 'north-america':
+            knowledge = countryKnowledge[entityName];
+            break;
+        case 'us-states':
+            knowledge = stateKnowledge[entityName];
+            break;
     }
 
-    // Fallback to template praise
-    if (!message) {
-        const praise = phrases.correct[Math.floor(Math.random() * phrases.correct.length)];
-        message = result.wasQuick
-            ? `${praise} You're so fast!`
-            : praise;
+    let funFact = '';
+    if (knowledge?.funFact) {
+        funFact = Array.isArray(knowledge.funFact)
+            ? knowledge.funFact[Math.floor(Math.random() * knowledge.funFact.length)]
+            : knowledge.funFact;
     }
+
+    // Fallback to template praise if no fact
+    if (!funFact) {
+        const praise = phrases.correct[Math.floor(Math.random() * phrases.correct.length)];
+        funFact = praise;
+    }
+
+    message = `That's right! ${funFact}`;
 
     // Speak the praise
     await speakText(message);
@@ -354,30 +368,40 @@ export const startTurn = (targetEntity, level) => {
 };
 
 // Announce the target
-export const announceTarget = async (targetEntity, level, gameMode = 'quiz') => {
+export const announceTarget = async (targetEntity, level, gameMode = 'quiz', specificFact = null) => {
     let message;
 
     // Train mode: teach instead of quiz
     if (gameMode === 'train') {
-        // Get fun fact from knowledge data
-        let funFact = '';
-        switch (level) {
-            case 'solar-system':
-                funFact = solarSystemKnowledge[targetEntity]?.funFact || '';
-                break;
-            case 'world-map':
-                funFact = continentKnowledge[targetEntity]?.funFact || '';
-                break;
-            case 'north-america':
-                funFact = countryKnowledge[targetEntity]?.funFact || '';
-                break;
-            case 'us-states':
-                funFact = stateKnowledge[targetEntity]?.funFact || '';
-                break;
+        // Get fun fact from knowledge data or use provided specificFact
+        let funFact = specificFact;
+
+        if (!funFact) {
+            let knowledge = null;
+            switch (level) {
+                case 'solar-system':
+                    knowledge = solarSystemKnowledge[targetEntity];
+                    break;
+                case 'world-map':
+                    knowledge = continentKnowledge[targetEntity];
+                    break;
+                case 'north-america':
+                    knowledge = countryKnowledge[targetEntity];
+                    break;
+                case 'us-states':
+                    knowledge = stateKnowledge[targetEntity];
+                    break;
+            }
+
+            if (knowledge?.funFact) {
+                funFact = Array.isArray(knowledge.funFact)
+                    ? knowledge.funFact[Math.floor(Math.random() * knowledge.funFact.length)]
+                    : knowledge.funFact;
+            }
         }
 
         // Speak introduction and fun fact together
-        message = `This is ${targetEntity}! ${funFact}`;
+        message = `This is ${targetEntity}! ${funFact || ''}`;
     } else {
         // Quiz mode: ask to find
         switch (level) {

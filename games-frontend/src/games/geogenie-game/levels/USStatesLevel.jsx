@@ -53,16 +53,26 @@ const USStatesLevel = ({
         }
     }, [gameMode]);
 
+    const currentTarget = shuffledStates[currentTargetIndex];
+    const currentKnowledge = currentTarget ? stateKnowledge[currentTarget] : null;
+
+    // Select a consistent random fact for the current target
+    const currentFunFact = React.useMemo(() => {
+        if (!currentKnowledge?.funFact) return null;
+        if (Array.isArray(currentKnowledge.funFact)) {
+            return currentKnowledge.funFact[Math.floor(Math.random() * currentKnowledge.funFact.length)];
+        }
+        return currentKnowledge.funFact;
+    }, [currentTarget, currentKnowledge]);
+
     // Announce target when ready
     useEffect(() => {
         if (shuffledStates.length > 0 && currentTargetIndex < shuffledStates.length) {
             const target = shuffledStates[currentTargetIndex];
-            onNewTarget(target);
+            // Pass the selected fact so audio matches text
+            onNewTarget(target, currentFunFact);
         }
-    }, [currentTargetIndex, shuffledStates, onNewTarget]);
-
-    const currentTarget = shuffledStates[currentTargetIndex];
-    const currentKnowledge = currentTarget ? stateKnowledge[currentTarget] : null;
+    }, [currentTargetIndex, shuffledStates, onNewTarget, currentFunFact]);
 
     const handleStateClick = useCallback(async (stateName) => {
         if (gameMode === 'train') return;
@@ -106,6 +116,8 @@ const USStatesLevel = ({
         setIsProcessing(false);
     }, [currentTarget, currentTargetIndex, shuffledStates, isProcessing, onCorrect, onLevelComplete]);
 
+    const displayFact = currentFunFact || `${currentTarget} is a beautiful state!`;
+
     return (
         <div className="us-states-level">
             <div className="target-instruction">
@@ -118,7 +130,7 @@ const USStatesLevel = ({
             {/* Train mode info card */}
             {gameMode === 'train' && currentKnowledge && (
                 <div className="train-info-card">
-                    <p className="train-fact">{currentKnowledge.funFact || `${currentTarget} is a beautiful state!`}</p>
+                    <p className="train-fact">{displayFact}</p>
                     <button className="train-next-btn" onClick={handleNext} disabled={isProcessing}>
                         Next State →
                     </button>

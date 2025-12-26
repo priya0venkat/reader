@@ -158,10 +158,10 @@ function GeoGenieGame() {
     }, [currentLevel, gameMode]);
 
     // Handle turn start (new target)
-    const handleNewTarget = useCallback(async (targetEntity) => {
+    const handleNewTarget = useCallback(async (targetEntity, specificFact = null) => {
         startTurn(targetEntity, currentLevel.id);
         setAvatarState('speaking');
-        await announceTarget(targetEntity, currentLevel.id, gameMode);
+        await announceTarget(targetEntity, currentLevel.id, gameMode, specificFact);
         setTimeout(() => setAvatarState('idle'), 1000);
     }, [currentLevel, gameMode]);
 
