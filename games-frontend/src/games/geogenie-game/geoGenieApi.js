@@ -105,13 +105,13 @@ const requestAIPraise = (entityName) => {
 
         pendingPraiseResolve = resolve;
 
-        // Timeout fallback after 3 seconds
+        // Timeout fallback after 6 seconds (increased for Llama-1B)
         setTimeout(() => {
             if (pendingPraiseResolve) {
                 pendingPraiseResolve({ praise: null, useFallback: true });
                 pendingPraiseResolve = null;
             }
-        }, 3000);
+        }, 6000);
 
         worker.postMessage({
             type: 'generatePraise',
