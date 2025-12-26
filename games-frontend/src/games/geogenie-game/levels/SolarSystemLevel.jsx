@@ -158,3 +158,49 @@ const SolarSystemLevel = ({
 
 export default SolarSystemLevel;
 
+// Add space background styles
+const spaceStyles = `
+.solar-system-level {
+    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+    min-height: 100%;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Stars effect */
+.solar-system-level::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 4px),
+        radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 3px),
+        radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 4px);
+    background-size: 550px 550px, 350px 350px, 250px 250px;
+    background-position: 0 0, 40px 60px, 130px 270px;
+    z-index: 0;
+    opacity: 0.8;
+}
+
+.planets-container {
+    position: relative;
+    z-index: 1;
+}
+
+.planet-label {
+    text-shadow: 0 0 4pxblack;
+    font-weight: bold;
+}
+`;
+
+if (typeof document !== 'undefined') {
+    const styleEl = document.createElement('style');
+    styleEl.textContent = spaceStyles;
+    document.head.appendChild(styleEl);
+}
+
+
