@@ -30,8 +30,8 @@ async function initModel(onProgress) {
     isLoading = true;
 
     try {
-        // Use small model for mobile/browser compatibility
-        const modelId = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
+        // Use Llama 3.2 1B - much smarter but still tablet/mobile friendly (~800MB RAM)
+        const modelId = 'Llama-3.2-1B-Instruct-q4f16_1-MLC';
 
         engine = await webllm.CreateMLCEngine(modelId, {
             initProgressCallback: (progress) => {
