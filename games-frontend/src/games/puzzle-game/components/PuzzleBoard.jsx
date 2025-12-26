@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import PuzzlePiece from './PuzzlePiece'
 import { playSnap, playWin } from '../utils/sound'
 import clsx from 'clsx'
+import trackingService from '../../../services/trackingService'
 
 export default function PuzzleBoard({ image, difficulty, showBackground, onWin }) {
     const [pieces, setPieces] = useState([])
@@ -106,6 +107,7 @@ export default function PuzzleBoard({ image, difficulty, showBackground, onWin }
 
             if (dist < 60) { // Snap threshold
                 playSnap()
+                trackingService.trackInteraction(`piece-${id}`, 'snap', true);
 
                 const newPieces = prev.map(p => {
                     if (p.id === id) {

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import PuzzleBoard from './components/PuzzleBoard'
 import Menu from './components/Menu'
 import SuccessScreen from './components/SuccessScreen'
+import trackingService from '../../services/trackingService'
 import './styles.css'
 
 function PuzzleGame() {
@@ -17,6 +18,7 @@ function PuzzleGame() {
         setDifficulty(selectedDifficulty)
         setShowBackground(selectedShowBackground)
         setGameState('playing')
+        trackingService.initSession('puzzle-game', `diff-${selectedDifficulty}`);
     }
 
     const handleWin = () => {
@@ -24,13 +26,14 @@ function PuzzleGame() {
     }
 
     const resetGame = () => {
+        trackingService.saveSession()
         setGameState('menu')
         setImage(null)
     }
 
     return (
         <div className="puzzle-container">
-            <button onClick={() => navigate('/')} className="home-btn">🏠</button>
+            <button onClick={() => { trackingService.saveSession(); navigate('/'); }} className="home-btn">🏠</button>
             {gameState === 'menu' && <Menu onStart={startGame} />}
             {gameState === 'playing' && (
                 <PuzzleBoard

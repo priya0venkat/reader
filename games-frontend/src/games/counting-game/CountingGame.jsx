@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import './styles.css';
+import trackingService from '../../services/trackingService';
 
 const TREATS = [
     { id: 'apple', emoji: '🍎', name: 'Apple' },
@@ -53,6 +54,8 @@ function CountingGame() {
     const startGame = () => {
         setHasStarted(true);
         speak("Let's go!");
+        // Initialize tracking
+        trackingService.initSession('counting-game', `max-${maxNumber}`);
         startNewLevel();
     };
 
@@ -100,8 +103,10 @@ function CountingGame() {
         if (showSuccess) return;
 
         if (number === targetNumber) {
+            trackingService.trackInteraction(targetNumber.toString(), number.toString(), true);
             handleWin(number);
         } else {
+            trackingService.trackInteraction(targetNumber.toString(), number.toString(), false);
             setWrongOption(number);
             playErrorSound();
             setTimeout(() => setWrongOption(null), 500);
@@ -141,7 +146,7 @@ function CountingGame() {
     return (
         <div className="game-container">
             <header>
-                <button onClick={() => navigate('/')} className="home-btn">🏠</button>
+                <button onClick={() => { trackingService.saveSession(); navigate('/'); }} className="home-btn">🏠</button>
                 <h1>How many {currentTreat.name}s?</h1>
             </header>
 

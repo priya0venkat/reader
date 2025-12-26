@@ -4,6 +4,7 @@ import { DraggablePart } from './DraggablePart';
 import { DroppableZone } from './DroppableZone';
 import confetti from 'canvas-confetti';
 import { playWashingMachineSound } from '../utils/audio';
+import trackingService from '../../../services/trackingService';
 
 const PARTS = [
     { id: 'drum', label: 'Drum' },
@@ -34,12 +35,14 @@ export function Game() {
         const { active, over } = event;
 
         if (over && active.id === over.id) {
+            trackingService.trackInteraction(active.id, 'placed', true);
             setPlacedParts((prev) => [...prev, active.id]);
         }
     };
 
     const handleStartWash = () => {
         setIsWashing(true);
+        trackingService.trackInteraction('washing', 'start', true);
         confetti();
         playWashingMachineSound();
         setTimeout(() => setIsWashing(false), 5000);

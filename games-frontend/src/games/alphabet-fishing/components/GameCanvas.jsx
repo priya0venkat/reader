@@ -3,6 +3,7 @@ import LetterFish from './LetterFish';
 import ScoreBoard from './ScoreBoard';
 import confetti from 'canvas-confetti';
 import { initPiper, speakText, phonetizeSentence } from '../../../utils/audio';
+import trackingService from '../../../services/trackingService';
 
 const ALPHABET_CAPS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const ALPHABET_SMALL = 'abcdefghijklmnopqrstuvwxyz'.split('');
@@ -167,6 +168,7 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
 
         if (clickedFish.char === targetLetter) {
             // Correct!
+            trackingService.trackInteraction(targetLetter, clickedFish.char, true);
             setScore(prev => prev + 1);
 
             // Visual feedback
@@ -200,6 +202,7 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
 
         } else {
             // Incorrect
+            trackingService.trackInteraction(targetLetter, clickedFish.char, false);
             speak(`That is ${clickedFish.char}. Try finding ${targetLetter}`);
         }
     };

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import GameCanvas from './components/GameCanvas';
 import StartScreen from './components/StartScreen';
 import './styles.css';
+import trackingService from '../../services/trackingService';
 
 function AlphabetFishing() {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -14,10 +15,14 @@ function AlphabetFishing() {
         setGameMode(mode);
         setMaxNumber(maxNum);
         setIsPlaying(true);
+        // Initialize tracking
+        const levelId = mode === 'number' ? `numbers-1-${maxNum}` : `${mode}-letters`;
+        trackingService.initSession('alphabet-fishing', levelId, mode);
     };
 
     const handleGoBack = () => {
         if (isPlaying) {
+            trackingService.saveSession(); // Save stats
             setIsPlaying(false);
         } else {
             navigate('/');

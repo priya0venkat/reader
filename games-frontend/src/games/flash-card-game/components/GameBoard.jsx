@@ -1,45 +1,66 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FlashCard from './FlashCard';
+import trackingService from '../../../services/trackingService';
 
 function GameBoard({ bundle, onBack }) {
-    const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-    const nextCard = () => {
-        setCurrentIndex((prev) => (prev + 1) % bundle.cards.length);
+  useEffect(() => {
+    // Init session
+    trackingService.initSession('flash-cards', bundle.id);
+
+    // Track first card
+    if (bundle.cards[0]) {
+      trackingService.trackInteraction(bundle.cards[0].word, 'view', true);
+    }
+
+    return () => {
+      trackingService.saveSession();
     };
+  }, [bundle.id]);
 
-    const prevCard = () => {
-        setCurrentIndex((prev) => (prev - 1 + bundle.cards.length) % bundle.cards.length);
-    };
+  const nextCard = () => {
+    setCurrentIndex((prev) => (prev + 1) % bundle.cards.length);
+  };
 
-    const shuffle = () => {
-        // Suffle logic would go here, maybe re-sort cards prop copy
-        setCurrentIndex(0);
-    };
+  const prevCard = () => {
+    setCurrentIndex((prev) => (prev - 1 + bundle.cards.length) % bundle.cards.length);
+  };
 
-    const currentCard = bundle.cards[currentIndex];
+  const shuffle = () => {
+    // Suffle logic would go here, maybe re-sort cards prop copy
+    setCurrentIndex(0);
+  };
 
-    return (
-        <div className="game-board fade-in">
-            <div className="controls-top">
-                <button onClick={onBack} className="btn-secondary">← Back</button>
-                <span>{currentIndex + 1} / {bundle.cards.length}</span>
-            </div>
+  const currentCard = bundle.cards[currentIndex];
 
-            <div className="card-area">
-                <FlashCard
-                    key={currentCard.id} // Re-mount on change to reset flip state
-                    card={currentCard}
-                    mechanic={bundle.mechanic}
-                />
-            </div>
+  useEffect(() => {
+    if (currentCard) {
+      trackingService.trackInteraction(currentCard.word, 'view', true);
+    }
+  }, [currentIndex, currentCard]);
 
-            <div className="controls-bottom">
-                <button onClick={prevCard} className="btn-nav">Previous</button>
-                <button onClick={nextCard} className="btn-nav">Next</button>
-            </div>
+  return (
+    <div className="game-board fade-in">
+      <div className="controls-top">
+        <button onClick={onBack} className="btn-secondary">← Back</button>
+        <span>{currentIndex + 1} / {bundle.cards.length}</span>
+      </div>
 
-            <style>{`
+      <div className="card-area">
+        <FlashCard
+          key={currentCard.id} // Re-mount on change to reset flip state
+          card={currentCard}
+          mechanic={bundle.mechanic}
+        />
+      </div>
+
+      <div className="controls-bottom">
+        <button onClick={prevCard} className="btn-nav">Previous</button>
+        <button onClick={nextCard} className="btn-nav">Next</button>
+      </div>
+
+      <style>{`
         .game-board {
           display: flex;
           flex-direction: column;
@@ -85,8 +106,8 @@ function GameBoard({ bundle, onBack }) {
           background: var(--secondary-hover);
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 }
 
 export default GameBoard;

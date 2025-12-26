@@ -5,6 +5,7 @@ import FoodCard from './components/FoodCard';
 import CategoryButtons from './components/CategoryButtons';
 import Feedback from './components/Feedback';
 import { playCorrectSound, playWrongSound, playCelebrationSound, announceFoodItem } from './utils/audio';
+import trackingService from '../../services/trackingService';
 import './styles.css';
 
 const shuffleArray = (array) => {
@@ -29,6 +30,11 @@ function FoodClassificationGame() {
     useEffect(() => {
         setFoods(shuffleArray(initialFoods));
         setGameStarted(true);
+        trackingService.initSession('food-classification', 'standard');
+
+        return () => {
+            trackingService.saveSession();
+        };
     }, []);
 
     useEffect(() => {
@@ -43,6 +49,8 @@ function FoodClassificationGame() {
 
         const currentFood = foods[currentFoodIndex];
         const correct = currentFood.category === category;
+
+        trackingService.trackInteraction(currentFood.name, category, correct);
 
         setIsCorrect(correct);
         setShowFeedback(true);

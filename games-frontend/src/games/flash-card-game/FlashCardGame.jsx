@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import BundleSelector from './components/BundleSelector';
 import GameBoard from './components/GameBoard';
 import { initPiper, unlockAudioContext } from './utils/audio';
+import trackingService from '../../services/trackingService';
 import './styles.css';
 import './base.css';
 

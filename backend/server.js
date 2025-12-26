@@ -265,9 +265,9 @@ app.post('/api/stats', async (req, res) => {
     try {
         const { gameId, levelId, score, totalAttempts, duration, entities, mode } = req.body
 
-        if (!gameId || !levelId) {
-            console.warn('[Stats] Missing fields:', req.body);
-            return res.status(400).json({ error: 'Missing required fields' })
+        if (!gameId) {
+            console.warn('[Stats] Missing gameId:', req.body);
+            return res.status(400).json({ error: 'Missing gameId' })
         }
 
         const statsData = {
@@ -276,20 +276,25 @@ app.post('/api/stats', async (req, res) => {
             userName: user.displayName,
             isAnonymous: !isAuthenticated,
             gameId,
-            levelId,
-            mode: mode || 'quiz',
-            score,
-            totalAttempts,
+            levelId: levelId || 'unknown',
+            mode: mode || 'standard',
+            score: score || 0,
+            totalAttempts: totalAttempts || 0,
             accuracy: totalAttempts > 0 ? Math.round((score / totalAttempts) * 100) : 0,
-            durationSeconds: duration,
+            durationSeconds: duration || 0,
             entities: entities || {},
             timestamp: new Date()
         }
 
-        // Save to Firestore
-        await firestore.collection(STATS_COLLECTION).add(statsData)
+        // Dynamic collection name: e.g. "alphabet_fishing" -> "alphabet_fishing_stats"
+        // sanitize gameId to be safe
+        const safeGameId = gameId.replace(/[^a-zA-Z0-9_-]/g, '_').toLowerCase();
+        const collectionName = `${safeGameId}_stats`;
 
-        console.log(`[Stats] Saved for ${user.displayName} - Level: ${levelId}`)
+        // Save to Firestore
+        await firestore.collection(collectionName).add(statsData)
+
+        console.log(`[Stats] Saved to ${collectionName} for ${user.displayName}`)
 
         res.json({ success: true, message: 'Stats saved successfully' })
     } catch (error) {

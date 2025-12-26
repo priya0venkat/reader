@@ -1,14 +1,19 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Game } from './components/Game'
+import trackingService from '../../services/trackingService'
 import './styles.css'
 
 function WashingMachine() {
     const navigate = useNavigate()
 
+    React.useEffect(() => {
+        trackingService.initSession('washing-machine', 'standard');
+    }, []);
+
     return (
         <div className="App">
-            <button onClick={() => navigate('/')} className="home-btn" style={{
+            <button onClick={() => { trackingService.saveSession(); navigate('/'); }} className="home-btn" style={{
                 position: 'absolute',
                 top: '20px',
                 left: '20px',
