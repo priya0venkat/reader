@@ -39,6 +39,15 @@ const checkWebGPU = async () => {
 const handleWorkerMessage = (event) => {
     const { type, ...data } = event.data;
 
+    // Helper to sanitize markdown and special chars for TTS
+    const sanitizeForTTS = (text) => {
+        if (!text) return text;
+        return text
+            .replace(/[*#_\[\]~`]/g, '') // Remove markdown chars
+            .replace(/\s+/g, ' ')        // Normalize whitespace
+            .trim();
+    };
+
     switch (type) {
         case 'progress':
             aiInitProgress = data.percent;
@@ -54,12 +63,18 @@ const handleWorkerMessage = (event) => {
             break;
         case 'hint':
             if (pendingHintResolve) {
+                if (data.hint) {
+                    data.hint = sanitizeForTTS(data.hint);
+                }
                 pendingHintResolve(data);
                 pendingHintResolve = null;
             }
             break;
         case 'praise':
             if (pendingPraiseResolve) {
+                if (data.praise) {
+                    data.praise = sanitizeForTTS(data.praise);
+                }
                 pendingPraiseResolve(data);
                 pendingPraiseResolve = null;
             }
