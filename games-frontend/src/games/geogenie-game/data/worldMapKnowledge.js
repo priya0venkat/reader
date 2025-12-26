@@ -8,19 +8,21 @@ export const continentKnowledge = {
         shape: "looks like a big triangle pointing down",
         position: "top left of the map",
         animals: ["bears", "eagles", "moose"],
-        tier4Hints: ["where bears and eagles live", "has the USA and Canada"],
-        tier3Hints: ["top left corner", "above South America"],
-        tier2Hints: ["the orange one", "big one on the left"]
+        tier4Hints: ["It's where bears, eagles, and moose live!", "Home to the USA, Canada, and Mexico.", "The big orange continent."],
+        tier3Hints: ["Look for the orange piece at the top left.", "High up on the left side."],
+        tier2Hints: ["The big orange one!", "Top left corner."],
+        funFact: "North America has everything from frozen snow to hot deserts!"
     },
     "South America": {
         montessoriColor: "pink",
         colorHex: "#FF69B4",
         shape: "looks like a big ice cream cone",
         position: "bottom left of the map",
-        animals: ["parrots", "llamas", "monkeys"],
-        tier4Hints: ["where parrots and monkeys live", "has the Amazon rainforest"],
-        tier3Hints: ["below North America", "bottom left"],
-        tier2Hints: ["the pink one", "cone shape at the bottom"]
+        animals: ["parrots", "llamas", "monkeys", "jaguars"],
+        tier4Hints: ["Where colorful parrots and jaguars live!", "It has the giant Amazon rainforest.", "The pink continent shaped like an ice cream cone."],
+        tier3Hints: ["Look below North America.", "The pink one at the bottom left."],
+        tier2Hints: ["The pink one!", "Bottom left corner."],
+        funFact: "The Amazon rainforest makes 20% of the world's oxygen!"
     },
     "Europe": {
         montessoriColor: "red",
@@ -28,9 +30,10 @@ export const continentKnowledge = {
         shape: "small but has lots of countries",
         position: "top center-right of the map",
         animals: ["wolves", "deer", "foxes"],
-        tier4Hints: ["many small countries", "has castles and knights"],
-        tier3Hints: ["next to Asia", "above Africa"],
-        tier2Hints: ["the red one", "smaller one in the middle-top"]
+        tier4Hints: ["A red continent with many castles and kings!", "Attached to the big yellow Asia.", "Small but has lots of countries."],
+        tier3Hints: ["The red piece in the middle, near the top.", "Above the green Africa."],
+        tier2Hints: ["The red one!", "The small red piece."],
+        funFact: "Europe has a city built entirely on water called Venice!"
     },
     "Asia": {
         montessoriColor: "yellow",
@@ -38,9 +41,10 @@ export const continentKnowledge = {
         shape: "the biggest land mass",
         position: "right side of the map",
         animals: ["pandas", "tigers", "elephants"],
-        tier4Hints: ["where pandas and tigers live", "the biggest continent"],
-        tier3Hints: ["the huge one on the right", "biggest piece"],
-        tier2Hints: ["the yellow one", "biggest land on the map"]
+        tier4Hints: ["The biggest continent of all!", "Home to giant pandas and tigers.", "The huge yellow land."],
+        tier3Hints: ["The giant yellow piece on the right.", "Connected to the red Europe."],
+        tier2Hints: ["The big yellow one!", "The biggest piece."],
+        funFact: "Asia is so big, it has the highest mountain in the world!"
     },
     "Africa": {
         montessoriColor: "green",
@@ -48,9 +52,10 @@ export const continentKnowledge = {
         shape: "big puzzle piece in the middle",
         position: "center of the map, below Europe",
         animals: ["lions", "elephants", "zebras", "giraffes"],
-        tier4Hints: ["where lions and zebras live", "has the Sahara desert"],
-        tier3Hints: ["in the middle", "below Europe, right of South America"],
-        tier2Hints: ["the green one", "big piece in the center"]
+        tier4Hints: ["Where lions, giraffes, and elephants roam!", "It has the huge Sahara desert.", "The green continent in the middle."],
+        tier3Hints: ["The big green piece in the center.", "Below the red Europe."],
+        tier2Hints: ["The green one!", "Middle of the map."],
+        funFact: "Africa has the longest river in the world, the Nile!"
     },
     "Australia": {
         montessoriColor: "brown",
@@ -58,19 +63,21 @@ export const continentKnowledge = {
         shape: "island at the bottom right",
         position: "bottom right corner",
         animals: ["kangaroos", "koalas", "platypus"],
-        tier4Hints: ["where kangaroos hop", "koalas live there"],
-        tier3Hints: ["all by itself at the bottom", "island continent"],
-        tier2Hints: ["the brown one", "bottom right corner"]
+        tier4Hints: ["Where kangaroos hop and koalas sleep!", "The island continent down under.", "The brown land all by itself."],
+        tier3Hints: ["The brown island at the bottom right.", "All alone in the corner."],
+        tier2Hints: ["The brown one!", "Bottom right corner."],
+        funFact: "Australia has more kangaroos than people!"
     },
     "Antarctica": {
         montessoriColor: "white",
         colorHex: "#FFFFFF",
         shape: "snowy land at the very bottom",
         position: "very bottom of the map",
-        animals: ["penguins", "seals"],
-        tier4Hints: ["where penguins live", "super cold and icy"],
-        tier3Hints: ["at the very bottom", "covered in snow"],
-        tier2Hints: ["the white snowy one", "at the bottom"]
+        animals: ["penguins", "seals", "whales"],
+        tier4Hints: ["The frozen land of penguins!", "It's super cold and covered in ice.", "At the very bottom of the world."],
+        tier3Hints: ["The white snowy land at the bottom.", "Way down at the bottom."],
+        tier2Hints: ["The white one!", "The snowy bottom."],
+        funFact: "Antarctica is the coldest place on Earth, colder than your freezer!"
     }
 };
 

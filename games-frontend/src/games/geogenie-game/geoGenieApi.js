@@ -256,7 +256,9 @@ export const handleIncorrectAnswer = async (targetEntity, clickedEntity, level) 
             target: targetEntity
         };
     } else {
-        // Try AI hint first
+        // Use knowledge base hints instead of AI for better accuracy/consistency
+        // (User requested to use static hints over LLM)
+        /* 
         if (useAI) {
             const aiResult = await requestAIHint(targetEntity, level, clickedEntity, result.currentTier);
             if (!aiResult.useFallback && aiResult.hint) {
@@ -266,9 +268,10 @@ export const handleIncorrectAnswer = async (targetEntity, clickedEntity, level) 
                     : `${encouragement} ${aiResult.hint}`;
                 aiGenerated = true;
             }
-        }
+        } 
+        */
 
-        // Fallback to template hint
+        // Always use template/knowledge base hint
         if (!message) {
             const hint = getHint(targetEntity, result.currentTier);
             const encouragement = phrases.encouragement[Math.floor(Math.random() * phrases.encouragement.length)];

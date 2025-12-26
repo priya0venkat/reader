@@ -15,68 +15,68 @@ export const PLANETS = [
 
 export const solarSystemKnowledge = {
     Mercury: {
-        shape: "tiny grey ball",
+        shape: "tiny grey rocky ball",
         position: "closest to the Sun",
-        tier4Hints: ["smallest planet", "closest to the Sun", "grey and tiny"],
-        tier3Hints: ["right next to the Sun", "first planet from the Sun"],
-        tier2Hints: ["tiny grey one", "smallest ball"],
-        funFact: "Mercury is super fast!"
+        tier4Hints: ["It's the baby planet closest to the Sun!", "It's super hot and dusty!", "The smallest grey planet."],
+        tier3Hints: ["Look for the tiny grey ball right next to the Sun.", "It's the very first planet!"],
+        tier2Hints: ["Find the smallest grey ball.", "The tiny one touching the Sun."],
+        funFact: "Mercury zooms around the Sun faster than any other planet!"
     },
     Venus: {
         shape: "bright yellow-orange ball",
         position: "second from the Sun",
-        tier4Hints: ["super hot planet", "bright and cloudy"],
-        tier3Hints: ["between Mercury and Earth", "second planet"],
-        tier2Hints: ["yellowish bright one", "medium size, not grey"],
-        funFact: "Venus is the hottest planet!"
+        tier4Hints: ["It's the hottest planet of all!", "It hides under thick yellow clouds.", "Brighter than any star!"],
+        tier3Hints: ["It's the yellow one next to Earth.", "The second planet from the Sun."],
+        tier2Hints: ["The bright yellow ball.", "Find the one that looks like a yellow marble."],
+        funFact: "Venus spins backwards! The sun rises in the west there!"
     },
     Earth: {
-        shape: "blue and green ball",
+        shape: "blue and green marble",
         position: "third from the Sun",
-        tier4Hints: ["our home!", "has water and land", "where we live"],
-        tier3Hints: ["after Venus", "has the moon"],
-        tier2Hints: ["the blue one", "has green and blue colors"],
-        funFact: "Earth is our home!"
+        tier4Hints: ["It's our home!", "The only place with oceans and life.", "Look for the blue and green colors."],
+        tier3Hints: ["It's the third planet, where we live!", "Find the blue and green ball."],
+        tier2Hints: ["The blue and green one.", "Our beautiful home planet."],
+        funFact: "Earth is the only planet with chocolate and puppies!"
     },
     Mars: {
-        shape: "red ball",
+        shape: "dusty red ball",
         position: "fourth from the Sun",
-        tier4Hints: ["the red planet", "robots explore it"],
-        tier3Hints: ["after Earth", "smaller than Earth"],
-        tier2Hints: ["the red one", "red colored ball"],
-        funFact: "Mars has big volcanoes!"
+        tier4Hints: ["The Red Planet!", "It has giant volcanoes and red dust.", "Robots are exploring it right now!"],
+        tier3Hints: ["Look for the rusty red ball.", "It's the red one next to Earth."],
+        tier2Hints: ["The small red one.", "Find the red planet."],
+        funFact: "Mars has a volcano three times bigger than Everest!"
     },
     Jupiter: {
         shape: "giant striped ball",
         position: "fifth from the Sun",
-        tier4Hints: ["biggest planet", "has a red spot", "the Giant King"],
-        tier3Hints: ["after Mars", "much bigger than the others"],
-        tier2Hints: ["the huge one", "biggest ball with stripes"],
-        funFact: "Jupiter is so big, all other planets could fit inside!"
+        tier4Hints: ["The King of Planets!", "It has a Great Red Spot storm.", "It's the biggest one of all!"],
+        tier3Hints: ["The giant one with stripes.", "It's huge and sandy colored."],
+        tier2Hints: ["The biggest planet.", "The giant striped ball."],
+        funFact: "Jupiter is a gas giant - you couldn't stand on it!"
     },
     Saturn: {
         shape: "ball with beautiful rings",
         position: "sixth from the Sun",
-        tier4Hints: ["has rings like a hula hoop", "the ringed planet"],
-        tier3Hints: ["after Jupiter", "second biggest"],
-        tier2Hints: ["the one with rings", "wearing a hula hoop"],
-        funFact: "Saturn's rings are made of ice and rock!"
+        tier4Hints: ["It has the most beautiful rings!", "The jewel of the solar system.", "A big yellow ball with a hula hoop!"],
+        tier3Hints: ["Look for the planet with big rings.", "The one wearing a ring!"],
+        tier2Hints: ["The one with the rings.", "Find the ringed planet."],
+        funFact: "Saturn's rings are made of ice chunks and space rocks!"
     },
     Uranus: {
-        shape: "pale blue-green ball",
+        shape: "pale blue-green ice giant",
         position: "seventh from the Sun",
-        tier4Hints: ["tilted on its side", "ice giant"],
-        tier3Hints: ["after Saturn", "far away"],
-        tier2Hints: ["light bluish-green one", "pale colored"],
-        funFact: "Uranus spins on its side!"
+        tier4Hints: ["The frozen ice giant!", "It rolls on its side like a ball.", "A cold, pale blue planet."],
+        tier3Hints: ["The light blue one far away.", "It spins on its side!"],
+        tier2Hints: ["The light blue-green one.", "The pale blue ball."],
+        funFact: "Uranus is the coldest planet in the whole neighborhood!"
     },
     Neptune: {
-        shape: "deep blue ball",
+        shape: "deep blue windy ball",
         position: "eighth from the Sun",
-        tier4Hints: ["farthest planet", "super windy", "dark blue"],
-        tier3Hints: ["last planet", "after Uranus"],
-        tier2Hints: ["the dark blue one", "deep blue color"],
-        funFact: "Neptune has the fastest winds!"
+        tier4Hints: ["The furthest planet from the Sun!", "A dark blue world with super fast winds.", "It's very cold and far away."],
+        tier3Hints: ["The dark blue one at the end.", "The very last planet."],
+        tier2Hints: ["The dark blue ball.", "The one furthest away."],
+        funFact: "It takes Neptune 165 years to go around the Sun just once!"
     }
 };
 
