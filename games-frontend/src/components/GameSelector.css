@@ -131,3 +131,39 @@
         text-align: center;
     }
 }
+/* Install Button Styles */
+.install-button {
+    background: linear-gradient(135deg, #2a9d8f, #264653);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(42, 157, 143, 0.4);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2rem;
+}
+
+.install-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(42, 157, 143, 0.5);
+    background: linear-gradient(135deg, #3ab7a8, #2a5a4f);
+}
+
+.install-button:active {
+    transform: translateY(-1px);
+}
+
+.install-icon {
+    font-size: 1.3rem;
+}
+
+.install-text {
+    white-space: nowrap;
+}

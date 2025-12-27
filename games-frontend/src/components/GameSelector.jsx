@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import './GameSelector.css'
+import InstallButton from './InstallButton'
 
 const GAMES = [
     { path: '/alphabet-fishing', icon: '🎣', title: 'Alphabet Fishing', description: 'Catch the letters!' },
@@ -55,6 +56,8 @@ function GameSelector() {
             </div>
 
             <h1>Verma Games</h1>
+
+            <InstallButton />
 
             <div className="games-container">
                 {GAMES.map((game) => (
