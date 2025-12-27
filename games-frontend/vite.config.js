@@ -41,6 +41,8 @@ export default defineConfig({
             workbox: {
                 // Allow large files (ONNX workers, WASM) to be precached
                 maximumFileSizeToCacheInBytes: 30 * 1024 * 1024, // 30 MB
+                // Exclude auth routes from service worker navigation fallback
+                navigateFallbackDenylist: [/^\/auth/],
                 // Cache all static assets
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,ttf,eot,json,onnx,wav}'],
                 // Runtime caching for dynamic requests
