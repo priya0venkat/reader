@@ -15,9 +15,6 @@ function AlphabetFishing() {
         setGameMode(mode);
         setMaxNumber(maxNum);
         setIsPlaying(true);
-        // Initialize tracking
-        const levelId = mode === 'number' ? `numbers-1-${maxNum}` : `${mode}-letters`;
-        trackingService.initSession('alphabet-fishing', levelId, mode);
     };
 
     const handleGoBack = () => {

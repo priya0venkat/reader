@@ -17,28 +17,25 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
     const [fish, setFish] = useState([]);
     const [audioStatus, setAudioStatus] = useState('Initializing Audio...');
 
+    // Deck state
+    const [deck, setDeck] = useState([]);
+    const [gameComplete, setGameComplete] = useState(false);
+    const [isDeckReady, setIsDeckReady] = useState(false);
+
     // Initialize Piper WASM
     useEffect(() => {
         initPiper((status) => {
             setAudioStatus(status);
         }).catch(err => {
             console.error("Audio init failed", err);
-            // Don't overwrite if we already have a detailed failure message?
-            // Actually, initPiper throws AFTER calling callback with "Failed: ..."
-            // So we should just let the callback handle the status update.
         });
     }, []);
 
     // Audio setup
     const speak = useCallback((text) => {
-        // Convert any single letters to phonetic sounds before speaking
-        // e.g. "Fish me B" -> "Fish me Buh"
         const phoneticText = phonetizeSentence(text);
         speakText(phoneticText);
     }, []);
-
-    // Use a ref to access the current fish state inside timeouts/callbacks if needed,
-    // but we will pass fish as argument to helper functions to be pure.
 
     // State to track timeouts for cleanup
     const timeoutsRef = useRef([]);
@@ -48,7 +45,7 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
             timeoutsRef.current = timeoutsRef.current.filter(t => t !== id);
         }, delay);
         timeoutsRef.current.push(id);
-    }, []); // No dependencies needed as timeoutsRef is stable
+    }, []);
 
     // Cleanup timeouts on unmount
     useEffect(() => {
@@ -57,35 +54,8 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
         };
     }, []);
 
-    const pickNewTarget = useCallback((currentFish) => {
-        if (currentFish.length === 0) {
-            // Level cleared!
-            addTimeout(startLevel, 1000);
-            return;
-        }
-
-        const randomFish = currentFish[Math.floor(Math.random() * currentFish.length)];
-        setTargetLetter(randomFish.char);
-        speak(`Fish me ${randomFish.char}`);
-    }, [speak, addTimeout]);
-
-    const startLevel = useCallback(() => {
-        // Spawn 6-8 fish
-        const count = 6 + Math.floor(Math.random() * 3);
-        const newFish = [];
-
-        // Helper to check overlap (simple distance check in % units)
-        const isSafePosition = (x, y, existingFish) => {
-            for (const fish of existingFish) {
-                // Rough distance check: 12% horizontal, 15% vertical (due to aspect ratio)
-                const dx = Math.abs(x - fish.x);
-                const dy = Math.abs(y - fish.y);
-                if (dx < 12 && dy < 15) return false;
-            }
-            return true;
-        };
-
-        // Select pool based on game mode
+    // Initialize/Reset Game Deck
+    const initGame = useCallback(() => {
         let pool = [];
         if (gameMode === 'small') {
             pool = [...ALPHABET_SMALL];
@@ -95,75 +65,132 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
             pool = [...ALPHABET_CAPS];
         }
 
-        // Create a pool of available chars
-        const availableChars = [...pool];
-
-        const screenWidth = window.innerWidth;
-        const screenHeight = window.innerHeight;
-
-        // Approximate safe dimensions including some wiggle/padding
-        const fishWidthPx = 120;
-        const fishHeightPx = 100;
-
-        // Calculate maximum safe percentage positions
-        // x% + (fishWidth/screenWidth * 100) should be < 95% (right margin)
-        // So max_x% = 95 - (fishWidth/screenWidth * 100)
-        const safeRightMargin = 5;
-        const fishWidthPercent = (fishWidthPx / screenWidth) * 100;
-        const maxX = 100 - safeRightMargin - fishWidthPercent;
-        const minX = 5; // Left safe margin
-
-        const safeBottomMargin = 5;
-        const fishHeightPercent = (fishHeightPx / screenHeight) * 100;
-        const maxY = 100 - safeBottomMargin - fishHeightPercent;
-        const minY = 25; // Keep existing top margin for header
-
-        for (let i = 0; i < count; i++) {
-            // Pick a random index from availableChars
-            const randomIndex = Math.floor(Math.random() * availableChars.length);
-            const char = availableChars[randomIndex];
-
-            // Remove the selected char from the pool to avoid duplicates
-            availableChars.splice(randomIndex, 1);
-
-            // Try to find a safe position
-            let x, y;
-            let valid = false;
-            let attempts = 0;
-
-            // Ensure ranges are valid (if screen is extremely small, fallback to small range)
-            const xRange = Math.max(0, maxX - minX);
-            const yRange = Math.max(0, maxY - minY);
-
-            while (!valid && attempts < 50) {
-                x = Math.random() * xRange + minX;
-                y = Math.random() * yRange + minY;
-                if (isSafePosition(x, y, newFish)) {
-                    valid = true;
-                }
-                attempts++;
-            }
-
-            newFish.push({
-                char,
-                id: `${char}-${Date.now()}-${i}`,
-                x,
-                y,
-            });
+        // Fisher-Yates Shuffle
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
         }
 
-        setFish(newFish);
-        // Pick first target after a moment
-        addTimeout(() => pickNewTarget(newFish), 1000);
-    }, [pickNewTarget, addTimeout]);
+        // Initialize Tracking Session
+        // We do this here to cover both initial load and "Play Again"
+        const levelId = gameMode === 'number' ? `numbers-1-${maxNumber}` : `${gameMode}-letters`;
+        trackingService.initSession('alphabet-fishing', levelId, gameMode);
 
-    // Initial Start
+        setDeck(pool);
+        setScore(0);
+        setAttempts(0);
+        setGameComplete(false);
+        setFish([]);
+        setIsDeckReady(true);
+    }, [gameMode, maxNumber]);
+
+    // Update game when mode changes
     useEffect(() => {
-        startLevel();
-        // No cleanup for startLevel itself needed if we clean timeouts
-    }, [startLevel]);
+        initGame();
+    }, [initGame]);
+
+    const spawnNextBatch = useCallback(() => {
+        if (!isDeckReady || gameComplete) return;
+
+        setDeck(prevDeck => {
+            if (prevDeck.length === 0) return prevDeck;
+
+            const batchSize = 6 + Math.floor(Math.random() * 3);
+            const itemsToSpawn = prevDeck.slice(0, batchSize);
+            const remainingDeck = prevDeck.slice(batchSize);
+
+            // Generate spawn positions
+            const newFish = [];
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const fishWidthPx = 120;
+            const fishHeightPx = 100;
+            const safeRightMargin = 5;
+            const fishWidthPercent = (fishWidthPx / screenWidth) * 100;
+            const maxX = 100 - safeRightMargin - fishWidthPercent;
+            const minX = 5;
+            const safeBottomMargin = 5;
+            const fishHeightPercent = (fishHeightPx / screenHeight) * 100;
+            const maxY = 100 - safeBottomMargin - fishHeightPercent;
+            const minY = 25;
+
+            const isSafePosition = (x, y, existingFish) => {
+                for (const fish of existingFish) {
+                    const dx = Math.abs(x - fish.x);
+                    const dy = Math.abs(y - fish.y);
+                    if (dx < 12 && dy < 15) return false;
+                }
+                return true;
+            };
+
+            itemsToSpawn.forEach((char, i) => {
+                let x, y;
+                let valid = false;
+                let attempts = 0;
+                const xRange = Math.max(0, maxX - minX);
+                const yRange = Math.max(0, maxY - minY);
+
+                while (!valid && attempts < 50) {
+                    x = Math.random() * xRange + minX;
+                    y = Math.random() * yRange + minY;
+                    if (isSafePosition(x, y, newFish)) {
+                        valid = true;
+                    }
+                    attempts++;
+                }
+
+                newFish.push({
+                    char,
+                    id: `${char}-${Date.now()}-${i}`,
+                    x,
+                    y,
+                });
+            });
+
+            // Perform State methods OUTSIDE the updater if possible, 
+            // but since we need 'remainingDeck' and 'newFish' derived from 'prevDeck',
+            // we have to be careful. 
+            // In React 18, we can trigger other state updates here safely as they will be batched.
+            setFish(newFish);
+            addTimeout(() => pickNewTarget(newFish, remainingDeck), 1000);
+
+            return remainingDeck;
+        });
+    }, [isDeckReady, gameComplete, addTimeout]); // pickNewTarget dependency handled below
+
+    const pickNewTarget = useCallback((currentFish, currentDeck) => {
+        if (currentFish.length === 0) {
+            // No fish left on screen.
+            // Check if deck is empty
+            if (!currentDeck || currentDeck.length === 0) {
+                // GAME OVER
+                setGameComplete(true);
+                speak("Congratulations! You found all of them!");
+                trackingService.saveSession();
+                return;
+            }
+            // Else, spawn next batch
+            addTimeout(spawnNextBatch, 1000);
+            return;
+        }
+
+        const randomFish = currentFish[Math.floor(Math.random() * currentFish.length)];
+        setTargetLetter(randomFish.char);
+        speak(`Fish me ${randomFish.char}`);
+    }, [speak, addTimeout, spawnNextBatch]);
+
+    // Initial Start of the first batch
+    useEffect(() => {
+        if (isDeckReady && !gameComplete && fish.length === 0 && deck.length > 0) {
+            // Only run this once per init
+            // We can check if we haven't started yet
+            spawnNextBatch();
+        }
+    }, [isDeckReady, gameComplete, spawnNextBatch]); // Careful with deps
+
 
     const handleFishClick = (clickedFish) => {
+        if (gameComplete) return;
         setAttempts(prev => prev + 1);
 
         if (clickedFish.char === targetLetter) {
@@ -193,11 +220,13 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
 
             // Wait a bit before asking for the next one
             if (remainingFish.length > 0) {
-                addTimeout(() => pickNewTarget(remainingFish), 1500);
+                // Pass currentDeck so it knows if game is over eventually
+                addTimeout(() => pickNewTarget(remainingFish, deck), 1500);
             } else {
                 // Screen cleared
                 speak("All cleared! Next round.");
-                addTimeout(startLevel, 2000);
+                // Pass deck to know if we should spawn or end
+                addTimeout(() => pickNewTarget([], deck), 2000);
             }
 
         } else {
@@ -228,8 +257,61 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
                 {audioStatus !== 'Ready' && audioStatus}
             </div>
 
+            {/* Game Complete Overlay */}
+            {gameComplete && (
+                <div style={{
+                    position: 'absolute',
+                    top: 0, left: 0, width: '100%', height: '100%',
+                    background: 'rgba(255,255,255,0.95)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 200,
+                    gap: '20px'
+                }}>
+                    <h1 style={{ fontSize: '3rem', color: '#2a9d8f' }}>🎉 Amazing! 🎉</h1>
+                    <p style={{ fontSize: '1.5rem', color: '#555' }}>You caught all the fish!</p>
+                    <div style={{ fontSize: '1.2rem', margin: '10px 0' }}>
+                        Final Score: {score} / {attempts}
+                    </div>
+                    <div style={{ display: 'flex', gap: '20px' }}>
+                        <button
+                            onClick={() => initGame()}
+                            style={{
+                                padding: '15px 30px',
+                                fontSize: '1.5rem',
+                                background: '#E63946',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '50px',
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
+                            }}
+                        >
+                            Play Again 🔄
+                        </button>
+                        <button
+                            onClick={onGoBack}
+                            style={{
+                                padding: '15px 30px',
+                                fontSize: '1.5rem',
+                                background: '#457b9d',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '50px',
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
+                            }}
+                        >
+                            Exit 🏠
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Target Letter Display - Moved down to avoid overlap with score/controls */}
-            {targetLetter && (
+            {targetLetter && !gameComplete && (
                 <div style={{
                     position: 'absolute',
                     top: '90px',
@@ -253,21 +335,23 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
             )}
 
             {/* Controls */}
-            <div style={{
-                position: 'absolute',
-                top: '20px',
-                right: '20px',
-                zIndex: 100,
-                display: 'flex',
-                gap: '10px'
-            }}>
-                <button onClick={handleReplay} style={{ padding: '10px 20px', fontSize: '1.2rem' }}>
-                    🔊 Hear Again
-                </button>
-                <button onClick={onGoBack} style={{ padding: '10px 20px', fontSize: '1.2rem' }}>
-                    Exit
-                </button>
-            </div>
+            {!gameComplete && (
+                <div style={{
+                    position: 'absolute',
+                    top: '20px',
+                    right: '20px',
+                    zIndex: 100,
+                    display: 'flex',
+                    gap: '10px'
+                }}>
+                    <button onClick={handleReplay} style={{ padding: '10px 20px', fontSize: '1.2rem' }}>
+                        🔊 Hear Again
+                    </button>
+                    <button onClick={onGoBack} style={{ padding: '10px 20px', fontSize: '1.2rem' }}>
+                        Exit
+                    </button>
+                </div>
+            )}
 
             {fish.map((f) => (
                 <LetterFish
