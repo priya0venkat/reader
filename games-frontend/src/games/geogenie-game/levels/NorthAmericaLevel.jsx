@@ -32,14 +32,15 @@ const NorthAmericaLevel = ({
     // Order states - in train mode, keep order; in quiz, shuffle within groups
     useEffect(() => {
         if (gameMode === 'train') {
-            setShuffledCountries([...COUNTRIES_BY_SIZE]);
+            setShuffledCountries([...COUNTRIES]);
         } else {
-            setShuffledCountries(shuffleBySize());
+            const shuffled = [...COUNTRIES].sort(() => Math.random() - 0.5);
+            setShuffledCountries(shuffled);
         }
     }, [gameMode]);
 
     const currentTarget = shuffledCountries[currentTargetIndex];
-    const currentKnowledge = currentTarget ? countryKnowledge[currentTarget] : null;
+    const currentKnowledge = currentTarget ? countryKnowledge[currentTarget.name] : null;
 
     // Select a consistent random fact for the current target
     const currentFunFact = React.useMemo(() => {
@@ -55,7 +56,7 @@ const NorthAmericaLevel = ({
         if (shuffledCountries.length > 0 && currentTargetIndex < shuffledCountries.length) {
             const target = shuffledCountries[currentTargetIndex];
             // Pass the selected fact so audio matches text
-            onNewTarget(target, currentFunFact);
+            onNewTarget(target.name, currentFunFact);
         }
     }, [currentTargetIndex, shuffledCountries, onNewTarget, currentFunFact]);
 
@@ -66,7 +67,7 @@ const NorthAmericaLevel = ({
 
         setIsProcessing(true);
 
-        if (countryName === currentTarget) {
+        if (countryName === currentTarget.name) {
             setFoundCountries(prev => [...prev, countryName]);
             await onCorrect(countryName);
 
@@ -77,7 +78,7 @@ const NorthAmericaLevel = ({
             }
         } else {
             setWrongCountry(countryName);
-            await onIncorrect(currentTarget, countryName);
+            await onIncorrect(currentTarget.name, countryName);
             setTimeout(() => setWrongCountry(null), 800);
         }
 
@@ -89,8 +90,8 @@ const NorthAmericaLevel = ({
         if (isProcessing || !currentTarget) return;
         setIsProcessing(true);
 
-        setFoundCountries(prev => [...prev, currentTarget]);
-        await onCorrect(currentTarget);
+        setFoundCountries(prev => [...prev, currentTarget.name]);
+        await onCorrect(currentTarget.name);
 
         if (currentTargetIndex + 1 >= shuffledCountries.length) {
             onLevelComplete();
@@ -101,14 +102,14 @@ const NorthAmericaLevel = ({
         setIsProcessing(false);
     }, [currentTarget, currentTargetIndex, shuffledCountries, isProcessing, onCorrect, onLevelComplete]);
 
-    const displayFact = currentFunFact || `${currentTarget} is a beautiful place!`;
+    const displayFact = currentFunFact || `${currentTarget?.name} is a beautiful place!`;
 
     return (
         <div className="north-america-level">
             <div className="target-instruction">
                 {gameMode === 'train'
-                    ? (currentTarget ? `This is ${currentTarget}!` : 'Loading...')
-                    : (currentTarget ? `Find ${currentTarget}!` : 'Loading...')
+                    ? (currentTarget ? `This is ${currentTarget.name}!` : 'Loading...')
+                    : (currentTarget ? `Find ${currentTarget.name}!` : 'Loading...')
                 }
             </div>
 
