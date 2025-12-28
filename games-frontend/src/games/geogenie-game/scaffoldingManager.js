@@ -63,11 +63,9 @@ class ScaffoldingManager {
     startTurn(targetName, level) {
         // Only reset if target actually changed (prevents erroneous resets from React re-renders)
         if (this.sessionState.currentTarget === targetName) {
-            console.log('[Scaffolding] startTurn skipped - same target:', targetName);
             return this.sessionState.currentTier;
         }
 
-        console.log('[Scaffolding] startTurn - new target:', targetName, 'previous:', this.sessionState.currentTarget);
         this.sessionState.currentTarget = targetName;
         this.sessionState.consecutiveErrors = 0;
         this.sessionState.lastInteractionTime = Date.now();
@@ -121,7 +119,6 @@ class ScaffoldingManager {
         mastery.lastSeen = Date.now();
 
         this.sessionState.consecutiveErrors++;
-        console.log('[Scaffolding] Error recorded. consecutiveErrors:', this.sessionState.consecutiveErrors, 'target:', entityName, 'clicked:', clickedEntity);
         saveMasteryData(this.masteryData);
 
         // Determine if we should downgrade scaffold tier
@@ -132,11 +129,9 @@ class ScaffoldingManager {
 
         // Check for frustration zone
         const isInFrustrationZone = this.sessionState.consecutiveErrors >= MAX_CONSECUTIVE_ERRORS;
-        console.log('[Scaffolding] isInFrustrationZone:', isInFrustrationZone, 'threshold:', MAX_CONSECUTIVE_ERRORS);
         if (isInFrustrationZone) {
             this.sessionState.isInRescueMode = true;
             this.sessionState.currentTier = 1; // Direct visual cue
-            console.log('[Scaffolding] RESCUE MODE ACTIVATED!');
         }
 
         return {
