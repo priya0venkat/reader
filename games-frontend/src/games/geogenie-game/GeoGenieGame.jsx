@@ -422,26 +422,6 @@ function GeoGenieGame() {
             {/* Avatar */}
             <GeoGenieAvatar state={avatarState} size="large" />
 
-            {/* Progress dots - clickable level links */}
-            <div className="level-progress">
-                {LEVELS.map((level, idx) => (
-                    <button
-                        key={level.id}
-                        onClick={() => {
-                            setCurrentLevelIndex(idx);
-                            setSearchParams({ mode: gameMode, level: level.id });
-                            setLevelStats({});
-                            setScore(0);
-                            setTotalAttempts(0);
-                            setStartTime(Date.now());
-                            resetSession();
-                        }}
-                        className={`progress-dot ${idx === currentLevelIndex ? 'active' : ''} ${idx < currentLevelIndex ? 'completed' : ''}`}
-                        title={level.name}
-                    />
-                ))}
-            </div>
-
             {/* Level links for quick navigation */}
             <div className="level-nav-links">
                 {LEVELS.map((level, idx) => (
