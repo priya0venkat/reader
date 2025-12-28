@@ -2,7 +2,7 @@
 // AI-powered geography tutor with 4 adaptive levels
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import GeoGenieAvatar from './components/GeoGenieAvatar';
 import SolarSystemLevel from './levels/SolarSystemLevel';
@@ -32,11 +32,17 @@ const LEVELS = [
 
 function GeoGenieGame() {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Parse initial state from URL
+    const initialLevelId = searchParams.get('level');
+    const initialMode = searchParams.get('mode');
+    const initialLevelIndex = initialLevelId ? LEVELS.findIndex(l => l.id === initialLevelId) : 0;
 
     // Game state
-    const [gamePhase, setGamePhase] = useState('welcome');
-    const [gameMode, setGameMode] = useState(null);
-    const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
+    const [gamePhase, setGamePhase] = useState(initialMode ? 'playing' : 'welcome');
+    const [gameMode, setGameMode] = useState(initialMode || null);
+    const [currentLevelIndex, setCurrentLevelIndex] = useState(initialLevelIndex >= 0 ? initialLevelIndex : 0);
     const [score, setScore] = useState(0);
     const [totalAttempts, setTotalAttempts] = useState(0);
 
@@ -77,6 +83,9 @@ function GeoGenieGame() {
         // Reset stats
         setLevelStats({});
         setStartTime(Date.now());
+
+        // Update URL
+        setSearchParams({ mode, level: LEVELS[0].id });
     };
 
     // Start next level
@@ -89,11 +98,17 @@ function GeoGenieGame() {
         resetSession();
 
         if (currentLevelIndex < LEVELS.length - 1) {
-            setCurrentLevelIndex(i => i + 1);
+            const nextIndex = currentLevelIndex + 1;
+            setCurrentLevelIndex(nextIndex);
             setGamePhase('playing');
             setAvatarState('idle');
+
+            // Update URL
+            setSearchParams({ mode: gameMode, level: LEVELS[nextIndex].id });
         } else {
             setGamePhase('gameComplete');
+            // Clear URL params on game complete
+            setSearchParams({});
         }
     }
 
@@ -407,13 +422,44 @@ function GeoGenieGame() {
             {/* Avatar */}
             <GeoGenieAvatar state={avatarState} size="large" />
 
-            {/* Progress dots */}
+            {/* Progress dots - clickable level links */}
             <div className="level-progress">
                 {LEVELS.map((level, idx) => (
-                    <div
+                    <button
                         key={level.id}
+                        onClick={() => {
+                            setCurrentLevelIndex(idx);
+                            setSearchParams({ mode: gameMode, level: level.id });
+                            setLevelStats({});
+                            setScore(0);
+                            setTotalAttempts(0);
+                            setStartTime(Date.now());
+                            resetSession();
+                        }}
                         className={`progress-dot ${idx === currentLevelIndex ? 'active' : ''} ${idx < currentLevelIndex ? 'completed' : ''}`}
+                        title={level.name}
                     />
+                ))}
+            </div>
+
+            {/* Level links for quick navigation */}
+            <div className="level-nav-links">
+                {LEVELS.map((level, idx) => (
+                    <button
+                        key={level.id}
+                        onClick={() => {
+                            setCurrentLevelIndex(idx);
+                            setSearchParams({ mode: gameMode, level: level.id });
+                            setLevelStats({});
+                            setScore(0);
+                            setTotalAttempts(0);
+                            setStartTime(Date.now());
+                            resetSession();
+                        }}
+                        className={`level-nav-link ${idx === currentLevelIndex ? 'active' : ''}`}
+                    >
+                        {level.emoji} {level.name}
+                    </button>
                 ))}
             </div>
         </div>
