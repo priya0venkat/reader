@@ -2,6 +2,7 @@
 // Animated globe character for the AI tutor
 
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import './GeoGenieAvatar.css';
 
 const GeoGenieAvatar = ({
@@ -31,11 +32,15 @@ const GeoGenieAvatar = ({
     }[size] || 'avatar-medium';
 
     return (
-        <div
+        <motion.div
             className={`geogenie-avatar ${sizeClass} ${state}`}
             onClick={onClick}
             role="button"
             aria-label="GeoGenie Geography Tutor"
+            drag
+            dragMomentum={false}
+            whileDrag={{ scale: 1.1, cursor: 'grabbing' }}
+            style={{ cursor: 'grab' }}
         >
             {/* Globe body */}
             <div className="avatar-body">
@@ -97,8 +102,9 @@ const GeoGenieAvatar = ({
 
             {/* Name label */}
             <div className="avatar-name">GeoGenie</div>
-        </div>
+        </motion.div>
     );
 };
 
 export default GeoGenieAvatar;
+
