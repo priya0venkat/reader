@@ -142,7 +142,7 @@ const NorthAmericaLevel = ({
                                     d={data.path}
                                     fill={isFound ? '#4caf50' : data.color}
                                     className={`country-item ${isFound ? 'found' : ''} ${isHighlighted ? 'highlighted' : ''} ${isWrong ? 'shake' : ''}`}
-                                    onClick={() => handleCountryClick(country)}
+                                    onClick={() => handleCountryClick(country.name)}
                                     style={{ cursor: gameMode === 'quiz' && !isFound ? 'pointer' : 'default' }}
                                 />
                                 <text
