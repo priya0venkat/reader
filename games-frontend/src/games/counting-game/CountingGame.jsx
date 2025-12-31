@@ -16,6 +16,16 @@ const TREATS = [
     { id: 'cake', emoji: '🍰', name: 'Cake' },
 ];
 
+// Fisher-Yates shuffle algorithm
+const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+};
+
 function CountingGame() {
     const navigate = useNavigate();
     const [maxNumber, setMaxNumber] = useState(10);
@@ -28,6 +38,11 @@ function CountingGame() {
 
     const [hasStarted, setHasStarted] = useState(false);
     const [voice, setVoice] = useState(null);
+
+    // Shuffled sequence of numbers and current index
+    const [shuffledNumbers, setShuffledNumbers] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [gameComplete, setGameComplete] = useState(false);
 
     useEffect(() => {
         const loadVoices = () => {
@@ -53,10 +68,19 @@ function CountingGame() {
 
     const startGame = () => {
         setHasStarted(true);
+        setGameComplete(false);
         speak("Let's go!");
         // Initialize tracking
         trackingService.initSession('counting-game', `max-${maxNumber}`);
-        startNewLevel();
+
+        // Create shuffled list of numbers 1 to maxNumber
+        const numbers = Array.from({ length: maxNumber }, (_, i) => i + 1);
+        const shuffled = shuffleArray(numbers);
+        setShuffledNumbers(shuffled);
+        setCurrentIndex(0);
+
+        // Start with the first number in the shuffled list
+        startNewLevelWithNumber(shuffled[0]);
     };
 
     const generateOptions = (target) => {
@@ -70,8 +94,7 @@ function CountingGame() {
         return Array.from(opts).sort(() => Math.random() - 0.5);
     };
 
-    const startNewLevel = () => {
-        const newTarget = Math.floor(Math.random() * maxNumber) + 1;
+    const startNewLevelWithNumber = (newTarget) => {
         const randomTreat = TREATS[Math.floor(Math.random() * TREATS.length)];
         const newOptions = generateOptions(newTarget);
 
@@ -91,6 +114,24 @@ function CountingGame() {
         setTimeout(() => {
             speak(`Let's eat ${randomTreat.name}s!`);
         }, 500);
+    };
+
+    const advanceToNextLevel = () => {
+        const nextIndex = currentIndex + 1;
+        if (nextIndex >= shuffledNumbers.length) {
+            // Game complete!
+            setGameComplete(true);
+            trackingService.saveSession();
+            confetti({
+                particleCount: 200,
+                spread: 100,
+                origin: { y: 0.5 }
+            });
+            speak("Congratulations! You counted all the numbers! Great job!");
+        } else {
+            setCurrentIndex(nextIndex);
+            startNewLevelWithNumber(shuffledNumbers[nextIndex]);
+        }
     };
 
     const handleItemClick = (id) => {
@@ -126,7 +167,7 @@ function CountingGame() {
             speak(`That is right! There were ${finalCount} ${currentTreat.name}s!`);
         }, 1000);
 
-        setTimeout(startNewLevel, 5000);
+        setTimeout(advanceToNextLevel, 5000);
     };
 
     const playPopSound = () => {
@@ -148,6 +189,19 @@ function CountingGame() {
             <header>
                 <button onClick={() => { trackingService.saveSession(); navigate('/'); }} className="home-btn">🏠</button>
                 <h1>How many {currentTreat.name}s?</h1>
+                {hasStarted && !gameComplete && (
+                    <span style={{
+                        position: 'absolute',
+                        right: '20px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        fontSize: '1.2rem',
+                        color: '#ffcc00',
+                        fontWeight: 'bold'
+                    }}>
+                        {currentIndex + 1}/{maxNumber}
+                    </span>
+                )}
             </header>
 
             {!hasStarted && (
@@ -220,13 +274,34 @@ function CountingGame() {
                 </div>
             </main>
 
-            {showSuccess && (
+            {showSuccess && !gameComplete && (
                 <motion.div
                     className="success-message"
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                 >
                     <h2 style={{ fontSize: '2.5rem', margin: 0 }}>Correct! That's {targetNumber}! 🎉</h2>
+                </motion.div>
+            )}
+
+            {gameComplete && (
+                <motion.div
+                    className="start-overlay"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                >
+                    <h1 style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉 Game Complete! 🎉</h1>
+                    <p style={{ fontSize: '2rem', marginBottom: '2rem', color: '#ffcc00' }}>
+                        You counted all {maxNumber} numbers!
+                    </p>
+                    <div style={{ display: 'flex', gap: '2rem' }}>
+                        <button onClick={() => { setHasStarted(false); setGameComplete(false); }} className="start-button">
+                            Play Again 🔄
+                        </button>
+                        <button onClick={() => { trackingService.saveSession(); navigate('/'); }} className="start-button" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+                            Exit 🏠
+                        </button>
+                    </div>
                 </motion.div>
             )}
         </div>
