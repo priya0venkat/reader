@@ -226,6 +226,37 @@ export const getPhonetic = (letter) => {
     return PHONETIC_MAP[letter.toUpperCase()] || letter;
 };
 
+// Play human-recorded phonics audio for a letter
+export const playPhonicsSound = (letter) => {
+    return new Promise((resolve, reject) => {
+        if (!letter || typeof letter !== 'string') {
+            resolve();
+            return;
+        }
+
+        const lowerLetter = letter.toLowerCase();
+        // Only play for a-z
+        if (!/^[a-z]$/.test(lowerLetter)) {
+            resolve();
+            return;
+        }
+
+        const audioPath = `/audio/phonics/${lowerLetter}.mp3`;
+        const audio = new Audio(audioPath);
+
+        audio.onended = () => resolve();
+        audio.onerror = (e) => {
+            console.warn(`Failed to play phonics audio for "${letter}":`, e);
+            resolve(); // Resolve anyway to not block the game
+        };
+
+        audio.play().catch(err => {
+            console.warn(`Audio play failed for "${letter}":`, err);
+            resolve();
+        });
+    });
+};
+
 // Helper to convert typical sentences to phonetic representations for single letters
 // e.g. "Fish me B" -> "Fish me Buh"
 export const phonetizeSentence = (sentence) => {

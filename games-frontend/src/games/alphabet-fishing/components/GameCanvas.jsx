@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import LetterFish from './LetterFish';
 import ScoreBoard from './ScoreBoard';
 import confetti from 'canvas-confetti';
-import { initPiper, speakText, phonetizeSentence } from '../../../utils/audio';
+import { initPiper, speakText, phonetizeSentence, playPhonicsSound } from '../../../utils/audio';
 import trackingService from '../../../services/trackingService';
 
 const ALPHABET_CAPS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -176,7 +176,13 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
 
         const randomFish = currentFish[Math.floor(Math.random() * currentFish.length)];
         setTargetLetter(randomFish.char);
-        speak(`Fish me ${randomFish.char}`);
+        // Use human phonics audio for letter pronunciation in alphabet modes
+        const isLetterMode = gameMode === 'capital' || gameMode === 'small';
+        if (isLetterMode) {
+            speakText('Fish me').then(() => playPhonicsSound(randomFish.char));
+        } else {
+            speak(`Fish me ${randomFish.char}`);
+        }
     }, [speak, addTimeout, spawnNextBatch]);
 
     // Initial Start of the first batch
@@ -237,7 +243,12 @@ const GameCanvas = ({ onGoBack, gameMode = 'capital', maxNumber = 10 }) => {
     };
 
     const handleReplay = () => {
-        speak(`Fish me ${targetLetter}`);
+        const isLetterMode = gameMode === 'capital' || gameMode === 'small';
+        if (isLetterMode) {
+            speakText('Fish me').then(() => playPhonicsSound(targetLetter));
+        } else {
+            speak(`Fish me ${targetLetter}`);
+        }
     };
 
     return (
