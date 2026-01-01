@@ -27,7 +27,6 @@ const NorthAmericaLevel = ({
     const [shuffledCountries, setShuffledCountries] = useState([]);
     const [foundCountries, setFoundCountries] = useState([]);
     const [wrongCountry, setWrongCountry] = useState(null);
-    const [isProcessing, setIsProcessing] = useState(false);
 
     // Order states - in train mode, keep order; in quiz, shuffle within groups
     useEffect(() => {
@@ -60,16 +59,15 @@ const NorthAmericaLevel = ({
         }
     }, [currentTargetIndex, shuffledCountries, onNewTarget, currentFunFact]);
 
-    const handleCountryClick = useCallback(async (countryName) => {
+    // Note: We don't await callbacks to allow clicking while TTS is playing
+    const handleCountryClick = useCallback((countryName) => {
         if (gameMode === 'train') return;
-        if (isProcessing || !currentTarget) return;
+        if (!currentTarget) return;
         if (foundCountries.includes(countryName)) return;
-
-        setIsProcessing(true);
 
         if (countryName === currentTarget.name) {
             setFoundCountries(prev => [...prev, countryName]);
-            await onCorrect(countryName);
+            onCorrect(countryName); // Fire-and-forget
 
             if (currentTargetIndex + 1 >= shuffledCountries.length) {
                 onLevelComplete();
@@ -78,29 +76,24 @@ const NorthAmericaLevel = ({
             }
         } else {
             setWrongCountry(countryName);
-            await onIncorrect(currentTarget.name, countryName);
+            onIncorrect(currentTarget.name, countryName); // Fire-and-forget
             setTimeout(() => setWrongCountry(null), 800);
         }
-
-        setIsProcessing(false);
-    }, [gameMode, currentTarget, currentTargetIndex, shuffledCountries, foundCountries, isProcessing, onCorrect, onIncorrect, onLevelComplete]);
+    }, [gameMode, currentTarget, currentTargetIndex, shuffledCountries, foundCountries, onCorrect, onIncorrect, onLevelComplete]);
 
     // Handle Next button (train mode)
-    const handleNext = useCallback(async () => {
-        if (isProcessing || !currentTarget) return;
-        setIsProcessing(true);
+    const handleNext = useCallback(() => {
+        if (!currentTarget) return;
 
         setFoundCountries(prev => [...prev, currentTarget.name]);
-        await onCorrect(currentTarget.name);
+        onCorrect(currentTarget.name); // Fire-and-forget
 
         if (currentTargetIndex + 1 >= shuffledCountries.length) {
             onLevelComplete();
         } else {
             setCurrentTargetIndex(i => i + 1);
         }
-
-        setIsProcessing(false);
-    }, [currentTarget, currentTargetIndex, shuffledCountries, isProcessing, onCorrect, onLevelComplete]);
+    }, [currentTarget, currentTargetIndex, shuffledCountries, onCorrect, onLevelComplete]);
 
     const displayFact = currentFunFact || `${currentTarget?.name} is a beautiful place!`;
 
@@ -117,7 +110,7 @@ const NorthAmericaLevel = ({
             {gameMode === 'train' && currentKnowledge && (
                 <div className="train-info-card">
                     <p className="train-fact">{displayFact}</p>
-                    <button className="train-next-btn" onClick={handleNext} disabled={isProcessing}>
+                    <button className="train-next-btn" onClick={handleNext}>
                         Next Region →
                     </button>
                 </div>

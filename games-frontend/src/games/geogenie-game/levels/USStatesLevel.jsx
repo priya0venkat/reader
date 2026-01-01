@@ -42,7 +42,6 @@ const USStatesLevel = ({
     const [shuffledStates, setShuffledStates] = useState([]);
     const [foundStates, setFoundStates] = useState([]);
     const [wrongState, setWrongState] = useState(null);
-    const [isProcessing, setIsProcessing] = useState(false);
 
     // Order states - in train mode, keep order; in quiz, shuffle within groups
     useEffect(() => {
@@ -74,16 +73,15 @@ const USStatesLevel = ({
         }
     }, [currentTargetIndex, shuffledStates, onNewTarget, currentFunFact]);
 
-    const handleStateClick = useCallback(async (stateName) => {
+    // Note: We don't await callbacks to allow clicking while TTS is playing
+    const handleStateClick = useCallback((stateName) => {
         if (gameMode === 'train') return;
-        if (isProcessing || !currentTarget) return;
+        if (!currentTarget) return;
         if (foundStates.includes(stateName)) return;
-
-        setIsProcessing(true);
 
         if (stateName === currentTarget) {
             setFoundStates(prev => [...prev, stateName]);
-            await onCorrect(stateName);
+            onCorrect(stateName); // Fire-and-forget
 
             if (currentTargetIndex + 1 >= shuffledStates.length) {
                 onLevelComplete();
@@ -92,29 +90,24 @@ const USStatesLevel = ({
             }
         } else {
             setWrongState(stateName);
-            await onIncorrect(currentTarget, stateName);
+            onIncorrect(currentTarget, stateName); // Fire-and-forget
             setTimeout(() => setWrongState(null), 800);
         }
-
-        setIsProcessing(false);
-    }, [gameMode, currentTarget, currentTargetIndex, shuffledStates, foundStates, isProcessing, onCorrect, onIncorrect, onLevelComplete]);
+    }, [gameMode, currentTarget, currentTargetIndex, shuffledStates, foundStates, onCorrect, onIncorrect, onLevelComplete]);
 
     // Handle Next button (train mode)
-    const handleNext = useCallback(async () => {
-        if (isProcessing || !currentTarget) return;
-        setIsProcessing(true);
+    const handleNext = useCallback(() => {
+        if (!currentTarget) return;
 
         setFoundStates(prev => [...prev, currentTarget]);
-        await onCorrect(currentTarget);
+        onCorrect(currentTarget); // Fire-and-forget
 
         if (currentTargetIndex + 1 >= shuffledStates.length) {
             onLevelComplete();
         } else {
             setCurrentTargetIndex(i => i + 1);
         }
-
-        setIsProcessing(false);
-    }, [currentTarget, currentTargetIndex, shuffledStates, isProcessing, onCorrect, onLevelComplete]);
+    }, [currentTarget, currentTargetIndex, shuffledStates, onCorrect, onLevelComplete]);
 
     const displayFact = currentFunFact || `${currentTarget} is a beautiful state!`;
 
@@ -131,7 +124,7 @@ const USStatesLevel = ({
             {gameMode === 'train' && currentKnowledge && (
                 <div className="train-info-card">
                     <p className="train-fact">{displayFact}</p>
-                    <button className="train-next-btn" onClick={handleNext} disabled={isProcessing}>
+                    <button className="train-next-btn" onClick={handleNext}>
                         Next State →
                     </button>
                 </div>

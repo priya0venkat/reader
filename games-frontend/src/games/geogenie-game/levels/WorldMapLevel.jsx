@@ -29,7 +29,6 @@ const WorldMapLevel = ({
     const [shuffledContinents, setShuffledContinents] = useState([]);
     const [foundContinents, setFoundContinents] = useState([]);
     const [wrongContinent, setWrongContinent] = useState(null);
-    const [isProcessing, setIsProcessing] = useState(false);
 
     // Shuffle continents (quiz) or keep order (train)
     useEffect(() => {
@@ -62,16 +61,15 @@ const WorldMapLevel = ({
         }
     }, [currentTargetIndex, shuffledContinents, onNewTarget, currentFunFact]);
 
-    const handleContinentClick = useCallback(async (continent) => {
+    // Note: We don't await callbacks to allow clicking while TTS is playing
+    const handleContinentClick = useCallback((continent) => {
         if (gameMode === 'train') return;
-        if (isProcessing || !currentTarget) return;
+        if (!currentTarget) return;
         if (foundContinents.includes(continent.name)) return;
-
-        setIsProcessing(true);
 
         if (continent.name === currentTarget.name) {
             setFoundContinents(prev => [...prev, continent.name]);
-            await onCorrect(continent.name);
+            onCorrect(continent.name); // Fire-and-forget
 
             if (currentTargetIndex + 1 >= shuffledContinents.length) {
                 onLevelComplete();
@@ -80,29 +78,24 @@ const WorldMapLevel = ({
             }
         } else {
             setWrongContinent(continent.name);
-            await onIncorrect(currentTarget.name, continent.name);
+            onIncorrect(currentTarget.name, continent.name); // Fire-and-forget
             setTimeout(() => setWrongContinent(null), 800);
         }
-
-        setIsProcessing(false);
-    }, [gameMode, currentTarget, currentTargetIndex, shuffledContinents, foundContinents, isProcessing, onCorrect, onIncorrect, onLevelComplete]);
+    }, [gameMode, currentTarget, currentTargetIndex, shuffledContinents, foundContinents, onCorrect, onIncorrect, onLevelComplete]);
 
     // Handle Next button (train mode)
-    const handleNext = useCallback(async () => {
-        if (isProcessing || !currentTarget) return;
-        setIsProcessing(true);
+    const handleNext = useCallback(() => {
+        if (!currentTarget) return;
 
         setFoundContinents(prev => [...prev, currentTarget.name]);
-        await onCorrect(currentTarget.name);
+        onCorrect(currentTarget.name); // Fire-and-forget
 
         if (currentTargetIndex + 1 >= shuffledContinents.length) {
             onLevelComplete();
         } else {
             setCurrentTargetIndex(i => i + 1);
         }
-
-        setIsProcessing(false);
-    }, [currentTarget, currentTargetIndex, shuffledContinents, isProcessing, onCorrect, onLevelComplete]);
+    }, [currentTarget, currentTargetIndex, shuffledContinents, onCorrect, onLevelComplete]);
 
     const displayFact = currentFunFact || '';
 
@@ -119,7 +112,7 @@ const WorldMapLevel = ({
             {gameMode === 'train' && currentKnowledge && (
                 <div className="train-info-card">
                     <p className="train-fact">{displayFact}</p>
-                    <button className="train-next-btn" onClick={handleNext} disabled={isProcessing}>
+                    <button className="train-next-btn" onClick={handleNext}>
                         Next Continent →
                     </button>
                 </div>

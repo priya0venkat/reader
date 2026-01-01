@@ -20,7 +20,6 @@ const SolarSystemLevel = ({
     const [shuffledPlanets, setShuffledPlanets] = useState([]);
     const [foundPlanets, setFoundPlanets] = useState([]);
     const [wrongPlanet, setWrongPlanet] = useState(null);
-    const [isProcessing, setIsProcessing] = useState(false);
 
     // Shuffle planets on mount (for quiz mode, train goes in order)
     useEffect(() => {
@@ -54,18 +53,17 @@ const SolarSystemLevel = ({
     }, [currentTargetIndex, shuffledPlanets, onNewTarget, currentFunFact]);
 
     // Handle planet click (quiz mode)
-    const handlePlanetClick = useCallback(async (planet) => {
+    // Note: We don't await callbacks to allow clicking while TTS is playing
+    const handlePlanetClick = useCallback((planet) => {
         if (gameMode === 'train') return; // In train mode, clicking doesn't do anything
-        if (isProcessing || !currentTarget) return;
+        if (!currentTarget) return;
         if (planet.type === 'star') return; // Can't click the Sun
         if (foundPlanets.includes(planet.name)) return; // Already found
-
-        setIsProcessing(true);
 
         if (planet.name === currentTarget.name) {
             // Correct!
             setFoundPlanets(prev => [...prev, planet.name]);
-            await onCorrect(planet.name);
+            onCorrect(planet.name); // Fire-and-forget, don't await
 
             // Next planet or level complete
             if (currentTargetIndex + 1 >= shuffledPlanets.length) {
@@ -76,29 +74,24 @@ const SolarSystemLevel = ({
         } else {
             // Incorrect
             setWrongPlanet(planet.name);
-            await onIncorrect(currentTarget.name, planet.name);
+            onIncorrect(currentTarget.name, planet.name); // Fire-and-forget, don't await
             setTimeout(() => setWrongPlanet(null), 800);
         }
-
-        setIsProcessing(false);
-    }, [gameMode, currentTarget, currentTargetIndex, shuffledPlanets, foundPlanets, isProcessing, onCorrect, onIncorrect, onLevelComplete]);
+    }, [gameMode, currentTarget, currentTargetIndex, shuffledPlanets, foundPlanets, onCorrect, onIncorrect, onLevelComplete]);
 
     // Handle Next button (train mode)
-    const handleNext = useCallback(async () => {
-        if (isProcessing || !currentTarget) return;
-        setIsProcessing(true);
+    const handleNext = useCallback(() => {
+        if (!currentTarget) return;
 
         setFoundPlanets(prev => [...prev, currentTarget.name]);
-        await onCorrect(currentTarget.name);
+        onCorrect(currentTarget.name); // Fire-and-forget
 
         if (currentTargetIndex + 1 >= shuffledPlanets.length) {
             onLevelComplete();
         } else {
             setCurrentTargetIndex(i => i + 1);
         }
-
-        setIsProcessing(false);
-    }, [currentTarget, currentTargetIndex, shuffledPlanets, isProcessing, onCorrect, onLevelComplete]);
+    }, [currentTarget, currentTargetIndex, shuffledPlanets, onCorrect, onLevelComplete]);
 
     const displayFact = currentFunFact || '';
 
@@ -116,7 +109,7 @@ const SolarSystemLevel = ({
             {gameMode === 'train' && currentKnowledge && (
                 <div className="train-info-card">
                     <p className="train-fact">{displayFact}</p>
-                    <button className="train-next-btn" onClick={handleNext} disabled={isProcessing}>
+                    <button className="train-next-btn" onClick={handleNext}>
                         Next Planet →
                     </button>
                 </div>
