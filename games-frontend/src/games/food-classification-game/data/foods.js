@@ -1,4 +1,5 @@
 // Simple food data - emojis only
+// Categories: Carbohydrates, Proteins, Fats, Sugars, Vitamins, Fiber, Dairy
 export const foods = [
     {
         id: 1,
@@ -15,13 +16,13 @@ export const foods = [
     {
         id: 3,
         name: "Banana",
-        category: "Fruits & Veggies",
+        category: "Sugars",
         emoji: "🍌"
     },
     {
         id: 4,
         name: "Melon",
-        category: "Fruits & Veggies",
+        category: "Vitamins",
         emoji: "🍈"
     },
     {
@@ -39,13 +40,13 @@ export const foods = [
     {
         id: 7,
         name: "Blueberries",
-        category: "Fruits & Veggies",
+        category: "Vitamins",
         emoji: "🫐"
     },
     {
         id: 8,
         name: "Pizza",
-        category: "Carbohydrates",
+        category: "Fats",
         emoji: "🍕"
     },
     {
@@ -57,7 +58,7 @@ export const foods = [
     {
         id: 10,
         name: "Cucumber",
-        category: "Fruits & Veggies",
+        category: "Fiber",
         emoji: "🥒"
     },
     {
@@ -69,25 +70,25 @@ export const foods = [
     {
         id: 12,
         name: "Cheese",
-        category: "Dairy",
+        category: "Fats",
         emoji: "🧀"
     },
     {
         id: 13,
         name: "Mandarin Orange",
-        category: "Fruits & Veggies",
+        category: "Vitamins",
         emoji: "🍊"
     },
     {
         id: 14,
         name: "Pear",
-        category: "Fruits & Veggies",
+        category: "Fiber",
         emoji: "🍐"
     },
     {
         id: 15,
         name: "Apple",
-        category: "Fruits & Veggies",
+        category: "Fiber",
         emoji: "🍎"
     },
     {
@@ -105,19 +106,19 @@ export const foods = [
     {
         id: 18,
         name: "Oatmeal",
-        category: "Carbohydrates",
+        category: "Fiber",
         emoji: "🥣"
     },
     {
         id: 19,
         name: "Grapes",
-        category: "Fruits & Veggies",
+        category: "Sugars",
         emoji: "🍇"
     },
     {
         id: 20,
         name: "Plum",
-        category: "Fruits & Veggies",
+        category: "Sugars",
         emoji: "🍑"
     }
 ];

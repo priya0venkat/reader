@@ -1,9 +1,12 @@
 import React from 'react';
 
 const categories = [
-    { name: 'Fruits & Veggies', color: '#4CAF50', icon: '🍎' },
-    { name: 'Proteins', color: '#F44336', icon: '🍗' },
     { name: 'Carbohydrates', color: '#FF9800', icon: '🍞' },
+    { name: 'Proteins', color: '#F44336', icon: '🍗' },
+    { name: 'Fats', color: '#FFC107', icon: '🧈' },
+    { name: 'Sugars', color: '#E91E63', icon: '🍬' },
+    { name: 'Vitamins', color: '#4CAF50', icon: '🥗' },
+    { name: 'Fiber', color: '#8BC34A', icon: '🥦' },
     { name: 'Dairy', color: '#2196F3', icon: '🥛' }
 ];
 
