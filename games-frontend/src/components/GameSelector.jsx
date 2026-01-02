@@ -11,6 +11,7 @@ const GAMES = [
     { path: '/puzzle-game', icon: '🧩', title: 'Puzzle Game', description: 'Solve the picture puzzles!' },
     { path: '/washing-machine', icon: '🧺', title: 'Washing Machine', description: 'Assemble the parts correctly!' },
     { path: '/geogenie', icon: '🧞‍♂️', title: 'GeoGenie', description: 'Your AI Geography Tutor!' },
+    { path: '/word-phonics-game', icon: '🔊', title: 'Word Phonics', description: 'Learn letter sounds!' },
 ]
 
 function GameSelector() {
