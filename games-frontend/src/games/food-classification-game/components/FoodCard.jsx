@@ -8,7 +8,7 @@ function FoodCard({ food }) {
                     {food.emoji}
                 </div>
             </div>
-            <h2 className="food-name">{food.name}</h2>
+            <h2 className="food-name">{food.name} has?</h2>
         </div>
     );
 }

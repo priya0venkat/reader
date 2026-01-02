@@ -29,7 +29,7 @@ export const speak = (text, rate = 1, pitch = 1) => {
  * @param {string} foodName - Name of the food item
  */
 export const announceFoodItem = (foodName) => {
-    const question = `${foodName}. Is it Fruits and Veggies, Carbohydrates, Proteins, or Dairy?`;
+    const question = `${foodName} has?`;
     speak(question, 0.9, 1);
 };
 
