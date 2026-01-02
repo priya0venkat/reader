@@ -14,6 +14,7 @@ const WashingMachine = lazy(() => import('./games/washing-machine/WashingMachine
 const WorldMapGame = lazy(() => import('./games/world-map-game/WorldMapGame'))
 const SolarSystemGame = lazy(() => import('./games/solar-system-game/SolarSystemGame'))
 const GeoGenieGame = lazy(() => import('./games/geogenie-game/GeoGenieGame'))
+const WordPhonicsGame = lazy(() => import('./games/word-phonics-game/WordPhonicsGame'))
 
 const GameLoading = () => (
     <div style={{
@@ -51,6 +52,7 @@ function App() {
                     <Route path="/world-map-game" element={<WorldMapGame />} />
                     <Route path="/solar-system-game" element={<SolarSystemGame />} />
                     <Route path="/geogenie" element={<GeoGenieGame />} />
+                    <Route path="/word-phonics-game" element={<WordPhonicsGame />} />
                 </Route>
             </Routes>
         </Suspense>

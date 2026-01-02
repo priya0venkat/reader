@@ -1,0 +1,327 @@
+/* Word Phonics Game Styles */
+
+.word-phonics-game {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.game-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    position: relative;
+}
+
+.game-header h1 {
+    color: white;
+    font-size: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin: 0;
+}
+
+.home-btn {
+    position: absolute;
+    left: 0.5rem;
+    font-size: 1.8rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.home-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
+/* Mode Selector */
+.mode-selector {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.mode-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
+.mode-btn.active {
+    background: white;
+    color: #764ba2;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.mode-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+}
+
+/* Training Mode - Alphabet Grid */
+.alphabet-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.75rem;
+    max-width: 500px;
+    width: 100%;
+    padding: 1rem;
+}
+
+.letter-btn {
+    aspect-ratio: 1;
+    font-size: 2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: linear-gradient(145deg, #ffffff, #e6e6e6);
+    color: #4a4a8a;
+    box-shadow:
+        4px 4px 10px rgba(0, 0, 0, 0.15),
+        -2px -2px 8px rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.letter-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(118, 75, 162, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.letter-btn:active::after {
+    width: 150%;
+    height: 150%;
+}
+
+.letter-btn:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        6px 6px 15px rgba(0, 0, 0, 0.2),
+        -3px -3px 10px rgba(255, 255, 255, 0.9);
+}
+
+.letter-btn:active {
+    transform: scale(0.95);
+}
+
+.letter-btn.playing {
+    background: linear-gradient(145deg, #ff9a9e, #fecfef);
+    animation: pulse 0.5s ease;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Quiz Mode */
+.quiz-mode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    gap: 1.5rem;
+}
+
+.word-input-container {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.word-input {
+    padding: 1rem 1.5rem;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #4a4a8a;
+    text-align: center;
+    min-width: 200px;
+    flex: 1;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.word-input:focus {
+    outline: none;
+    box-shadow: 0 4px 20px rgba(118, 75, 162, 0.4);
+}
+
+.word-input::placeholder {
+    color: #aaa;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.play-btn,
+.clear-btn {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.play-btn {
+    background: linear-gradient(145deg, #4CAF50, #45a049);
+    color: white;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+}
+
+.play-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
+}
+
+.play-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.clear-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
+.clear-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+/* Word Display */
+.word-display {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    min-height: 100px;
+    width: 100%;
+}
+
+.display-letter {
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    border: 3px solid transparent;
+    user-select: none;
+}
+
+.display-letter:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: scale(1.05);
+}
+
+.display-letter:active {
+    transform: scale(0.95);
+}
+
+.display-letter.active {
+    background: linear-gradient(145deg, #ffd700, #ffaa00);
+    color: #4a4a8a;
+    transform: scale(1.15);
+    border-color: white;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.display-letter.playing {
+    animation: letterPulse 0.4s ease;
+}
+
+@keyframes letterPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+/* Instructions */
+.instructions {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .alphabet-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.5rem;
+    }
+
+    .letter-btn {
+        font-size: 1.5rem;
+    }
+
+    .game-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .word-input {
+        font-size: 1.2rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .display-letter {
+        font-size: 2rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
