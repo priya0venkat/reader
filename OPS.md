@@ -23,13 +23,20 @@ sudo systemctl status puzzle-backend
 ```
 (Look for `Active: active (running)`)
 
-### 2. Updating the Code
-To pull the latest changes from GitHub and deploy them:
+### 2. Updating the Code (Games Frontend)
+To pull the latest changes from GitHub and deploy the games frontend:
 
+```bash
+# From local machine
+gcloud compute ssh verma-games --zone=us-central1-a --command='cd ~/reader && git pull && cd games-frontend && npm run build'
+```
+
+Or if you're already SSH'd into the VM:
 ```bash
 cd ~/reader
 git pull
-sudo systemctl restart puzzle-backend
+cd games-frontend
+npm run build
 ```
 
 ### 3. Checking Logs
