@@ -1,430 +1,176 @@
+/* WebGL Washing Machine Game Styles */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
   min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 }
 
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  width: 100%;
+  height: 100vh;
 }
 
-.game-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+.App {
+  width: 100%;
+  height: 100vh;
+  position: relative;
 }
 
-.game-area {
-  display: flex;
-  flex-direction: row;
-  gap: 40px;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  /* Allow wrapping for smaller screens */
-  justify-content: center;
-}
-
-/* Parts Tray */
-.parts-tray {
-  background: #f0f0f0;
-  padding: 20px;
+/* Home button */
+.home-btn {
+  position: fixed !important;
+  top: 20px;
+  left: 20px;
+  font-size: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
-  min-width: 150px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px 15px;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.3s ease;
 }
 
-.draggable-part {
-  background: white;
-  border: 2px solid #333;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: grab;
-  touch-action: none;
-  /* Critical for touch devices */
-  user-select: none;
-  font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 50px;
-}
-
-.draggable-part:active {
-  cursor: grabbing;
+.home-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
 }
 
-/* Specific Part Styling to match destination zones */
-.draggable-part.part-drum {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  font-size: 2.5rem;
-  padding: 0;
-  background: linear-gradient(145deg, #c0c0c0, #e8e8e8);
-  border: 3px solid #888;
-  color: #444;
+/* 3D Container */
+.washing-machine-3d-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  display: flex;
 }
 
-.draggable-part.part-door {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  font-size: 2.5rem;
-  padding: 0;
-  background: radial-gradient(circle, rgba(200, 220, 255, 0.3), rgba(100, 120, 180, 0.5));
-  border: 4px solid #555;
-  color: #333;
-  backdrop-filter: blur(2px);
+.canvas-container {
+  flex: 1;
+  width: 100%;
+  height: 100%;
 }
 
-.draggable-part.part-panel {
-  min-width: 140px;
-  height: 50px;
-  font-size: 1.2rem;
-  background: linear-gradient(180deg, #f5f5f5, #e0e0e0);
-  border: 2px solid #999;
-  color: #333;
+.canvas-container canvas {
+  display: block;
 }
 
-.draggable-part.part-drawer {
-  width: 70px;
-  height: 35px;
+/* Control Overlay */
+.control-overlay {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  color: white;
+  min-width: 220px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.status-display {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
   font-size: 1rem;
-  background: linear-gradient(180deg, #ffffff, #f0f0f0);
-  border: 2px solid #aaa;
-  color: #555;
 }
 
-/* Placed part styling */
-.part-drum {
-  font-size: 2rem;
-  background: linear-gradient(145deg, #c0c0c0, #e8e8e8);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+.status-item .label {
+  color: rgba(255, 255, 255, 0.6);
 }
 
-.part-door {
-  font-size: 2rem;
-  background: radial-gradient(circle, rgba(200, 220, 255, 0.2), rgba(100, 120, 180, 0.4));
-  border: 4px solid #555;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+.status-item .value {
+  font-weight: 600;
+  color: #fff;
 }
 
-.part-panel {
-  font-size: 1.5rem;
-  background: linear-gradient(180deg, #f5f5f5, #e0e0e0);
-  padding: 10px;
+.status-item .value.washing {
+  color: #4CAF50;
+  animation: pulse 1s ease-in-out infinite;
 }
 
-.part-drawer {
-  font-size: 1.5rem;
-  background: linear-gradient(180deg, #ffffff, #f0f0f0);
-  padding: 5px;
-}
+@keyframes pulse {
 
-/* Washing Machine Frame */
-.washing-machine-frame {
-  width: 300px;
-  height: 400px;
-  background: linear-gradient(180deg, #ffffff, #f8f8f8);
-  border: 8px solid #d0d0d0;
-  border-radius: 20px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-}
-
-.machine-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  background: linear-gradient(180deg, #f5f5f5, #ececec);
-}
-
-/* Droppable Zones */
-.droppable-zone {
-  border: 2px dashed #ccc;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 5px;
-  background: rgba(255, 255, 255, 0.5);
-  transition: background-color 0.2s;
-  color: #888;
-  font-size: 0.9rem;
-}
-
-.droppable-zone.placed {
-  border-style: solid;
-  border-color: #4CAF50;
-  background: white;
-  color: black;
-}
-
-.zone-panel {
-  height: 60px;
-  margin-bottom: 10px;
-  background: #eee;
-}
-
-.middle-section {
-  flex: 1;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.zone-drawer {
-  width: 80px;
-  height: 40px;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.center-assembly {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  margin-top: 50px;
-  /* Space for drawer */
-}
-
-.zone-drum {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  position: absolute;
-  z-index: 1;
-}
-
-.zone-door {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  position: absolute;
-  z-index: 2;
-  /* Door goes over drum */
-  border-width: 4px;
-}
-
-/* Animations */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes shake {
-  0% {
-    transform: translate(1px, 1px) rotate(0deg);
-  }
-
-  10% {
-    transform: translate(-1px, -2px) rotate(-1deg);
-  }
-
-  20% {
-    transform: translate(-3px, 0px) rotate(1deg);
-  }
-
-  30% {
-    transform: translate(3px, 2px) rotate(0deg);
-  }
-
-  40% {
-    transform: translate(1px, -1px) rotate(1deg);
+  0%,
+  100% {
+    opacity: 1;
   }
 
   50% {
-    transform: translate(-1px, 2px) rotate(-1deg);
-  }
-
-  60% {
-    transform: translate(-3px, 1px) rotate(0deg);
-  }
-
-  70% {
-    transform: translate(3px, 1px) rotate(-1deg);
-  }
-
-  80% {
-    transform: translate(-1px, -1px) rotate(1deg);
-  }
-
-  90% {
-    transform: translate(1px, 2px) rotate(0deg);
-  }
-
-  100% {
-    transform: translate(1px, -2px) rotate(-1deg);
+    opacity: 0.6;
   }
 }
 
-.shaking {
-  animation: shake 0.5s;
-  animation-iteration-count: infinite;
+.instructions {
+  font-size: 0.85rem;
 }
 
-.spinning {
-  animation: spin 1s linear infinite;
+.instructions p {
+  margin: 8px 0;
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.start-button {
-  padding: 15px 30px;
-  font-size: 1.2rem;
-  background-color: #4CAF50;
+.instructions strong {
+  color: #fff;
+}
+
+/* Title */
+.game-title {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.8rem;
+  font-weight: 700;
   color: white;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  transition: transform 0.1s;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  z-index: 50;
 }
 
-.start-button:active {
-  transform: scale(0.95);
-}
-
-.start-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.reset-button {
-  padding: 12px 25px;
-  font-size: 1rem;
-  background-color: #ff5722;
-  color: white;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  transition: transform 0.1s, background-color 0.2s;
-  margin-top: 10px;
-}
-
-.reset-button:hover {
-  background-color: #e64a19;
-}
-
-.reset-button:active {
-  transform: scale(0.95);
-}
-
-/* Responsive adjustments for Tablets and Phones */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .game-area {
-    flex-direction: column;
-    align-items: center;
+  .control-overlay {
+    position: fixed;
+    right: 10px;
+    left: 10px;
+    top: auto;
+    bottom: 20px;
+    transform: none;
+    min-width: auto;
+    padding: 16px;
   }
 
-  .parts-tray {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-    max-width: 350px;
+  .instructions {
+    display: none;
   }
 
-  .draggable-part {
-    min-width: 80px;
+  .game-title {
+    font-size: 1.3rem;
+    top: 15px;
+  }
+
+  .home-btn {
+    top: 10px;
+    left: 10px;
+    font-size: 1.5rem;
+    padding: 8px 12px;
   }
 }
