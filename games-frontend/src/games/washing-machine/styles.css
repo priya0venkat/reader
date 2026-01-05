@@ -80,8 +80,7 @@ body {
 }
 
 .status-display {
-  margin-bottom: 20px;
-  padding-bottom: 20px;
+  /* Spacing removed */
 }
 
 .status-item {
@@ -180,8 +179,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 24px;
-  padding-top: 20px;
 }
 
 .control-btn {
